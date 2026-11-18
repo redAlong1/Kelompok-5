@@ -14,6 +14,8 @@ namespace AdinsLibrary.Models
         decimal? DiscountAmout { get; set; }
         public FineStatus FineStatus { get; set; } = FineStatus.UNPAID;
         public DateTime? PaidDate { get; set; }
-        public DateTime CreatedAt { get; set; } 
+        public DateTime CreatedAt { get; set; }
+        public ICollection<BorrowingItem> BorrowingItem { get; set; } = new List<BorrowingItem>();
+
     }
 }

@@ -7,7 +7,6 @@ namespace AdinsLibrary.Models
     public class Book
     {
         [Key]
-
         public long BookId { get; set; }
         public string Title { get; set; }
         public string Isbn { get; set; }
@@ -23,8 +22,9 @@ namespace AdinsLibrary.Models
         [ForeignKey(nameof(Publisher))]
         public long PublisherId { get; set; }
         public Publisher? Publisher { get; set;}
-
         public string Description { get; set; }
+        public ICollection<Inventory> Inventories { get; set; }
+        public ICollection<BookReservation> BookReservations { get; set; }
 
     }
 }

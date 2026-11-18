@@ -15,6 +15,8 @@ namespace AdinsLibrary.Models
         public long BookId { get; set; }
         public DateTime ReservationDate { get; set; }
         public BookReservationStatus BookReservationStatus { get; set; } = BookReservationStatus.ACTIVE;
+        public ICollection<User> User { get; set; } = new List<User>();
+
         public DateTime CreatedAt { get; set; }
     }
 }
