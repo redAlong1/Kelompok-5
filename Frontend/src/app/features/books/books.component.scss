@@ -1,0 +1,151 @@
+
+.books-page {
+  padding: 30px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.page-header h4 {
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.page-header p,
+.table-header p {
+  color: #929bad;
+  font-size: 13px;
+  margin: 0;
+}
+
+.summary-card {
+  background: white;
+  border: 1px solid #edf0f5;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.summary-card > i {
+  font-size: 25px;
+  color: #2563eb;
+  background: #eff5ff;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.summary-card small {
+  color: #929bad;
+  font-size: 12px;
+}
+
+.summary-card h4 {
+  font-weight: 700;
+  margin: 3px 0 0;
+}
+
+.content-card {
+  background: white;
+  border: 1px solid #edf0f5;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.table-header h5 {
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1px solid #e9edf3;
+  border-radius: 8px;
+  padding: 9px 12px;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 12px;
+}
+
+.table {
+  font-size: 12px;
+}
+
+.table thead th {
+  background: #f8fafc;
+  color: #929bad;
+  font-size: 10px;
+  padding: 15px 12px;
+  border: none;
+  white-space: nowrap;
+}
+
+.table tbody td {
+  padding: 17px 12px;
+  border-color: #f0f2f6;
+  white-space: nowrap;
+}
+
+.table tbody strong {
+  color: #263247;
+}
+
+.status {
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.available {
+  background: #e5f8ef;
+  color: #16a36a;
+}
+
+.borrowed {
+  background: #fff2e3;
+  color: #ed922c;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.table-footer {
+  padding-top: 15px;
+  color: #929bad;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .books-page {
+    padding: 18px;
+  }
+
+  .page-header,
+  .table-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+}

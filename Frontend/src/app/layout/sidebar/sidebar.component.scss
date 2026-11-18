@@ -1,0 +1,102 @@
+
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: #fff;
+  border-right: 1px solid #e9edf3;
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px 35px;
+}
+
+.brand-icon {
+  width: 42px;
+  height: 42px;
+  background: #2563eb;
+  color: white;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 21px;
+}
+
+.brand h5 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.brand small,
+.sidebar-footer small {
+  color: #929bad;
+  font-size: 11px;
+}
+
+.menu-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #9ba5b5;
+  letter-spacing: 1px;
+  margin: 20px 10px 10px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px;
+  margin: 2px 0;
+  border-radius: 8px;
+  color: #64748b;
+  text-decoration: none;
+  font-size: 13px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.menu-item i {
+  font-size: 17px;
+}
+
+.menu-item:hover,
+.menu-item.active {
+  background: #eff5ff;
+  color: #2563eb;
+}
+
+.menu-item.active {
+  font-weight: 600;
+}
+
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding: 20px 5px 0;
+  border-top: 1px solid #eee;
+}
+
+.sidebar-footer strong {
+  display: block;
+  font-size: 12px;
+}
+
+.avatar {
+  background: #dbeafe;
+  color: #2563eb;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+}
