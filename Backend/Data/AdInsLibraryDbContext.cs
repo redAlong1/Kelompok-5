@@ -5,10 +5,13 @@ namespace AdinsLibrary.Data
 {
     public class AdInsLibraryDbContext : DbContext
     {
+
+        // Konstruktor utama untuk Dependency Injection di aplikasi
         public AdInsLibraryDbContext(DbContextOptions<AdInsLibraryDbContext> options)
            : base(options)
         {
         }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<MembershipTier> MembershipTiers { get; set; }
@@ -96,21 +99,21 @@ namespace AdinsLibrary.Data
 
             // Relasi One-to-Many: Book -> Inventory
             modelBuilder.Entity<Inventory>()
-                .HasOne(i => i.Books)
-                .WithMany(b => b.)
+                .HasOne(i => i.Book)
+                .WithMany(b => b.Inventories)
                 .HasForeignKey(i => i.BookId);
 
             // Relasi One-to-Many: User -> BookBorrowingTransaction
             modelBuilder.Entity<BookBorrowingTransaction>()
                 .HasOne(bbt => bbt.User)
-                .WithMany(u => u.)
+                .WithMany(u => u.BookBorrowingTransactions)
                 .HasForeignKey(bbt => bbt.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relasi One-to-Many: User -> BookReservation
             modelBuilder.Entity<BookReservation>()
                 .HasOne(br => br.User)
-                .WithMany(u => u.)
+                .WithMany(u => u.BookReservations)
                 .HasForeignKey(br => br.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -137,11 +140,11 @@ namespace AdinsLibrary.Data
                 .HasIndex(bi => new { bi.BookBorrowingTransactionId, bi.InventoryId })
                 .IsUnique();
 
-            // Relasi One-to-One / One-to-Many: BorrowingItem -> Fine
+            // Relasi One-to-Many: BorrowingItem -> Fine
             modelBuilder.Entity<Fine>()
                 .HasOne(f => f.BorrowingItem)
-                .WithMany(bi => bi.Fines) // atau WithOne() jika relasinya strictly 1-to-1
+                .WithMany(bi => bi.Fines)
                 .HasForeignKey(f => f.BorrowingItemId);
         }
     }
-    }
+}

@@ -1,4 +1,10 @@
+using AdinsLibrary.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var connStr = builder.Configuration.GetConnectionString("CineBook");
+builder.Services.AddDbContext<AdInsLibraryDbContext>(opt => opt.UseNpgsql(connStr));
 
 // Add services to the container.
 

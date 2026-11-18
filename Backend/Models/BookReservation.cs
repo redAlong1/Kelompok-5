@@ -10,13 +10,13 @@ namespace AdinsLibrary.Models
         [ForeignKey(nameof(User))]
         [Required]
         public long UserId { get; set; }
+        public User User { get; set; } = null!;
         [ForeignKey(nameof(Book))]
         [Required]
         public long BookId { get; set; }
+        public Book Book { get; set; } = null!;
         public DateTime ReservationDate { get; set; }
         public BookReservationStatus BookReservationStatus { get; set; } = BookReservationStatus.ACTIVE;
-        public ICollection<User> User { get; set; } = new List<User>();
-
         public DateTime CreatedAt { get; set; }
     }
 }

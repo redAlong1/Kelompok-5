@@ -5,9 +5,12 @@ namespace AdinsLibrary.Models
 {
     public class Fine
     {
+        [Key]
         public long FineId { get; set; }
         [Required]
+        [ForeignKey(nameof(BorrowingItem))]
         public long BorrowingItemId { get; set; }
+        public BorrowingItem? BorrowingItem { get; set; }
         [Column(TypeName = "decimal(10,2)")]
         decimal BaseAmount { get; set; }
         [Column(TypeName = "decimal(10,2)")]
@@ -15,7 +18,5 @@ namespace AdinsLibrary.Models
         public FineStatus FineStatus { get; set; } = FineStatus.UNPAID;
         public DateTime? PaidDate { get; set; }
         public DateTime CreatedAt { get; set; }
-        public ICollection<BorrowingItem> BorrowingItem { get; set; } = new List<BorrowingItem>();
-
     }
 }

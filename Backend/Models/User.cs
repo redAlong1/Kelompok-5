@@ -19,10 +19,10 @@ namespace AdinsLibrary.Models
         public string Password { get; set; } = string.Empty;
         [ForeignKey(nameof(Role))]
         public long RoleId { get; set; }
-        public Role Role { get; set; } = null!;
+        public Role Role { get; set; }
         [ForeignKey(nameof(MembershipTier))]
         public long MembershipTierId { get; set; }
-        public MembershipTier MembershipTier { get; set; } = null!;
+        public MembershipTier MembershipTier { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<BookBorrowingTransaction> BookBorrowingTransactions { get; set; } = new List<BookBorrowingTransaction>();

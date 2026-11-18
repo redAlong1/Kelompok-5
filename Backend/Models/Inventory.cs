@@ -10,9 +10,13 @@ namespace AdinsLibrary.Models
         [Required]
         [ForeignKey(nameof(Book))]
         public long BookId { get; set; }
+        public Book? Book { get; set; }
+        public string ShelfLocation { get; set; }
         [Required]
         public AvailabilityStatus AvailabilityStatus { get; set; } = AvailabilityStatus.AVAILABLE;
+        public ICollection<BorrowingItem> BorrowingItems { get; set; } = new List<BorrowingItem>();
         public ICollection<Book> Books { get; set; } = new List<Book>();
+
 
     }
 }
