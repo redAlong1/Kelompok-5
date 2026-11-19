@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AdinsLibrary.Migrations
 {
     [DbContext(typeof(AdInsLibraryDbContext))]
-    [Migration("20261119020618_add coverUrl on book model")]
-    partial class addcoverUrlonbookmodel
+    [Migration("20261119142358_initial db")]
+    partial class initialdb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -64,12 +64,12 @@ namespace AdinsLibrary.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<long?>("InventoryId")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("Isbn")
                         .IsRequired()
@@ -89,8 +89,6 @@ namespace AdinsLibrary.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("InventoryId");
 
                     b.HasIndex("Isbn")
                         .IsUnique();
@@ -212,6 +210,9 @@ namespace AdinsLibrary.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -314,6 +315,9 @@ namespace AdinsLibrary.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("PublisherId"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("PublisherName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -405,10 +409,6 @@ namespace AdinsLibrary.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("AdinsLibrary.Models.Inventory", null)
-                        .WithMany("Books")
-                        .HasForeignKey("InventoryId");
 
                     b.HasOne("AdinsLibrary.Models.Publisher", "Publisher")
                         .WithMany("Books")
@@ -542,8 +542,6 @@ namespace AdinsLibrary.Migrations
 
             modelBuilder.Entity("AdinsLibrary.Models.Inventory", b =>
                 {
-                    b.Navigation("Books");
-
                     b.Navigation("BorrowingItems");
                 });
 

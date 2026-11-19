@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Auth\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
