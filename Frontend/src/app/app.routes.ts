@@ -8,6 +8,14 @@ export const routes: Routes = [
       import('./pages/landing/landing.component')
         .then(m => m.LandingComponent)
   },
+
+  {
+    path: 'catalog',
+    loadComponent: () =>
+      import('./pages/catalog/catalog.component')
+        .then(m => m.CatalogComponent)
+  },
+
   {
     path: 'books/:id',
     loadComponent: () =>

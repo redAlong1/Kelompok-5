@@ -1,0 +1,12 @@
+/* Sisa CSS hanya untuk Cover Buku */
+.book-cover {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Pastikan class cover-blue tetap ada untuk ngClass */
+.cover-blue {
+  background:
+    radial-gradient(circle at 85% 70%, #3167ad 0, transparent 35%),
+    linear-gradient(145deg, #1854a5, #071b43);
+}
