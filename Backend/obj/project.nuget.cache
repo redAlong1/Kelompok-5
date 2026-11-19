@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9QF1+Vy4XAU=",
+  "dgSpecHash": "mMTq/hlcXXs6hXPDIgfCrXdIKkchRMKeyUyLNa7T/2aZEBK1t+7742pLtc1KOZRWLydNFh5R3rWbT8UX/F/YUw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\AdinsLibrary.csproj",
+  "projectFilePath": "C:\\Users\\Adicipta\\Documents\\Kelompok-5\\Backend\\AdinsLibrary.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Adicipta\\.nuget\\packages\\bcrypt.net-next\\4.2.0\\bcrypt.net-next.4.2.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
@@ -17,12 +17,18 @@
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\6.0.0\\microsoft.extensions.caching.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.caching.memory\\6.0.1\\microsoft.extensions.caching.memory.6.0.1.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.configuration\\2.0.0\\microsoft.extensions.configuration.2.0.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\6.0.0\\microsoft.extensions.configuration.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.configuration.binder\\2.0.0\\microsoft.extensions.configuration.binder.2.0.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\6.0.1\\microsoft.extensions.dependencyinjection.6.0.1.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.dependencymodel\\3.0.0\\microsoft.extensions.dependencymodel.3.0.0.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\3.1.8\\microsoft.extensions.fileproviders.abstractions.3.1.8.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.hosting.abstractions\\3.1.8\\microsoft.extensions.hosting.abstractions.3.1.8.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.logging\\6.0.0\\microsoft.extensions.logging.6.0.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.0\\microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.options\\6.0.0\\microsoft.extensions.options.6.0.0.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.options.configurationextensions\\2.0.0\\microsoft.extensions.options.configurationextensions.2.0.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.identitymodel.abstractions\\6.35.0\\microsoft.identitymodel.abstractions.6.35.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\6.35.0\\microsoft.identitymodel.jsonwebtokens.6.35.0.nupkg.sha512",
@@ -35,6 +41,15 @@
     "C:\\Users\\Adicipta\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\npgsql\\6.0.11\\npgsql.6.0.11.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\6.0.29\\npgsql.entityframeworkcore.postgresql.6.0.29.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\serilog\\2.10.0\\serilog.2.10.0.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\serilog.aspnetcore\\6.1.0\\serilog.aspnetcore.6.1.0.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\serilog.extensions.hosting\\5.0.1\\serilog.extensions.hosting.5.0.1.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\serilog.extensions.logging\\3.1.0\\serilog.extensions.logging.3.1.0.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\serilog.formatting.compact\\1.1.0\\serilog.formatting.compact.1.1.0.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\serilog.settings.configuration\\3.3.0\\serilog.settings.configuration.3.3.0.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\serilog.sinks.console\\4.0.1\\serilog.sinks.console.4.0.1.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\serilog.sinks.debug\\2.0.0\\serilog.sinks.debug.2.0.0.nupkg.sha512",
+    "C:\\Users\\Adicipta\\.nuget\\packages\\serilog.sinks.file\\5.0.0\\serilog.sinks.file.5.0.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
@@ -49,15 +64,5 @@
     "C:\\Users\\Adicipta\\.nuget\\packages\\system.text.encodings.web\\4.7.2\\system.text.encodings.web.4.7.2.nupkg.sha512",
     "C:\\Users\\Adicipta\\.nuget\\packages\\system.text.json\\4.7.2\\system.text.json.4.7.2.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "message": "Problem reading the cache file C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
-      "projectPath": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\AdinsLibrary.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\AdinsLibrary.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }

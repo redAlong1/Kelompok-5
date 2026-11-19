@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\AdinsLibrary.csproj": {}
+    "C:\\Users\\Adicipta\\Documents\\Kelompok-5\\Backend\\AdinsLibrary.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\AdinsLibrary.csproj": {
+    "C:\\Users\\Adicipta\\Documents\\Kelompok-5\\Backend\\AdinsLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\AdinsLibrary.csproj",
+        "projectUniqueName": "C:\\Users\\Adicipta\\Documents\\Kelompok-5\\Backend\\AdinsLibrary.csproj",
         "projectName": "AdinsLibrary",
-        "projectPath": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\AdinsLibrary.csproj",
+        "projectPath": "C:\\Users\\Adicipta\\Documents\\Kelompok-5\\Backend\\AdinsLibrary.csproj",
         "packagesPath": "C:\\Users\\Adicipta\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\obj\\",
+        "outputPath": "C:\\Users\\Adicipta\\Documents\\Kelompok-5\\Backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -26,7 +26,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
+          "http://r3app-server:5400/v3/index.json": {},
+          "http://r3app-server:5500/v3/index.json": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -39,13 +40,7 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net6.0": {
@@ -73,6 +68,10 @@
               "target": "Package",
               "version": "[6.0.29, )"
             },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[6.1.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
@@ -84,8 +83,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -97,7 +95,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.320\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     }
