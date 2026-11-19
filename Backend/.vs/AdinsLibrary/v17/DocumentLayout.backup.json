@@ -3,68 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Migrations\\20261118103248_InitialCreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20261118103248_InitialCreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\services\\bookservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:services\\bookservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\data\\adinslibrarydbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:data\\adinslibrarydbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\services\\ibookservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:services\\ibookservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\book.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\book.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\publisher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\publisher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\adinslibrary.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:adinslibrary.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\inventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\inventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\fine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\fine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\borrowingitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\borrowingitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\bookreservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\bookreservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\bookborrowingtransaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\bookborrowingtransaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\author.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\author.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\membershiptier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\membershiptier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -79,209 +35,63 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "20261118103248_InitialCreate.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Migrations\\20261118103248_InitialCreate.cs",
-              "RelativeDocumentMoniker": "Migrations\\20261118103248_InitialCreate.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Migrations\\20261118103248_InitialCreate.cs",
-              "RelativeToolTip": "Migrations\\20261118103248_InitialCreate.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAARAAAAAAAAAA==",
+              "Title": "BookService.cs",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Services\\BookService.cs",
+              "RelativeDocumentMoniker": "Services\\BookService.cs",
+              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Services\\BookService.cs",
+              "RelativeToolTip": "Services\\BookService.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAQwCYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T10:32:48.98Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T10:31:49.943Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Publisher.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Publisher.cs",
-              "RelativeDocumentMoniker": "Models\\Publisher.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Publisher.cs",
-              "RelativeToolTip": "Models\\Publisher.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAQAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T10:00:57.28Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Category.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Category.cs",
-              "RelativeDocumentMoniker": "Models\\Category.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Category.cs",
-              "RelativeToolTip": "Models\\Category.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:59:34.201Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "MembershipTier.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\MembershipTier.cs",
-              "RelativeDocumentMoniker": "Models\\MembershipTier.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\MembershipTier.cs",
-              "RelativeToolTip": "Models\\MembershipTier.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:53:46.34Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Role.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Role.cs",
-              "RelativeDocumentMoniker": "Models\\Role.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Role.cs",
-              "RelativeToolTip": "Models\\Role.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:53:22.805Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "BorrowingItem.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\BorrowingItem.cs",
-              "RelativeDocumentMoniker": "Models\\BorrowingItem.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\BorrowingItem.cs",
-              "RelativeToolTip": "Models\\BorrowingItem.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAwwBUAAAAqAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:46:28.12Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "BookReservation.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\BookReservation.cs",
-              "RelativeDocumentMoniker": "Models\\BookReservation.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\BookReservation.cs",
-              "RelativeToolTip": "Models\\BookReservation.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwBIAAABoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:30:51.068Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Inventory.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Inventory.cs",
-              "RelativeDocumentMoniker": "Models\\Inventory.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Inventory.cs",
-              "RelativeToolTip": "Models\\Inventory.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAmwBEAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:29:20.206Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Fine.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Fine.cs",
-              "RelativeDocumentMoniker": "Models\\Fine.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Fine.cs",
-              "RelativeToolTip": "Models\\Fine.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBMAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:26:16.898Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\User.cs",
-              "RelativeDocumentMoniker": "Models\\User.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\User.cs",
-              "RelativeToolTip": "Models\\User.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAIwBgAAAA6AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:23:43.5Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "Author.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Author.cs",
-              "RelativeDocumentMoniker": "Models\\Author.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Author.cs",
-              "RelativeToolTip": "Models\\Author.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABCAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:19:05.922Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Book.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Book.cs",
-              "RelativeDocumentMoniker": "Models\\Book.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Book.cs",
-              "RelativeToolTip": "Models\\Book.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAA0wBcAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:17:29.609Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "BookBorrowingTransaction.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\BookBorrowingTransaction.cs",
-              "RelativeDocumentMoniker": "Models\\BookBorrowingTransaction.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\BookBorrowingTransaction.cs",
-              "RelativeToolTip": "Models\\BookBorrowingTransaction.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAwwBEAAABIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:17:00.485Z",
+              "WhenOpened": "2026-11-19T02:36:11.605Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "AdInsLibraryDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Data\\AdInsLibraryDbContext.cs",
-              "RelativeDocumentMoniker": "Data\\AdInsLibraryDbContext.cs",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Data\\AdInsLibraryDbContext.cs",
-              "RelativeToolTip": "Data\\AdInsLibraryDbContext.cs",
-              "ViewState": "AgIAAIMAAAAAAAAAAAAkwJUAAAABAAAAAAAAAA==",
+              "Title": "Book.cs",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Book.cs",
+              "RelativeDocumentMoniker": "Models\\Book.cs",
+              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Models\\Book.cs",
+              "RelativeToolTip": "Models\\Book.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAwwA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:12:03.38Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-19T02:03:05.871Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-11-18T09:08:06.101Z"
+              "DocumentIndex": 1,
+              "Title": "IBookService.cs",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Services\\IBookService.cs",
+              "RelativeDocumentMoniker": "Services\\IBookService.cs",
+              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Services\\IBookService.cs",
+              "RelativeToolTip": "Services\\IBookService.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAIwAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-19T01:54:23.82Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AdinsLibrary.csproj",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\AdinsLibrary.csproj",
+              "RelativeDocumentMoniker": "AdinsLibrary.csproj",
+              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\AdinsLibrary.csproj",
+              "RelativeToolTip": "AdinsLibrary.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-11-19T01:53:49.034Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAQwB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-19T01:12:16.325Z"
             }
           ]
         }
