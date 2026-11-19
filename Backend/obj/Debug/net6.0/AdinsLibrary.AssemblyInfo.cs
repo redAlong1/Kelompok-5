@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AdinsLibrary")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cc4c0b50e67924aa0c9b87e9f5f7d713e65fab28")]
 [assembly: System.Reflection.AssemblyProductAttribute("AdinsLibrary")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AdinsLibrary")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Migrations\\20261118103248_InitialCreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20261118103248_InitialCreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\migrations\\20261118103248_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|solutionrelative:migrations\\20261118103248_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6932985C-A272-4FE0-88DC-554F4F1E446F}|AdinsLibrary.csproj|c:\\users\\adicipta\\documents\\kelompok 5\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -99,8 +99,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T10:31:49.943Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T10:31:49.943Z"
             },
             {
               "$type": "Document",
@@ -112,8 +111,7 @@
               "RelativeToolTip": "Models\\Publisher.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwAQAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T10:00:57.28Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T10:00:57.28Z"
             },
             {
               "$type": "Document",
@@ -125,8 +123,7 @@
               "RelativeToolTip": "Models\\Category.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:59:34.201Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:59:34.201Z"
             },
             {
               "$type": "Document",
@@ -138,8 +135,7 @@
               "RelativeToolTip": "Models\\MembershipTier.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:53:46.34Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:53:46.34Z"
             },
             {
               "$type": "Document",
@@ -151,8 +147,7 @@
               "RelativeToolTip": "Models\\Role.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:53:22.805Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:53:22.805Z"
             },
             {
               "$type": "Document",
@@ -164,8 +159,7 @@
               "RelativeToolTip": "Models\\BorrowingItem.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAwwBUAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:46:28.12Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:46:28.12Z"
             },
             {
               "$type": "Document",
@@ -177,8 +171,7 @@
               "RelativeToolTip": "Models\\BookReservation.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAQwBIAAABoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:30:51.068Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:30:51.068Z"
             },
             {
               "$type": "Document",
@@ -190,8 +183,7 @@
               "RelativeToolTip": "Models\\Inventory.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAAmwBEAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:29:20.206Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:29:20.206Z"
             },
             {
               "$type": "Document",
@@ -203,8 +195,7 @@
               "RelativeToolTip": "Models\\Fine.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwBMAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:26:16.898Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:26:16.898Z"
             },
             {
               "$type": "Document",
@@ -216,8 +207,7 @@
               "RelativeToolTip": "Models\\User.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAAIwBgAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:23:43.5Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:23:43.5Z"
             },
             {
               "$type": "Document",
@@ -229,8 +219,7 @@
               "RelativeToolTip": "Models\\Author.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:19:05.922Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:19:05.922Z"
             },
             {
               "$type": "Document",
@@ -242,8 +231,7 @@
               "RelativeToolTip": "Models\\Book.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAA0wBcAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:17:29.609Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:17:29.609Z"
             },
             {
               "$type": "Document",
@@ -255,8 +243,7 @@
               "RelativeToolTip": "Models\\BookBorrowingTransaction.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAwwBEAAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:17:00.485Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:17:00.485Z"
             },
             {
               "$type": "Document",
@@ -268,8 +255,7 @@
               "RelativeToolTip": "Data\\AdInsLibraryDbContext.cs",
               "ViewState": "AgIAAIMAAAAAAAAAAAAkwJUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-18T09:12:03.38Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-18T09:12:03.38Z"
             },
             {
               "$type": "Document",
