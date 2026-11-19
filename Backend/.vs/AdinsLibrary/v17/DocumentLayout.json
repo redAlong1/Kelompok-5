@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "Services\\BookService.cs",
               "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\Services\\BookService.cs",
               "RelativeToolTip": "Services\\BookService.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAAACkAAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAAQwCYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-19T02:36:11.605Z",
               "EditorCaption": ""
@@ -55,8 +55,7 @@
               "RelativeToolTip": "Models\\Book.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAwwA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-19T02:03:05.871Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-19T02:03:05.871Z"
             },
             {
               "$type": "Document",
@@ -68,21 +67,19 @@
               "RelativeToolTip": "Services\\IBookService.cs",
               "ViewState": "AgIAAAEAAAAAAAAAAAAIwAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-19T01:54:23.82Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-19T01:54:23.82Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "AdinsLibrary",
+              "Title": "AdinsLibrary.csproj",
               "DocumentMoniker": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\AdinsLibrary.csproj",
               "RelativeDocumentMoniker": "AdinsLibrary.csproj",
               "ToolTip": "C:\\Users\\Adicipta\\Documents\\Kelompok 5\\Backend\\AdinsLibrary.csproj",
               "RelativeToolTip": "AdinsLibrary.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-11-19T01:53:49.034Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-19T01:53:49.034Z"
             },
             {
               "$type": "Document",
@@ -94,8 +91,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAABEAAAAAAAAAAAAQwB0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-19T01:12:16.325Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-19T01:12:16.325Z"
             }
           ]
         }

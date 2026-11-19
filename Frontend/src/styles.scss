@@ -1,12 +1,29 @@
 @import "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
+:root {
+  --primary: #2457d6;
+  --primary-dark: #173b85;
+  --text-dark: #142b50;
+  --text-muted: #718096;
+  --background: #f4f7fd;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: #f5f7fb;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--background);
+  color: var(--text-dark);
+}
+
+button, input {
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
 }

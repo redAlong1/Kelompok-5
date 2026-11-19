@@ -4,23 +4,30 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
+    loadComponent: () =>
+      import('./pages/landing/landing.component')
+        .then(m => m.LandingComponent)
   },
   {
-    path: 'dashboard',
+    path: 'books/:id',
     loadComponent: () =>
-      import('./features/dashboard/dashboard.component')
-        .then(m => m.DashboardComponent)
+      import('./pages/book-detail/book-detail.component')
+        .then(m => m.BookDetailComponent)
   },
   {
-    path: 'books',
+    path: 'login',
     loadComponent: () =>
-      import('./features/books/books.component')
-        .then(m => m.BooksComponent)
+      import('./pages/login/login.component')
+        .then(m => m.LoginComponent)
+  },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./pages/register/register.component')
+        .then(m => m.RegisterComponent)
   },
   {
     path: '**',
-    redirectTo: 'dashboard'
+    redirectTo: ''
   }
 ];
