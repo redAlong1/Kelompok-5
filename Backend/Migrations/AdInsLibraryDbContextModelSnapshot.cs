@@ -57,14 +57,6 @@ namespace AdinsLibrary.Migrations
                     b.Property<long>("CategoryId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("CoverUrl")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -213,9 +205,6 @@ namespace AdinsLibrary.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -317,9 +306,6 @@ namespace AdinsLibrary.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("PublisherId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PublisherName")
                         .IsRequired()

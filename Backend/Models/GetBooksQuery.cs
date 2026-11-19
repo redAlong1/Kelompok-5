@@ -24,13 +24,13 @@ namespace AdinsLibrary.Models
 
         [FromQuery(Name = "category_id")]
         [Range(1, int.MaxValue)]
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         [FromQuery(Name = "stock_status")]
-        public string? StockStatus { get; set; }
+        public string StockStatus { get; set; }
 
         [FromQuery(Name = "sort")]
-        public string? Sort { get; set; }
+        public int Sort { get; set; }
 
         [FromQuery(Name = "order")]
         public int Order { get; set; }
