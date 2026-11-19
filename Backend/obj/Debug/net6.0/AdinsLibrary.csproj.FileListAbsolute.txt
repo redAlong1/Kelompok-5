@@ -125,3 +125,13 @@ C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\obj\Debug\net6.0
 C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\obj\Debug\net6.0\ref\AdinsLibrary.dll
 C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\obj\Debug\net6.0\AdinsLibrary.pdb
 C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\obj\Debug\net6.0\AdinsLibrary.genruntimeconfig.cache
+C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\bin\Debug\net6.0\appsettings.json
+C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\bin\Debug\net6.0\BCrypt-Net-Next.dll
