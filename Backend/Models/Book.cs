@@ -9,9 +9,6 @@ namespace AdinsLibrary.Models
         [Key]
         public long BookId { get; set; }
         [Required]
-        [MaxLength(255)]
-        public string CoverUrl { get; set; }
-        [Required]
         [MaxLength(200)]
         public string Title { get; set; }
         [MaxLength(20)]
@@ -26,7 +23,6 @@ namespace AdinsLibrary.Models
         public long PublisherId { get; set; }
         public Publisher? Publisher { get; set;}
         public string Description { get; set; }
-        public DateTime CreatedAt { get; set; }
         public ICollection<Inventory> Inventories = new List<Inventory>();
         public ICollection<BookReservation> BookReservations = new List<BookReservation>();
 

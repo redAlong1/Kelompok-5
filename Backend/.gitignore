@@ -44,7 +44,7 @@ Thumbs.db
 
 
 # Visual Studio
-Backend/.vs/
+.vs/
 
 # Build output
 bin/

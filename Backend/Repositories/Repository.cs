@@ -24,29 +24,11 @@ namespace AdinsLibrary.Repositories
         public async Task<T?> GetByIdAsync(long id, params string[] includeProperties)
         {
             IQueryable<T> query = _dbSet;
-
-            if (includeProperties != null)
+            foreach (var includeProperty in includeProperties)
             {
-                foreach (var includeProperty in includeProperties)
-                {
-                    if (!string.IsNullOrWhiteSpace(includeProperty))
-                    {
-                        query = query.Include(includeProperty);
-                    }
-                }
+                query = query.Include(includeProperty);
             }
-
-            var entityType = _context.Model.FindEntityType(typeof(T));
-            var primaryKey = entityType?.FindPrimaryKey()?.Properties.FirstOrDefault();
-
-            if (primaryKey == null)
-            {
-                throw new InvalidOperationException($"Primary key untuk entity '{typeof(T).Name}' tidak ditemukan.");
-            }
-
-            string keyName = primaryKey.Name;
-
-            return await query.FirstOrDefaultAsync(e => EF.Property<long>(e, keyName) == id);
+            return await query.FirstOrDefaultAsync(e => EF.Property<long>(e, "Id") == id);
         }
 
         public async Task<List<T>> GetAllAsync()
@@ -67,6 +49,7 @@ namespace AdinsLibrary.Repositories
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
         public void Update(T entity)

@@ -255,3 +255,38 @@ LIMIT 1
 2026-11-19 14:22:19 [INF] Executed action AdinsLibrary.Controllers.AuthController.Login (AdinsLibrary) in 3618.6056ms
 2026-11-19 14:22:19 [INF] Executed endpoint 'AdinsLibrary.Controllers.AuthController.Login (AdinsLibrary)'
 2026-11-19 14:22:19 [INF] Request finished HTTP/2 POST https://localhost:7223/api/auth/login application/json 64 - 200 - application/json;+charset=utf-8 3763.0289ms
+2026-11-19 16:38:23 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-11-19 16:38:24 [INF] Now listening on: https://localhost:7223
+2026-11-19 16:38:24 [INF] Now listening on: http://localhost:5181
+2026-11-19 16:38:24 [INF] Application started. Press Ctrl+C to shut down.
+2026-11-19 16:38:24 [INF] Hosting environment: Development
+2026-11-19 16:38:24 [INF] Content root path: C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\
+2026-11-19 16:38:24 [INF] Request starting HTTP/2 GET https://localhost:7223/swagger/index.html - -
+2026-11-19 16:38:25 [INF] Request finished HTTP/2 GET https://localhost:7223/swagger/index.html - - - 200 - text/html;charset=utf-8 493.6207ms
+2026-11-19 16:38:25 [INF] Request starting HTTP/2 GET https://localhost:7223/_framework/aspnetcore-browser-refresh.js - -
+2026-11-19 16:38:25 [INF] Request finished HTTP/2 GET https://localhost:7223/_framework/aspnetcore-browser-refresh.js - - - 200 11946 application/javascript;+charset=utf-8 16.1268ms
+2026-11-19 16:38:25 [INF] Request starting HTTP/2 GET https://localhost:7223/swagger/v1/swagger.json - -
+2026-11-19 16:38:25 [INF] Request finished HTTP/2 GET https://localhost:7223/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 164.6251ms
+2026-11-19 16:38:42 [INF] Request starting HTTP/2 POST https://localhost:7223/api/auth/login application/json 64
+2026-11-19 16:38:42 [INF] CORS policy execution failed.
+2026-11-19 16:38:42 [INF] Request origin https://localhost:7223 does not have permission to access the resource.
+2026-11-19 16:38:42 [INF] Executing endpoint 'AdinsLibrary.Controllers.AuthController.Login (AdinsLibrary)'
+2026-11-19 16:38:42 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(AdinsLibrary.DTOs.LoginRequest) on controller AdinsLibrary.Controllers.AuthController (AdinsLibrary).
+2026-11-19 16:38:45 [INF] Entity Framework Core 6.0.29 initialized 'AdInsLibraryDbContext' using provider 'Npgsql.EntityFrameworkCore.PostgreSQL:6.0.29+1cc46a0695f052ba0f1ade7046d577882d351f39' with options: None
+2026-11-19 16:38:46 [INF] Executed DbCommand (91ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT u."UserId", u."CreatedAt", u."Email", u."MembershipTierId", u."Password", u."RoleId", u."Username"
+FROM "Users" AS u
+2026-11-19 16:38:46 [INF] Executed DbCommand (20ms) [Parameters=[@__p_0='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+SELECT r."RoleId", r."CreatedAt", r."RoleName"
+FROM "Roles" AS r
+WHERE r."RoleId" = @__p_0
+LIMIT 1
+2026-11-19 16:38:46 [INF] Executed DbCommand (4ms) [Parameters=[@__p_0='?' (DbType = Int64)], CommandType='"Text"', CommandTimeout='30']
+SELECT m."MembershipTierId", m."CreatedAt", m."Discount", m."TierName"
+FROM "MembershipTiers" AS m
+WHERE m."MembershipTierId" = @__p_0
+LIMIT 1
+2026-11-19 16:38:46 [INF] Executing OkObjectResult, writing value of type 'AdinsLibrary.DTOs.LoginResponse'.
+2026-11-19 16:38:46 [INF] Executed action AdinsLibrary.Controllers.AuthController.Login (AdinsLibrary) in 4392.4742ms
+2026-11-19 16:38:46 [INF] Executed endpoint 'AdinsLibrary.Controllers.AuthController.Login (AdinsLibrary)'
+2026-11-19 16:38:46 [INF] Request finished HTTP/2 POST https://localhost:7223/api/auth/login application/json 64 - 200 - application/json;+charset=utf-8 4528.6122ms
