@@ -1,0 +1,287 @@
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg landing-navbar">
+  <div class="container">
+
+    <a class="navbar-brand" routerLink="/">
+      <i class="bi bi-book-half"></i>
+      AdInsLibrary
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mainNavbar"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNavbar">
+
+      <div class="navbar-nav mx-auto">
+        <a class="nav-link active" routerLink="/">Beranda</a>
+        <a class="nav-link" href="#catalog">Katalog</a>
+        <a class="nav-link" href="#about">Tentang</a>
+        <a class="nav-link" href="#faq">FAQ</a>
+      </div>
+
+      <div class="navbar-buttons">
+        <a routerLink="/login" class="btn btn-login">
+          Login
+        </a>
+
+        <a routerLink="/register" class="btn btn-register">
+          Register
+        </a>
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center">
+
+      <div class="col-lg-6 hero-text">
+
+        <span class="hero-label">
+          <i class="bi bi-stars"></i>
+          Your Digital Library
+        </span>
+
+        <h1>
+          Temukan Buku
+          <span>Favoritmu di Sini</span>
+        </h1>
+
+        <p>
+          Perpustakaan digital dan fisik dengan
+          koleksi terbaik untuk Anda.
+          Temukan inspirasi melalui setiap halaman.
+        </p>
+
+        <div class="hero-search">
+
+          <i class="bi bi-search"></i>
+
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            placeholder="Cari buku judul, penulis..."
+            (keyup.enter)="searchBooks()"
+          >
+
+          <button (click)="searchBooks()">
+            Cari
+          </button>
+
+        </div>
+
+        <div class="hero-info">
+          <span>
+            <i class="bi bi-check-circle-fill"></i>
+            Koleksi berkualitas
+          </span>
+
+          <span>
+            <i class="bi bi-check-circle-fill"></i>
+            Mudah diakses
+          </span>
+        </div>
+
+      </div>
+
+
+      <!-- HERO ILLUSTRATION -->
+      <div class="col-lg-6 hero-visual">
+
+        <div class="hero-decoration decoration-one"></div>
+        <div class="hero-decoration decoration-two"></div>
+
+        <div class="hero-book-scene">
+
+          <div class="floating-book floating-book-one">
+            <span>THE ART OF</span>
+            <strong>READING</strong>
+          </div>
+
+          <div class="floating-book floating-book-two">
+            <span>KNOWLEDGE</span>
+            <strong>IS POWER</strong>
+          </div>
+
+          <div class="main-book">
+            <div class="book-pages">
+              <i class="bi bi-book-half"></i>
+              <strong>Explore<br>New Worlds</strong>
+              <small>AdInsLibrary COLLECTION</small>
+            </div>
+          </div>
+
+          <div class="floating-star star-one">✦</div>
+          <div class="floating-star star-two">✦</div>
+          <div class="floating-star star-three">✧</div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- CATEGORY SECTION -->
+<section class="category-section" id="catalog">
+
+  <div class="container">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-subtitle">EXPLORE COLLECTIONS</span>
+        <h3>Kategori Populer</h3>
+      </div>
+
+      <a href="#popular-books" class="view-link">
+        Lihat semua
+        <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="row g-3">
+
+      <div
+        class="col-6 col-lg-3"
+        *ngFor="let category of categories"
+      >
+
+        <div class="category-card">
+
+          <div class="category-icon" [ngClass]="category.color">
+            <i class="bi" [ngClass]="category.icon"></i>
+          </div>
+
+          <h6>{{ category.name }}</h6>
+
+          <span>Explore collection</span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- POPULAR BOOKS -->
+<section class="popular-section" id="popular-books">
+
+  <div class="container">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-subtitle">HANDPICKED FOR YOU</span>
+        <h3>Buku Pilihan</h3>
+      </div>
+    </div>
+
+    <div class="row g-4">
+
+      <div
+        class="col-6 col-md-3"
+        *ngFor="let book of filteredBooks"
+      >
+
+        <div class="book-card">
+
+          <a [routerLink]="['/books', book.id]" class="book-cover"
+             [ngClass]="book.coverClass">
+
+            <i class="bi" [ngClass]="book.coverIcon"></i>
+            <span>{{ book.title }}</span>
+            <small>{{ book.author }}</small>
+
+          </a>
+
+          <div class="book-information">
+
+            <span class="book-category">
+              {{ book.category }}
+            </span>
+
+            <h6>{{ book.title }}</h6>
+
+            <p>{{ book.author }}</p>
+
+            <div class="book-rating">
+              <i class="bi bi-star-fill"></i>
+              {{ book.rating }}
+            </div>
+
+            <a
+              [routerLink]="['/books', book.id]"
+              class="btn btn-outline-primary btn-sm w-100 mt-3"
+            >
+              Lihat Detail
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-12" *ngIf="filteredBooks.length === 0">
+        <div class="empty-state">
+          <i class="bi bi-search"></i>
+          <h5>Buku tidak ditemukan</h5>
+          <p>Coba gunakan kata kunci pencarian lainnya.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="landing-footer" id="about">
+
+  <div class="container">
+
+    <div class="footer-content">
+
+      <div>
+        <a class="footer-brand" routerLink="/">
+          <i class="bi bi-book-half"></i>
+          AdInsLibrary
+        </a>
+
+        <p>
+          Membaca hari ini, untuk masa depan yang lebih baik.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <a routerLink="/">Beranda</a>
+        <a href="#catalog">Katalog</a>
+        <a href="#faq">FAQ</a>
+        <a routerLink="/login">Login</a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom" id="faq">
+      © 2026 AdInsLibrary. All rights reserved.
+    </div>
+
+  </div>
+
+</footer>

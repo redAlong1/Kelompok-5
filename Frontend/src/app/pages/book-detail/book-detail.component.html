@@ -1,0 +1,248 @@
+
+<div class="detail-page">
+
+  <!-- NAVBAR -->
+  <nav class="detail-navbar">
+    <div class="container navbar-content">
+
+      <a routerLink="/" class="brand">
+        <i class="bi bi-book-half"></i>
+        LibraryPlus
+      </a>
+
+      <div class="nav-links">
+        <a routerLink="/">Beranda</a>
+        <a routerLink="/" fragment="catalog">Katalog</a>
+      </div>
+
+      <div class="nav-actions">
+        <a routerLink="/login" class="login-btn">Login</a>
+        <a routerLink="/register" class="register-btn">Register</a>
+      </div>
+
+    </div>
+  </nav>
+
+
+  <!-- BREADCRUMB -->
+  <div class="container breadcrumb-area">
+
+    <a routerLink="/">Beranda</a>
+    <i class="bi bi-chevron-right"></i>
+
+    <a routerLink="/" fragment="catalog">Katalog</a>
+    <i class="bi bi-chevron-right"></i>
+
+    <span>{{ book.title }}</span>
+
+  </div>
+
+
+  <!-- BOOK DETAIL -->
+  <main class="container detail-container">
+
+    <div class="row g-5">
+
+      <!-- BOOK COVER -->
+      <div class="col-lg-4">
+
+        <div class="cover-wrapper">
+
+          <div class="book-cover" [ngClass]="book.coverClass">
+
+            <span class="cover-label">A Handbook of</span>
+
+            <h1>
+              CLEAN<br>
+              CODE
+            </h1>
+
+            <div class="cover-decoration">
+              <i class="bi bi-code-slash"></i>
+            </div>
+
+            <span class="cover-subtitle">
+              A Handbook of Agile Software Craftsmanship
+            </span>
+
+            <div class="cover-author">
+              {{ book.author }}
+            </div>
+
+          </div>
+
+          <div class="cover-shadow"></div>
+
+        </div>
+
+        <div class="cover-caption">
+          <i class="bi bi-shield-check"></i>
+          Official Library Collection
+        </div>
+
+      </div>
+
+
+      <!-- BOOK INFORMATION -->
+      <div class="col-lg-8">
+
+        <div class="book-information">
+
+          <span class="category-badge">
+            <i class="bi bi-bookmark-fill"></i>
+            {{ book.category }}
+          </span>
+
+          <h1>{{ book.title }}</h1>
+
+          <p class="author-name">
+            By <strong>{{ book.author }}</strong>
+          </p>
+
+
+          <!-- RATING -->
+          <div class="rating-area">
+
+            <div class="stars">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-half"></i>
+            </div>
+
+            <strong>{{ book.rating }}</strong>
+
+            <span>({{ book.reviews }} ulasan)</span>
+
+          </div>
+
+
+          <!-- DESCRIPTION -->
+          <div class="description-section">
+
+            <h5>Deskripsi Buku</h5>
+
+            <p>{{ book.description }}</p>
+
+          </div>
+
+
+          <!-- BOOK METADATA -->
+          <div class="metadata-section">
+
+            <div class="metadata-item">
+              <i class="bi bi-bookmark"></i>
+              <span>Kategori</span>
+              <strong>{{ book.category }}</strong>
+            </div>
+
+            <div class="metadata-item">
+              <i class="bi bi-building"></i>
+              <span>Penerbit</span>
+              <strong>{{ book.publisher }}</strong>
+            </div>
+
+            <div class="metadata-item">
+              <i class="bi bi-calendar"></i>
+              <span>Tahun Terbit</span>
+              <strong>{{ book.year }}</strong>
+            </div>
+
+            <div class="metadata-item">
+              <i class="bi bi-box-seam"></i>
+              <span>Stok Tersedia</span>
+              <strong>{{ book.stock }} Buku</strong>
+            </div>
+
+            <div class="metadata-item">
+              <i class="bi bi-upc"></i>
+              <span>ISBN</span>
+              <strong>{{ book.isbn }}</strong>
+            </div>
+
+          </div>
+
+
+          <!-- STOCK STATUS -->
+          <div
+            class="stock-status"
+            [class.out-of-stock]="book.stock <= 0"
+          >
+            <i
+              class="bi"
+              [ngClass]="book.stock > 0
+                ? 'bi-check-circle-fill'
+                : 'bi-x-circle-fill'"
+            ></i>
+
+            {{ book.stock > 0
+              ? 'Buku tersedia untuk dipinjam'
+              : 'Buku sedang tidak tersedia' }}
+          </div>
+
+
+          <!-- ACTION BUTTONS -->
+          <div class="action-area">
+
+            <button
+              class="borrow-btn"
+              [disabled]="book.stock <= 0"
+              (click)="borrowBook()"
+            >
+              <i class="bi bi-book-half"></i>
+              Pinjam Buku
+            </button>
+
+            <button
+              class="favorite-btn"
+              [class.favorited]="isFavorite"
+              (click)="toggleFavorite()"
+            >
+              <i
+                class="bi"
+                [ngClass]="isFavorite
+                  ? 'bi-heart-fill'
+                  : 'bi-heart'"
+              ></i>
+
+              {{ isFavorite
+                ? 'Ditambahkan ke Favorit'
+                : 'Tambah ke Favorit' }}
+            </button>
+
+          </div>
+
+          <p class="login-notice">
+            <i class="bi bi-info-circle"></i>
+            Silakan login terlebih dahulu untuk melakukan peminjaman.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="detail-footer">
+
+    <div class="container footer-content">
+
+      <a routerLink="/" class="brand">
+        <i class="bi bi-book-half"></i>
+        LibraryPlus
+      </a>
+
+      <span>
+        © 2026 LibraryPlus. All rights reserved.
+      </span>
+
+    </div>
+
+  </footer>
+
+</div>
