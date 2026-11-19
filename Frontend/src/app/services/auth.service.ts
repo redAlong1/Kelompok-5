@@ -1,26 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of, throwError, timer, tap, delay, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface LoginRequest {
-  username: string;   // SESUAIKAN dengan nama field di DTO backend
+  username: string;   // SESUAIKAN dengan DTO backend
   password: string;
 }
 
 export interface LoginResponse {
-  token: string;      // SESUAIKAN dengan response backend (misal accessToken)
+  token: string;      // SESUAIKAN dengan response backend
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private readonly url = `${environment.apiUrl}/auth`;   // SESUAIKAN route controller
+  private readonly url = `${environment.apiUrl}/auth`;
 
   constructor(private http: HttpClient) {}
 
   login(data: LoginRequest, rememberMe: boolean): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.url}/login`, data).pipe(
+    const request$ = environment.useMock
+      ? this.mockLogin(data)
+      : this.http.post<LoginResponse>(`${this.url}/login`, data);
+
+    return request$.pipe(
       tap(res => this.saveToken(res.token, rememberMe))
     );
   }
@@ -39,8 +43,23 @@ export class AuthService {
   }
 
   private saveToken(token: string, rememberMe: boolean): void {
-    this.logout(); // bersihkan token lama di kedua storage
+    this.logout();
     const storage = rememberMe ? localStorage : sessionStorage;
     storage.setItem('token', token);
+  }
+
+  // ===== MOCK: hapus method ini kalau API sudah jadi =====
+  private mockLogin(data: LoginRequest): Observable<LoginResponse> {
+    const valid = data.username === 'admin' && data.password === 'admin123';
+
+    if (!valid) {
+      return timer(800).pipe(
+        switchMap(() => throwError(() =>
+          new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' })
+        ))
+      );
+    }
+
+    return of({ token: 'mock-token-123' }).pipe(delay(800));
   }
 }
