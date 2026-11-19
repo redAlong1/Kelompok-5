@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -9,7 +8,8 @@ import {
   AbstractControl,
   ValidationErrors
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service'; // SESUAIKAN path
 
 @Component({
   selector: 'app-register',
@@ -28,15 +28,16 @@ export class RegisterComponent {
 
   showPassword = false;
   showConfirmPassword = false;
+  isLoading = false;
+  errorMessage = '';
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
 
     this.registerForm = this.fb.group({
-
-      fullName: ['', [
-        Validators.required,
-        Validators.minLength(3)
-      ]],
 
       username: ['', [
         Validators.required,
@@ -84,10 +85,6 @@ export class RegisterComponent {
       : { passwordMismatch: true };
   }
 
-  get fullName() {
-    return this.registerForm.get('fullName');
-  }
-
   get username() {
     return this.registerForm.get('username');
   }
@@ -123,13 +120,30 @@ export class RegisterComponent {
       return;
     }
 
+    this.isLoading = true;
+    this.errorMessage = '';
+
     // Jangan kirim confirmPassword dan agreeTerms ke API.
     const { confirmPassword, agreeTerms, ...userData } =
       this.registerForm.value;
 
-    console.log('Registration Data:', userData);
+    this.authService.register(userData).subscribe({
+      next: () => {
+        this.isLoading = false;
+        void this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        this.isLoading = false;
 
-    alert('Registrasi berhasil disimulasikan! API belum tersedia.');
+        if (err.status === 0) {
+          this.errorMessage = 'Tidak dapat terhubung ke server.';
+        } else if (err.status === 400) {
+          this.errorMessage = err.error?.message ?? 'Data tidak valid.';
+        } else {
+          this.errorMessage = 'Terjadi kesalahan, silakan coba lagi.';
+        }
+      }
+    });
 
   }
 
