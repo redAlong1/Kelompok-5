@@ -12,6 +12,12 @@ export interface LoginResponse {
   token: string;      // SESUAIKAN dengan response backend
 }
 
+export interface RegisterRequest {
+  username: string;
+  email: string;
+  password: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
@@ -27,6 +33,10 @@ export class AuthService {
     return request$.pipe(
       tap(res => this.saveToken(res.token, rememberMe))
     );
+  }
+
+  register(data: RegisterRequest): Observable<unknown> {
+    return this.http.post(`${this.url}/register`, data);
   }
 
   logout(): void {

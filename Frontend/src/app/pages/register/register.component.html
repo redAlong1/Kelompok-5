@@ -80,36 +80,6 @@
           novalidate
         >
 
-          <!-- FULL NAME -->
-          <div class="form-group">
-
-            <label for="fullName">Nama Lengkap</label>
-
-            <div class="input-wrapper">
-
-              <i class="bi bi-person"></i>
-
-              <input
-                id="fullName"
-                type="text"
-                formControlName="fullName"
-                placeholder="Masukkan nama lengkap"
-                [class.input-error]="fullName?.invalid && fullName?.touched"
-              >
-
-            </div>
-
-            <small class="error-message"
-              *ngIf="fullName?.hasError('required') && fullName?.touched">
-              Nama lengkap wajib diisi.
-            </small>
-
-            <small class="error-message"
-              *ngIf="fullName?.hasError('minlength') && fullName?.touched">
-              Nama minimal 3 karakter.
-            </small>
-
-          </div>
 
 
           <!-- USERNAME -->

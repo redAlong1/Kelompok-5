@@ -37,11 +37,21 @@ yarn-error.log
 testem.log
 /typings
 
-## Environment / secrets
-appsettings.*.json
-!appsettings.json
-!appsettings.Development.json
 
 # System files
 .DS_Store
 Thumbs.db
+
+
+# Visual Studio
+.vs/
+
+# Build output
+bin/
+obj/
+
+# Logs
+logs/
+
+# User-specific files
+*.suo
