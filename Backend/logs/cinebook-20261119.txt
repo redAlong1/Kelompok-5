@@ -290,3 +290,27 @@ LIMIT 1
 2026-11-19 16:38:46 [INF] Executed action AdinsLibrary.Controllers.AuthController.Login (AdinsLibrary) in 4392.4742ms
 2026-11-19 16:38:46 [INF] Executed endpoint 'AdinsLibrary.Controllers.AuthController.Login (AdinsLibrary)'
 2026-11-19 16:38:46 [INF] Request finished HTTP/2 POST https://localhost:7223/api/auth/login application/json 64 - 200 - application/json;+charset=utf-8 4528.6122ms
+2026-11-19 17:07:58 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-11-19 17:07:58 [INF] Now listening on: https://localhost:7223
+2026-11-19 17:07:58 [INF] Now listening on: http://localhost:5181
+2026-11-19 17:07:58 [INF] Application started. Press Ctrl+C to shut down.
+2026-11-19 17:07:58 [INF] Hosting environment: Development
+2026-11-19 17:07:58 [INF] Content root path: C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\
+2026-11-19 17:07:59 [INF] Request starting HTTP/2 GET https://localhost:7223/swagger/index.html - -
+2026-11-19 17:07:59 [INF] Request finished HTTP/2 GET https://localhost:7223/swagger/index.html - - - 200 - text/html;charset=utf-8 272.6826ms
+2026-11-19 17:07:59 [INF] Request starting HTTP/2 GET https://localhost:7223/_framework/aspnetcore-browser-refresh.js - -
+2026-11-19 17:07:59 [INF] Request finished HTTP/2 GET https://localhost:7223/_framework/aspnetcore-browser-refresh.js - - - 200 11946 application/javascript;+charset=utf-8 5.1444ms
+2026-11-19 17:07:59 [INF] Request starting HTTP/2 GET https://localhost:7223/swagger/v1/swagger.json - -
+2026-11-19 17:07:59 [INF] Request finished HTTP/2 GET https://localhost:7223/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 94.1463ms
+2026-11-19 17:08:33 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-11-19 17:08:34 [INF] Now listening on: https://localhost:7223
+2026-11-19 17:08:34 [INF] Now listening on: http://localhost:5181
+2026-11-19 17:08:34 [INF] Application started. Press Ctrl+C to shut down.
+2026-11-19 17:08:34 [INF] Hosting environment: Development
+2026-11-19 17:08:34 [INF] Content root path: C:\Users\USER\Downloads\MiniProject Frontend\Kelompok-5\Backend\
+2026-11-19 17:08:35 [INF] Request starting HTTP/2 GET https://localhost:7223/swagger/index.html - -
+2026-11-19 17:08:35 [INF] Request finished HTTP/2 GET https://localhost:7223/swagger/index.html - - - 200 - text/html;charset=utf-8 455.9893ms
+2026-11-19 17:08:35 [INF] Request starting HTTP/2 GET https://localhost:7223/_framework/aspnetcore-browser-refresh.js - -
+2026-11-19 17:08:35 [INF] Request finished HTTP/2 GET https://localhost:7223/_framework/aspnetcore-browser-refresh.js - - - 200 11946 application/javascript;+charset=utf-8 15.5647ms
+2026-11-19 17:08:35 [INF] Request starting HTTP/2 GET https://localhost:7223/swagger/v1/swagger.json - -
+2026-11-19 17:08:35 [INF] Request finished HTTP/2 GET https://localhost:7223/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 125.0706ms
