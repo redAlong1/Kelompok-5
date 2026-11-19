@@ -1,15 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of, throwError, timer, tap, delay, switchMap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface LoginRequest {
-  username: string;   // SESUAIKAN dengan DTO backend
+  email: string;
   password: string;
 }
 
+export interface UserSummary {
+  userId: number;
+  userName: string;
+  email: string;
+  roleName: string;
+  membershipTierName: string;
+}
+
 export interface LoginResponse {
-  token: string;      // SESUAIKAN dengan response backend
+  status: string;
+  token: string;
+  user: UserSummary;
 }
 
 export interface RegisterRequest {
@@ -26,12 +36,8 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(data: LoginRequest, rememberMe: boolean): Observable<LoginResponse> {
-    const request$ = environment.useMock
-      ? this.mockLogin(data)
-      : this.http.post<LoginResponse>(`${this.url}/login`, data);
-
-    return request$.pipe(
-      tap(res => this.saveToken(res.token, rememberMe))
+    return this.http.post<LoginResponse>(`${this.url}/login`, data).pipe(
+      tap(res => this.saveSession(res, rememberMe))
     );
   }
 
@@ -41,35 +47,32 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
   }
 
   getToken(): string | null {
     return localStorage.getItem('token') ?? sessionStorage.getItem('token');
   }
 
+  getUser(): UserSummary | null {
+    const raw = localStorage.getItem('user') ?? sessionStorage.getItem('user');
+    return raw ? JSON.parse(raw) : null;
+  }
+
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
 
-  private saveToken(token: string, rememberMe: boolean): void {
-    this.logout();
-    const storage = rememberMe ? localStorage : sessionStorage;
-    storage.setItem('token', token);
+  isAdmin(): boolean {
+    return this.getUser()?.roleName === 'Admin';
   }
 
-  // ===== MOCK: hapus method ini kalau API sudah jadi =====
-  private mockLogin(data: LoginRequest): Observable<LoginResponse> {
-    const valid = data.username === 'admin' && data.password === 'admin123';
-
-    if (!valid) {
-      return timer(800).pipe(
-        switchMap(() => throwError(() =>
-          new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' })
-        ))
-      );
-    }
-
-    return of({ token: 'mock-token-123' }).pipe(delay(800));
+  private saveSession(res: LoginResponse, rememberMe: boolean): void {
+    this.logout(); // bersihkan sesi lama
+    const storage = rememberMe ? localStorage : sessionStorage;
+    storage.setItem('token', res.token);
+    storage.setItem('user', JSON.stringify(res.user));
   }
 }

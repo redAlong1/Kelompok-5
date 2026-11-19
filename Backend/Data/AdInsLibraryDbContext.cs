@@ -13,7 +13,6 @@ namespace AdinsLibrary.Data
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<MembershipTier> MembershipTiers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
@@ -33,9 +32,11 @@ namespace AdinsLibrary.Data
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
-            modelBuilder.Entity<Role>()
-                .HasIndex(r => r.RoleName)
-                .IsUnique();
+            modelBuilder.Entity<User>()
+                .Property(u => u.Role)
+                .HasConversion<string>()
+                .HasMaxLength(20)
+                .HasDefaultValue(UserRole.User);
 
             modelBuilder.Entity<MembershipTier>()
                 .HasIndex(mt => mt.TierName)
@@ -65,12 +66,6 @@ namespace AdinsLibrary.Data
                 .Property(f => f.FineStatus)
                 .HasConversion<string>();
 
-            // Relasi One-to-Many: Role -> User
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Role)
-                .WithMany(r => r.Users)
-                .HasForeignKey(u => u.RoleId)
-                .OnDelete(DeleteBehavior.Restrict);
 
             // Relasi One-to-Many: MembershipTier -> User
             modelBuilder.Entity<User>()

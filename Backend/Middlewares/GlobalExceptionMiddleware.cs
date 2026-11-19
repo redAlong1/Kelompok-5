@@ -25,9 +25,11 @@ namespace AdinsLibrary.Middlewares
                 await ctx.Response.WriteAsJsonAsync(new
                 {
                     status = "error",
-                    message = "Terjadi kesalahan server."
+                    message = ex.Message,
+                    innerException = ex.InnerException?.Message
                 });
             }
+
         }
     }
 }
