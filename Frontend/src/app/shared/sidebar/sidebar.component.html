@@ -55,6 +55,97 @@
       </a>
     </ng-container>
 
+      <li class="nav-item">
+        <a routerLink="/dashboard"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-grid-1x2 me-2"></i> Dashboard
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/catalog"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-journals me-2"></i> Katalog &amp; Pinjam
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/publisher"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-building me-2"></i> Publisher
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/author"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-person-lines-fill me-2"></i> Author
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/category"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-tags me-2"></i> Kategori
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/books-master"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-book me-2"></i> Master Buku
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/inventory"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-box-seam me-2"></i> Inventory &amp; Stok
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/reservations"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-calendar-check me-2"></i> Reservasi
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="#" class="nav-link sidebar-link text-white-50 rounded">
+          <i class="bi bi-clock-history me-2"></i> Riwayat Peminjaman
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="#" class="nav-link sidebar-link text-white-50 rounded">
+          <i class="bi bi-exclamation-circle me-2"></i> Denda Saya
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="#" class="nav-link sidebar-link text-white-50 rounded">
+          <i class="bi bi-person me-2"></i> Profil &amp; Membership
+        </a>
+      </li>
+
+      <li class="nav-item" *ngIf="authService.isAdmin()">
+        <a routerLink="/admin/return"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-arrow-left-right me-2"></i> Sirkulasi (Admin)
+        </a>
+      </li>
+
+    </ul>
   </nav>
 
   <!-- Tombol collapse -->
