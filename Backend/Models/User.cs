@@ -17,9 +17,9 @@ namespace AdinsLibrary.Models
         [Required]
         [MaxLength(200)]
         public string Password { get; set; } = string.Empty;
-        [ForeignKey(nameof(Role))]
-        public long RoleId { get; set; }
-        public Role Role { get; set; }
+
+        public UserRole Role { get; set; } = UserRole.User;
+
         [ForeignKey(nameof(MembershipTier))]
         public long MembershipTierId { get; set; }
         public MembershipTier MembershipTier { get; set; }

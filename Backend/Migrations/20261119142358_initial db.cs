@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AdinsLibrary.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class initialdb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,7 +31,8 @@ namespace AdinsLibrary.Migrations
                     CategoryId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CategoryName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
+                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,7 +60,8 @@ namespace AdinsLibrary.Migrations
                 {
                     PublisherId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    PublisherName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
+                    PublisherName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,6 +80,44 @@ namespace AdinsLibrary.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.RoleId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Books",
+                columns: table => new
+                {
+                    BookId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CoverUrl = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Isbn = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    AuthorId = table.Column<long>(type: "bigint", nullable: false),
+                    CategoryId = table.Column<long>(type: "bigint", nullable: false),
+                    PublisherId = table.Column<long>(type: "bigint", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Books", x => x.BookId);
+                    table.ForeignKey(
+                        name: "FK_Books_Authors_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Authors",
+                        principalColumn: "AuthorId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Books_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "CategoryId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Books_Publishers_PublisherId",
+                        column: x => x.PublisherId,
+                        principalTable: "Publishers",
+                        principalColumn: "PublisherId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -108,6 +148,27 @@ namespace AdinsLibrary.Migrations
                         principalTable: "Roles",
                         principalColumn: "RoleId",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Inventories",
+                columns: table => new
+                {
+                    InventoryId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    BookId = table.Column<long>(type: "bigint", nullable: false),
+                    ShelfLocation = table.Column<string>(type: "text", nullable: false),
+                    AvailabilityStatus = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inventories", x => x.InventoryId);
+                    table.ForeignKey(
+                        name: "FK_Inventories_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "BookId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -149,69 +210,17 @@ namespace AdinsLibrary.Migrations
                 {
                     table.PrimaryKey("PK_BookReservations", x => x.BookReservationId);
                     table.ForeignKey(
+                        name: "FK_BookReservations_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "BookId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_BookReservations_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Books",
-                columns: table => new
-                {
-                    BookId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Isbn = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    AuthorId = table.Column<long>(type: "bigint", nullable: false),
-                    CategoryId = table.Column<long>(type: "bigint", nullable: false),
-                    PublisherId = table.Column<long>(type: "bigint", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    InventoryId = table.Column<long>(type: "bigint", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Books", x => x.BookId);
-                    table.ForeignKey(
-                        name: "FK_Books_Authors_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "Authors",
-                        principalColumn: "AuthorId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Books_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "CategoryId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Books_Publishers_PublisherId",
-                        column: x => x.PublisherId,
-                        principalTable: "Publishers",
-                        principalColumn: "PublisherId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Inventories",
-                columns: table => new
-                {
-                    InventoryId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BookId = table.Column<long>(type: "bigint", nullable: false),
-                    ShelfLocation = table.Column<string>(type: "text", nullable: false),
-                    AvailabilityStatus = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Inventories", x => x.InventoryId);
-                    table.ForeignKey(
-                        name: "FK_Inventories_Books_BookId",
-                        column: x => x.BookId,
-                        principalTable: "Books",
-                        principalColumn: "BookId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -291,11 +300,6 @@ namespace AdinsLibrary.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Books_InventoryId",
-                table: "Books",
-                column: "InventoryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Books_Isbn",
                 table: "Books",
                 column: "Isbn",
@@ -360,29 +364,10 @@ namespace AdinsLibrary.Migrations
                 name: "IX_Users_RoleId",
                 table: "Users",
                 column: "RoleId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_BookReservations_Books_BookId",
-                table: "BookReservations",
-                column: "BookId",
-                principalTable: "Books",
-                principalColumn: "BookId",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Books_Inventories_InventoryId",
-                table: "Books",
-                column: "InventoryId",
-                principalTable: "Inventories",
-                principalColumn: "InventoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Inventories_Books_BookId",
-                table: "Inventories");
-
             migrationBuilder.DropTable(
                 name: "BookReservations");
 
@@ -396,7 +381,13 @@ namespace AdinsLibrary.Migrations
                 name: "BookBorrowingTransactions");
 
             migrationBuilder.DropTable(
+                name: "Inventories");
+
+            migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Books");
 
             migrationBuilder.DropTable(
                 name: "MembershipTiers");
@@ -405,16 +396,10 @@ namespace AdinsLibrary.Migrations
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Books");
-
-            migrationBuilder.DropTable(
                 name: "Authors");
 
             migrationBuilder.DropTable(
                 name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Inventories");
 
             migrationBuilder.DropTable(
                 name: "Publishers");

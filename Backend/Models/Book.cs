@@ -24,11 +24,11 @@ namespace AdinsLibrary.Models
         public Category? Category { get; set; }
         [ForeignKey(nameof(Publisher))]
         public long PublisherId { get; set; }
-        public Publisher? Publisher { get; set;}
+        public Publisher? Publisher { get; set; }
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
-        public ICollection<Inventory> Inventories = new List<Inventory>();
-        public ICollection<BookReservation> BookReservations = new List<BookReservation>();
+        public ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
+        public ICollection<BookReservation> BookReservations { get; set; } = new List<BookReservation>();
 
     }
 }

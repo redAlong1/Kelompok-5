@@ -21,30 +21,19 @@ namespace AdinsLibrary.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<T?> GetByIdAsync(long id, params string[] includeProperties)
+        public async Task<T?> GetByIdAsync(long id, params string[] includes)
         {
+            var keyName = _context.Model
+                .FindEntityType(typeof(T))!
+                .FindPrimaryKey()!
+                .Properties
+                .Single()
+                .Name;
+
             IQueryable<T> query = _dbSet;
 
-            if (includeProperties != null)
-            {
-                foreach (var includeProperty in includeProperties)
-                {
-                    if (!string.IsNullOrWhiteSpace(includeProperty))
-                    {
-                        query = query.Include(includeProperty);
-                    }
-                }
-            }
-
-            var entityType = _context.Model.FindEntityType(typeof(T));
-            var primaryKey = entityType?.FindPrimaryKey()?.Properties.FirstOrDefault();
-
-            if (primaryKey == null)
-            {
-                throw new InvalidOperationException($"Primary key untuk entity '{typeof(T).Name}' tidak ditemukan.");
-            }
-
-            string keyName = primaryKey.Name;
+            foreach (var include in includes)
+                query = query.Include(include);
 
             return await query.FirstOrDefaultAsync(e => EF.Property<long>(e, keyName) == id);
         }

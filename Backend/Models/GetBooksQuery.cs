@@ -5,7 +5,7 @@ namespace AdinsLibrary.Models
 {
     public class GetBooksQuery
     {
-        private string? _search {  get; set; }
+        private string? _search { get; set; }
         [FromQuery(Name = "page")]
         [Range(1, int.MaxValue)]
         public int Page { get; set; } = 1;

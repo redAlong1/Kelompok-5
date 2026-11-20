@@ -12,8 +12,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AdinsLibrary.Migrations
 {
     [DbContext(typeof(AdInsLibraryDbContext))]
-    [Migration("20261119043415_Inital Migration")]
-    partial class InitalMigration
+<<<<<<<< HEAD:Backend/Migrations/20261119142358_initial db.Designer.cs
+    [Migration("20261119142358_initial db")]
+    partial class initialdb
+========
+    [Migration("20261119145013_ReplaceRoleTableWithEnum")]
+    partial class ReplaceRoleTableWithEnum
+>>>>>>>> a5708202a3ccadf8203524858ac1234d6f053a99:Backend/Migrations/20261119145013_ReplaceRoleTableWithEnum.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -63,9 +68,6 @@ namespace AdinsLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long?>("InventoryId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Isbn")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -84,8 +86,6 @@ namespace AdinsLibrary.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("InventoryId");
 
                     b.HasIndex("Isbn")
                         .IsUnique();
@@ -319,30 +319,6 @@ namespace AdinsLibrary.Migrations
                     b.ToTable("Publishers");
                 });
 
-            modelBuilder.Entity("AdinsLibrary.Models.Role", b =>
-                {
-                    b.Property<long>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("RoleId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.HasKey("RoleId");
-
-                    b.HasIndex("RoleName")
-                        .IsUnique();
-
-                    b.ToTable("Roles");
-                });
-
             modelBuilder.Entity("AdinsLibrary.Models.User", b =>
                 {
                     b.Property<long>("UserId")
@@ -367,8 +343,12 @@ namespace AdinsLibrary.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<long>("RoleId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("User");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -381,8 +361,6 @@ namespace AdinsLibrary.Migrations
                         .IsUnique();
 
                     b.HasIndex("MembershipTierId");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -400,10 +378,6 @@ namespace AdinsLibrary.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("AdinsLibrary.Models.Inventory", null)
-                        .WithMany("Books")
-                        .HasForeignKey("InventoryId");
 
                     b.HasOne("AdinsLibrary.Models.Publisher", "Publisher")
                         .WithMany("Books")
@@ -497,15 +471,7 @@ namespace AdinsLibrary.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AdinsLibrary.Models.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("MembershipTier");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("AdinsLibrary.Models.Author", b =>
@@ -537,8 +503,6 @@ namespace AdinsLibrary.Migrations
 
             modelBuilder.Entity("AdinsLibrary.Models.Inventory", b =>
                 {
-                    b.Navigation("Books");
-
                     b.Navigation("BorrowingItems");
                 });
 
@@ -550,11 +514,6 @@ namespace AdinsLibrary.Migrations
             modelBuilder.Entity("AdinsLibrary.Models.Publisher", b =>
                 {
                     b.Navigation("Books");
-                });
-
-            modelBuilder.Entity("AdinsLibrary.Models.Role", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("AdinsLibrary.Models.User", b =>

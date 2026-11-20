@@ -1,9 +1,6 @@
 ﻿using AdinsLibrary.DTOs;
 using AdinsLibrary.Models;
 using AdinsLibrary.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq.Expressions;
 
 namespace AdinsLibrary.Services
 {
@@ -21,15 +18,34 @@ namespace AdinsLibrary.Services
         private readonly IRepository<Author> _authorRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Publisher> _publisherRepository;
+        private readonly IRepository<Inventory> _inventoryRepository;
+
+        public async Task<Book?> GetByIdAsync(long id)
+        {
+            return await _bookRepository.GetByIdAsync(id);
+        }
 
 
-        public BookService (
+        public BookService(
 
 
             IRepository<Book> bookRepository,
             IRepository<Author> authorRepository,
             IRepository<Category> categoryRepository,
-            IRepository<Publisher> publisherRepository
+            IRepository<Publisher> publisherRepository,
+            IRepository<Inventory> inventoryRepository
+
+        public async Task<Book?> CreateBookAsync(BookRequest request)
+        {
+            var book = new Book
+            {
+                Title = request.Title,
+                Isbn = request.Isbn ?? string.Empty,
+                Description = request.Description ?? string.Empty,
+                AuthorId = request.AuthorId,
+                CategoryId = request.CategoryId,
+                PublisherId = request.PublisherId
+            };
 
         )
         {
@@ -37,6 +53,7 @@ namespace AdinsLibrary.Services
             _authorRepository = authorRepository;
             _categoryRepository = categoryRepository;
             _publisherRepository = publisherRepository;
+            _inventoryRepository = inventoryRepository;
         }
 
 
@@ -46,8 +63,8 @@ namespace AdinsLibrary.Services
             return book == null ? null : MapToResponse(book);
         }
         public async Task<List<BookResponse?>> GetAllAsync(GetBooksQuery query)
-        { 
-            query??= new GetBooksQuery();
+        {
+            query ??= new GetBooksQuery();
 
             var books = await _bookRepository.GetAllAsync(BookIncludes);
             var filtered = books.AsEnumerable();
@@ -90,40 +107,43 @@ namespace AdinsLibrary.Services
                 }
             }
 
-                string sortKey = query.Sort?.Trim().ToLower() ?? string.Empty;
-                bool isDescending = query.Order == 1 || query.Order == -1;
+            string sortKey = query.Sort?.Trim().ToLower() ?? string.Empty;
+            bool isDescending = query.Order == 1 || query.Order == -1;
 
-                filtered = sortKey switch
-                {
-                    "title" => isDescending
-                        ? filtered.OrderByDescending(b => b.Title)
-                        : filtered.OrderBy(b => b.Title),
+            filtered = sortKey switch
+            {
+                "title" => isDescending
+                    ? filtered.OrderByDescending(b => b.Title)
+                    : filtered.OrderBy(b => b.Title),
 
-                    "author" => isDescending
-                        ? filtered.OrderByDescending(b => b.Author?.AuthorName)
-                        : filtered.OrderBy(b => b.Author?.AuthorName),
+                "author" => isDescending
+                    ? filtered.OrderByDescending(b => b.Author?.AuthorName)
+                    : filtered.OrderBy(b => b.Author?.AuthorName),
 
-                    "category" => isDescending
-                        ? filtered.OrderByDescending(b => b.Category?.CategoryName)
-                        : filtered.OrderBy(b => b.Category?.CategoryName),
+                "category" => isDescending
+                    ? filtered.OrderByDescending(b => b.Category?.CategoryName)
+                    : filtered.OrderBy(b => b.Category?.CategoryName),
 
-                    "publisher" => isDescending
-                        ? filtered.OrderByDescending(b => b.Publisher?.PublisherName)
-                        : filtered.OrderBy(b => b.Publisher?.PublisherName),
+                "publisher" => isDescending
+                    ? filtered.OrderByDescending(b => b.Publisher?.PublisherName)
+                    : filtered.OrderBy(b => b.Publisher?.PublisherName),
 
-                    _ => isDescending
-                        ? filtered.OrderByDescending(b => b.CreatedAt).ThenByDescending(b => b.BookId)
-                        : filtered.OrderBy(b => b.CreatedAt).ThenBy(b => b.BookId)
-                };
+                _ => isDescending
+                    ? filtered.OrderByDescending(b => b.CreatedAt).ThenByDescending(b => b.BookId)
+                    : filtered.OrderBy(b => b.CreatedAt).ThenBy(b => b.BookId)
+            };
 
-                return filtered
-                .Skip(query.Skip)
-                .Take(query.Limit)
-                .Select(MapToResponse)
-                .ToList();
+            return filtered
+            .Skip(query.Skip)
+            .Take(query.Limit)
+            .Select(MapToResponse)
+            .ToList();
         }
         public async Task<BookResponse?> CreateBookAsync(BookRequest request)
         {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
             string? normalizedIsbn = string.IsNullOrWhiteSpace(request.Isbn) ? null : request.Isbn.Trim();
             if (normalizedIsbn != null)
             {
@@ -149,6 +169,17 @@ namespace AdinsLibrary.Services
             {
                 await _bookRepository.AddAsync(newBook);
                 await _bookRepository.SaveChangesAsync();
+
+                var initialInventory = new Inventory
+                {
+                    BookId = newBook.BookId,
+                    ShelfLocation = string.Empty,
+                    AvailabilityStatus = AvailabilityStatus.AVAILABLE
+                };
+
+                await _inventoryRepository.AddAsync(initialInventory);
+                await _inventoryRepository.SaveChangesAsync();
+
                 await _bookRepository.CommitTransactionAsync();
             }
             catch
@@ -161,7 +192,7 @@ namespace AdinsLibrary.Services
             return createdBook == null ? null : MapToResponse(createdBook);
         }
         public async Task<BookResponse?> UpdateBookAsync(long id, UpdateBookRequest request)
-        { 
+        {
             var existingBook = await _bookRepository.GetByIdAsync(id);
             if (existingBook == null)
                 return null;

@@ -4,9 +4,15 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
+  },
+
+  {
+    path: 'dashboard',
     loadComponent: () =>
-      import('./pages/landing/landing.component')
-        .then(m => m.LandingComponent)
+      import('./pages/dashboard/dashboard.component')
+        .then(m => m.DashboardComponent)
   },
 
   {
@@ -22,20 +28,23 @@ export const routes: Routes = [
       import('./pages/book-detail/book-detail.component')
         .then(m => m.BookDetailComponent)
   },
+
   {
     path: 'login',
     loadComponent: () =>
       import('./pages/login/login.component')
         .then(m => m.LoginComponent)
   },
+
   {
     path: 'register',
     loadComponent: () =>
       import('./pages/register/register.component')
         .then(m => m.RegisterComponent)
   },
+
   {
     path: '**',
-    redirectTo: ''
+    redirectTo: 'dashboard'
   }
 ];

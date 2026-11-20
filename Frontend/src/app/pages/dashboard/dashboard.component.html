@@ -1,0 +1,226 @@
+<div class="d-flex vh-100 overflow-hidden">
+
+  <!-- SHARED SIDEBAR -->
+  <app-sidebar></app-sidebar>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-grow-1 d-flex flex-column bg-light overflow-auto">
+
+    <!-- TOP HEADER -->
+    <header class="d-flex justify-content-between align-items-center bg-white px-4 py-3 border-bottom shadow-sm">
+      <div>
+        <h1 class="fs-5 fw-bold text-dark mb-0">Halo, {{ userName }}</h1>
+        <p class="text-primary small mb-0">
+          {{ today }} &nbsp;·&nbsp; Ada 2 buku yang perlu Anda kembalikan minggu ini.
+        </p>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-light btn-sm position-relative p-2 border">
+          <i class="bi bi-bell fs-5 text-muted"></i>
+        </button>
+        <div class="d-flex align-items-center gap-2">
+          <div class="user-avatar bg-primary text-white d-flex align-items-center justify-content-center rounded-circle fw-bold">
+            A
+          </div>
+          <span class="fw-semibold text-dark">{{ userName }}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT AREA -->
+    <div class="p-4">
+
+      <!-- ===== STAT CARDS ROW ===== -->
+      <div class="row g-3 mb-4">
+
+        <!-- Buku Dipinjam -->
+        <div class="col-6 col-md-3">
+          <div class="stat-card card border-0 shadow-sm p-3">
+            <div class="stat-icon text-primary mb-2">
+              <i class="bi bi-bookmark"></i>
+            </div>
+            <div class="stat-value">{{ stats.borrowed }}</div>
+            <div class="stat-label text-muted">Buku dipinjam</div>
+          </div>
+        </div>
+
+        <!-- Reservasi Aktif -->
+        <div class="col-6 col-md-3">
+          <div class="stat-card card border-0 shadow-sm p-3">
+            <div class="stat-icon text-primary mb-2">
+              <i class="bi bi-bookmark-check"></i>
+            </div>
+            <div class="stat-value">{{ stats.reserved }}</div>
+            <div class="stat-label text-muted">Reservasi aktif</div>
+          </div>
+        </div>
+
+        <!-- Denda -->
+        <div class="col-6 col-md-3">
+          <div class="stat-card card border-0 shadow-sm p-3">
+            <div class="stat-icon text-warning mb-2">
+              <i class="bi bi-credit-card"></i>
+            </div>
+            <div class="stat-value">Rp {{ stats.fine | number }}</div>
+            <div class="stat-label text-muted">Denda belum dibayar</div>
+          </div>
+        </div>
+
+        <!-- Membership -->
+        <div class="col-6 col-md-3">
+          <div class="stat-card card border-0 shadow-sm p-3">
+            <div class="stat-icon text-muted mb-2">
+              <i class="bi bi-star"></i>
+            </div>
+            <div class="stat-value">{{ stats.membership }}</div>
+            <div class="stat-label text-muted">Membership</div>
+          </div>
+        </div>
+
+      </div>
+      <!-- END STAT CARDS -->
+
+      <!-- ===== MAIN GRID: LEFT + RIGHT ===== -->
+      <div class="row g-4">
+
+        <!-- LEFT COLUMN -->
+        <div class="col-lg-7">
+
+          <!-- Sedang Dipinjam -->
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center pt-3 pb-0 px-4">
+              <h6 class="fw-bold text-dark mb-0">Sedang dipinjam</h6>
+              <a routerLink="/catalog" class="text-primary small text-decoration-none">Lihat semua</a>
+            </div>
+            <div class="card-body px-4 py-3">
+
+              <div *ngFor="let book of borrowedBooks; let last = last"
+                   class="d-flex align-items-center gap-3 py-3"
+                   [class.border-bottom]="!last">
+
+                <!-- Mini Cover -->
+                <div class="mini-cover {{ book.coverColor }} d-flex align-items-center justify-content-center rounded flex-shrink-0">
+                  <span class="text-white fw-bold" style="font-size:9px; text-align:center; line-height:1.2; padding:2px;">
+                    {{ book.coverLabel }}
+                  </span>
+                </div>
+
+                <!-- Book Info -->
+                <div class="flex-grow-1">
+                  <div class="fw-semibold text-dark small">{{ book.title }}</div>
+                  <div class="text-muted" style="font-size:12px;">{{ book.author }}</div>
+                  <div class="text-muted" style="font-size:11px;">Jatuh tempo {{ book.dueDate }}</div>
+                </div>
+
+                <!-- Badge Hari -->
+                <span class="days-badge {{ getDaysLeftClass(book.daysLeft) }}">
+                  {{ book.daysLeft }} hari lagi
+                </span>
+
+                <!-- Perpanjang -->
+                <button class="btn btn-outline-primary btn-sm fw-semibold" style="font-size:12px; white-space:nowrap;">
+                  Perpanjang
+                </button>
+              </div>
+
+            </div>
+          </div>
+          <!-- END Sedang Dipinjam -->
+
+          <!-- Aktivitas Terbaru -->
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 pt-3 pb-0 px-4">
+              <h6 class="fw-bold text-dark mb-0">Aktivitas terbaru</h6>
+            </div>
+            <div class="card-body px-4 py-2">
+
+              <div *ngFor="let act of activities; let last = last"
+                   class="d-flex align-items-center gap-3 py-3"
+                   [class.border-bottom]="!last">
+                <i class="bi {{ getActivityIcon(act.type, act.isLate) }} fs-5 flex-shrink-0"></i>
+                <span class="flex-grow-1 small"
+                      [class.text-danger]="act.isLate"
+                      [class.text-dark]="!act.isLate">
+                  {{ act.description }}
+                </span>
+                <span class="text-muted" style="font-size:12px; white-space:nowrap;">{{ act.date }}</span>
+              </div>
+
+            </div>
+          </div>
+          <!-- END Aktivitas Terbaru -->
+
+        </div>
+        <!-- END LEFT COLUMN -->
+
+        <!-- RIGHT COLUMN -->
+        <div class="col-lg-5">
+
+          <!-- Batas Peminjaman -->
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 pt-3 pb-0 px-4">
+              <h6 class="fw-bold text-dark mb-0">Batas peminjaman</h6>
+            </div>
+            <div class="card-body px-4 py-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="text-muted small">Maks. {{ borrowLimit.max }} buku per periode</span>
+                <span class="fw-bold text-dark">{{ borrowLimit.current }} / {{ borrowLimit.max }}</span>
+              </div>
+              <div class="progress mb-3" style="height: 8px; border-radius: 10px;">
+                <div class="progress-bar bg-primary"
+                     role="progressbar"
+                     [style.width.%]="borrowPercent">
+                </div>
+              </div>
+              <p class="text-muted small mb-3">
+                Anda masih bisa meminjam <strong>{{ remainingBorrow }} buku</strong> lagi.
+              </p>
+              <a routerLink="/catalog" class="btn btn-primary w-100 fw-semibold">
+                Cari buku
+              </a>
+            </div>
+          </div>
+          <!-- END Batas Peminjaman -->
+
+          <!-- Reservasi Aktif -->
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 pt-3 pb-0 px-4">
+              <h6 class="fw-bold text-dark mb-0">Reservasi aktif</h6>
+            </div>
+            <div class="card-body px-4 py-3">
+              <div class="d-flex align-items-center gap-3">
+
+                <!-- Mini Cover -->
+                <div class="mini-cover {{ reservedBook.coverColor }} d-flex align-items-center justify-content-center rounded flex-shrink-0">
+                  <span class="text-white fw-bold" style="font-size:9px; text-align:center; line-height:1.2; padding:2px;">
+                    {{ reservedBook.coverLabel }}
+                  </span>
+                </div>
+
+                <div>
+                  <div class="fw-semibold text-dark small">{{ reservedBook.title }}</div>
+                  <div class="text-muted" style="font-size:12px;">{{ reservedBook.author }}</div>
+                  <div class="mt-1">
+                    <span class="badge bg-warning text-dark" style="font-size:11px;">
+                      Antrean ke-{{ reservedBook.queue }}
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <!-- END Reservasi Aktif -->
+
+        </div>
+        <!-- END RIGHT COLUMN -->
+
+      </div>
+      <!-- END MAIN GRID -->
+
+    </div>
+    <!-- END CONTENT AREA -->
+
+  </main>
+
+</div>
