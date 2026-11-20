@@ -20,33 +20,12 @@ namespace AdinsLibrary.Services
         private readonly IRepository<Publisher> _publisherRepository;
         private readonly IRepository<Inventory> _inventoryRepository;
 
-        public async Task<Book?> GetByIdAsync(long id)
-        {
-            return await _bookRepository.GetByIdAsync(id);
-        }
-
-
         public BookService(
-
-
             IRepository<Book> bookRepository,
             IRepository<Author> authorRepository,
             IRepository<Category> categoryRepository,
             IRepository<Publisher> publisherRepository,
             IRepository<Inventory> inventoryRepository
-
-        public async Task<Book?> CreateBookAsync(BookRequest request)
-        {
-            var book = new Book
-            {
-                Title = request.Title,
-                Isbn = request.Isbn ?? string.Empty,
-                Description = request.Description ?? string.Empty,
-                AuthorId = request.AuthorId,
-                CategoryId = request.CategoryId,
-                PublisherId = request.PublisherId
-            };
-
         )
         {
             _bookRepository = bookRepository;
@@ -55,7 +34,6 @@ namespace AdinsLibrary.Services
             _publisherRepository = publisherRepository;
             _inventoryRepository = inventoryRepository;
         }
-
 
         public async Task<BookResponse?> GetByIdAsync(long id)
         {
@@ -128,6 +106,10 @@ namespace AdinsLibrary.Services
                     ? filtered.OrderByDescending(b => b.Publisher?.PublisherName)
                     : filtered.OrderBy(b => b.Publisher?.PublisherName),
 
+                "price" => isDescending
+                    ? filtered.OrderByDescending(b => b.Price)
+                    : filtered.OrderBy(b => b.Price),
+
                 _ => isDescending
                     ? filtered.OrderByDescending(b => b.CreatedAt).ThenByDescending(b => b.BookId)
                     : filtered.OrderBy(b => b.CreatedAt).ThenBy(b => b.BookId)
@@ -144,6 +126,9 @@ namespace AdinsLibrary.Services
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
+            if(request.Price < 0)
+                throw new ArgumentException("Price tidak boleh kurang dari 0.", nameof(request.Price));
+
             string? normalizedIsbn = string.IsNullOrWhiteSpace(request.Isbn) ? null : request.Isbn.Trim();
             if (normalizedIsbn != null)
             {
@@ -157,6 +142,7 @@ namespace AdinsLibrary.Services
                 Title = request.Title.Trim(),
                 Isbn = normalizedIsbn,
                 CoverUrl = string.IsNullOrWhiteSpace(request.CoverUrl) ? null : request.CoverUrl.Trim(),
+                Price = request.Price,
                 Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim(),
                 AuthorId = request.AuthorId,
                 CategoryId = request.CategoryId,
@@ -197,6 +183,9 @@ namespace AdinsLibrary.Services
             if (existingBook == null)
                 return null;
 
+            if (request.Price < 0)
+                throw new ArgumentException("Price tidak boleh kurang dari 0.", nameof(request.Price));
+
             string? normalizedIsbn = string.IsNullOrWhiteSpace(request.Isbn) ? null : request.Isbn.Trim();
             if (normalizedIsbn != null)
             {
@@ -211,6 +200,7 @@ namespace AdinsLibrary.Services
             existingBook.Title = request.Title.Trim();
             existingBook.Isbn = normalizedIsbn;
             existingBook.CoverUrl = string.IsNullOrWhiteSpace(request.CoverUrl) ? null : request.CoverUrl.Trim();
+            existingBook.Price = request.Price;
             existingBook.Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim();
             existingBook.AuthorId = request.AuthorId;
             existingBook.CategoryId = request.CategoryId;
@@ -265,6 +255,7 @@ namespace AdinsLibrary.Services
                 BookId = book.BookId,
                 Title = book.Title,
                 Isbn = book.Isbn,
+                Price = book.Price,
                 CoverUrl = book.CoverUrl,
                 Description = book.Description,
                 CreatedAt = book.CreatedAt,

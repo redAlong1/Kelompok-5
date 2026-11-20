@@ -74,6 +74,9 @@ namespace AdinsLibrary.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric(12,2)");
+
                     b.Property<long>("PublisherId")
                         .HasColumnType("bigint");
 

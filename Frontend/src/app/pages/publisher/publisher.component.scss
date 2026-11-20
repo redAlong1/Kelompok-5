@@ -1,0 +1,103 @@
+// ============================================================
+//  SEARCH INPUT
+// ============================================================
+.search-input {
+  max-width: 340px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+
+  &:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+}
+
+// ============================================================
+//  TABLE
+// ============================================================
+.card {
+  border-radius: 12px;
+}
+
+.table {
+  .table-header th {
+    border-bottom: 1px solid #e2e8f0;
+    background: transparent;
+  }
+
+  td {
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background-color: #f8faff;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+// ============================================================
+//  PAGINATION
+// ============================================================
+.pagination {
+  gap: 4px;
+
+  .page-link {
+    border-radius: 6px !important;
+    font-size: 13px;
+    min-width: 32px;
+    text-align: center;
+    color: #374151;
+    border-color: #e2e8f0;
+
+    &:hover {
+      background: #f1f5f9;
+    }
+  }
+
+  .page-item.active .page-link {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+  }
+}
+
+// ============================================================
+//  MODAL
+// ============================================================
+.modal-content {
+  border-radius: 14px !important;
+}
+
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+
+  &:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+}
+
+// ============================================================
+//  DELETE ICON
+// ============================================================
+.delete-icon {
+  width: 64px;
+  height: 64px;
+  background: #fee2e2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 28px;
+}
