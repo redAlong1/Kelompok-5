@@ -5,10 +5,11 @@ namespace AdinsLibrary.Services
 {
     public interface IBookService
     {
-        Task<Book?> GetByIdAsync(long id);
-        Task<Book?> GetAllAsync(GetBooksQuery query);
-        Task<Book?> CreateBookAsync(BookRequest request);
-        Task<Book?> UpdateBookAsync(long id, UpdateBookRequest request);
-        Task<Book?> DeleteBookAsync(long id);
+        Task<BookResponse?> GetByIdAsync(long id);
+        Task<List<BookResponse?>> GetAllAsync(GetBooksQuery query);
+        Task<BookResponse?> CreateBookAsync(BookRequest book);
+        Task<BookResponse?> UpdateBookAsync(long id, UpdateBookRequest book);
+        Task<BookResponse?> DeleteBookAsync(long id);
+        BookResponse MapToResponse(Book book);
     }
 }

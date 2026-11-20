@@ -57,12 +57,17 @@ namespace AdinsLibrary.Migrations
                     b.Property<long>("CategoryId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("CoverUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<long?>("InventoryId")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("Isbn")
                         .IsRequired()
@@ -82,8 +87,6 @@ namespace AdinsLibrary.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("InventoryId");
 
                     b.HasIndex("Isbn")
                         .IsUnique();
@@ -205,6 +208,9 @@ namespace AdinsLibrary.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -307,6 +313,9 @@ namespace AdinsLibrary.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("PublisherId"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("PublisherName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -315,30 +324,6 @@ namespace AdinsLibrary.Migrations
                     b.HasKey("PublisherId");
 
                     b.ToTable("Publishers");
-                });
-
-            modelBuilder.Entity("AdinsLibrary.Models.Role", b =>
-                {
-                    b.Property<long>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("RoleId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.HasKey("RoleId");
-
-                    b.HasIndex("RoleName")
-                        .IsUnique();
-
-                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("AdinsLibrary.Models.User", b =>
@@ -365,8 +350,12 @@ namespace AdinsLibrary.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<long>("RoleId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("User");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -379,8 +368,6 @@ namespace AdinsLibrary.Migrations
                         .IsUnique();
 
                     b.HasIndex("MembershipTierId");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -398,10 +385,6 @@ namespace AdinsLibrary.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("AdinsLibrary.Models.Inventory", null)
-                        .WithMany("Books")
-                        .HasForeignKey("InventoryId");
 
                     b.HasOne("AdinsLibrary.Models.Publisher", "Publisher")
                         .WithMany("Books")
@@ -495,15 +478,7 @@ namespace AdinsLibrary.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AdinsLibrary.Models.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("MembershipTier");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("AdinsLibrary.Models.Author", b =>
@@ -535,8 +510,6 @@ namespace AdinsLibrary.Migrations
 
             modelBuilder.Entity("AdinsLibrary.Models.Inventory", b =>
                 {
-                    b.Navigation("Books");
-
                     b.Navigation("BorrowingItems");
                 });
 
@@ -548,11 +521,6 @@ namespace AdinsLibrary.Migrations
             modelBuilder.Entity("AdinsLibrary.Models.Publisher", b =>
                 {
                     b.Navigation("Books");
-                });
-
-            modelBuilder.Entity("AdinsLibrary.Models.Role", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("AdinsLibrary.Models.User", b =>

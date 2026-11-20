@@ -64,35 +64,35 @@ export class LoginComponent {
 
   onLogin(): void {
 
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
-
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    const { username, password, rememberMe } = this.loginForm.value;
-
-    this.authService.login({ username, password }, rememberMe).subscribe({
-      next: () => {
-        this.isLoading = false;
-        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-        void this.router.navigateByUrl(returnUrl || '/');
-      },
-      error: (err) => {
-        this.isLoading = false;
-
-        if (err.status === 0) {
-          this.errorMessage = 'Tidak dapat terhubung ke server.';
-        } else if (err.status === 400 || err.status === 401) {
-          this.errorMessage = 'Username/email atau password salah.';
-        } else {
-          this.errorMessage = 'Terjadi kesalahan, silakan coba lagi.';
-        }
-      }
-    });
-
+  if (this.loginForm.invalid) {
+    this.loginForm.markAllAsTouched();
+    return;
   }
+
+  this.isLoading = true;
+  this.errorMessage = '';
+
+  const { username, password, rememberMe } = this.loginForm.value;
+
+  // Backend meminta "email", jadi isi input dikirim sebagai email
+  this.authService.login({ email: username, password }, rememberMe).subscribe({
+    next: () => {
+      this.isLoading = false;
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+      void this.router.navigateByUrl(returnUrl || '/');
+    },
+    error: (err) => {
+      this.isLoading = false;
+
+      if (err.status === 0) {
+        this.errorMessage = 'Tidak dapat terhubung ke server.';
+      } else if (err.status === 401) {
+        this.errorMessage = 'Email atau password salah.';
+      } else {
+        this.errorMessage = 'Terjadi kesalahan, silakan coba lagi.';
+      }
+    }
+  });
+}
 
 }
