@@ -1,158 +1,141 @@
-<aside class="sidebar" [class.collapsed]="collapsed">
+<aside class="sidebar d-flex flex-column flex-shrink-0 text-white"
+       [class.collapsed]="collapsed"
+       [style.width]="collapsed ? '76px' : '240px'"
+       style="min-height: 100vh;">
 
   <!-- Logo -->
-  <div class="sidebar-logo">
-    <div class="logo-icon">
+  <div class="sidebar-logo d-flex align-items-center px-4 py-3">
+    <div class="logo-icon me-2">
       <i class="bi bi-book-fill"></i>
     </div>
-    <div class="logo-text">
-      <div class="logo-title">AdIns Library</div>
-      <div class="logo-subtitle">{{ authService.isAdmin() ? 'Admin Area' : 'Member Area' }}</div>
+    <div class="logo-text" *ngIf="!collapsed">
+      <div class="logo-title fw-bold fs-6 lh-1">AdIns Library</div>
+      <div class="logo-subtitle sidebar-subtitle opacity-75">
+        {{ authService.isAdmin() ? 'Admin Area' : 'Member Area' }}
+      </div>
     </div>
   </div>
 
   <!-- Menu (scroll sendiri) -->
-  <nav class="sidebar-nav">
-
-    <div class="nav-section">Menu Utama</div>
-
-    <a routerLink="/dashboard" routerLinkActive="active" class="sidebar-link" title="Dashboard">
-      <i class="bi bi-grid-1x2"></i><span>Dashboard</span>
-    </a>
-    <a routerLink="/catalog" routerLinkActive="active" class="sidebar-link" title="Katalog & Pinjam">
-      <i class="bi bi-journals"></i><span>Katalog &amp; Pinjam</span>
-    </a>
-    <a routerLink="/reservations" routerLinkActive="active" class="sidebar-link" title="Reservasi">
-      <i class="bi bi-calendar-check"></i><span>Reservasi</span>
-    </a>
-    <a href="#" class="sidebar-link disabled" title="Riwayat Peminjaman">
-      <i class="bi bi-clock-history"></i><span>Riwayat Peminjaman</span>
-    </a>
-    <a href="#" class="sidebar-link disabled" title="Denda Saya">
-      <i class="bi bi-exclamation-circle"></i><span>Denda Saya</span>
-    </a>
-
-    <ng-container *ngIf="authService.isAdmin()">
-      <div class="nav-section">Kelola Perpustakaan</div>
-
-      <a routerLink="/books-master" routerLinkActive="active" class="sidebar-link" title="Master Buku">
-        <i class="bi bi-book"></i><span>Master Buku</span>
-      </a>
-      <a routerLink="/inventory" routerLinkActive="active" class="sidebar-link" title="Inventory & Stok">
-        <i class="bi bi-box-seam"></i><span>Inventory &amp; Stok</span>
-      </a>
-      <a routerLink="/author" routerLinkActive="active" class="sidebar-link" title="Author">
-        <i class="bi bi-person-lines-fill"></i><span>Author</span>
-      </a>
-      <a routerLink="/publisher" routerLinkActive="active" class="sidebar-link" title="Publisher">
-        <i class="bi bi-building"></i><span>Publisher</span>
-      </a>
-      <a routerLink="/category" routerLinkActive="active" class="sidebar-link" title="Kategori">
-        <i class="bi bi-tags"></i><span>Kategori</span>
-      </a>
-      <a routerLink="/admin/return" routerLinkActive="active" class="sidebar-link" title="Pengembalian">
-        <i class="bi bi-box-arrow-in-left"></i><span>Pengembalian</span>
-      </a>
-    </ng-container>
+  <nav class="sidebar-nav flex-grow-1 px-3 mt-2">
+    <div class="nav-section small text-uppercase text-white-50 px-2 mb-1" *ngIf="!collapsed">Menu Utama</div>
+    <ul class="nav flex-column gap-1">
 
       <li class="nav-item">
         <a routerLink="/dashboard"
            routerLinkActive="active"
-           class="nav-link sidebar-link rounded">
-          <i class="bi bi-grid-1x2 me-2"></i> Dashboard
+           class="nav-link sidebar-link rounded"
+           title="Dashboard">
+          <i class="bi bi-grid-1x2 me-2"></i><span *ngIf="!collapsed">Dashboard</span>
         </a>
       </li>
 
       <li class="nav-item">
         <a routerLink="/catalog"
            routerLinkActive="active"
-           class="nav-link sidebar-link rounded">
-          <i class="bi bi-journals me-2"></i> Katalog &amp; Pinjam
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a routerLink="/publisher"
-           routerLinkActive="active"
-           class="nav-link sidebar-link rounded">
-          <i class="bi bi-building me-2"></i> Publisher
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a routerLink="/author"
-           routerLinkActive="active"
-           class="nav-link sidebar-link rounded">
-          <i class="bi bi-person-lines-fill me-2"></i> Author
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a routerLink="/category"
-           routerLinkActive="active"
-           class="nav-link sidebar-link rounded">
-          <i class="bi bi-tags me-2"></i> Kategori
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a routerLink="/books-master"
-           routerLinkActive="active"
-           class="nav-link sidebar-link rounded">
-          <i class="bi bi-book me-2"></i> Master Buku
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a routerLink="/inventory"
-           routerLinkActive="active"
-           class="nav-link sidebar-link rounded">
-          <i class="bi bi-box-seam me-2"></i> Inventory &amp; Stok
+           class="nav-link sidebar-link rounded"
+           title="Katalog & Pinjam">
+          <i class="bi bi-journals me-2"></i><span *ngIf="!collapsed">Katalog &amp; Pinjam</span>
         </a>
       </li>
 
       <li class="nav-item">
         <a routerLink="/reservations"
            routerLinkActive="active"
-           class="nav-link sidebar-link rounded">
-          <i class="bi bi-calendar-check me-2"></i> Reservasi
+           class="nav-link sidebar-link rounded"
+           title="Reservasi">
+          <i class="bi bi-calendar-check me-2"></i><span *ngIf="!collapsed">Reservasi</span>
         </a>
       </li>
 
       <li class="nav-item">
-        <a href="#" class="nav-link sidebar-link text-white-50 rounded">
-          <i class="bi bi-clock-history me-2"></i> Riwayat Peminjaman
+        <a href="#"
+           class="nav-link sidebar-link text-white-50 disabled rounded"
+           title="Riwayat Peminjaman">
+          <i class="bi bi-clock-history me-2"></i><span *ngIf="!collapsed">Riwayat Peminjaman</span>
         </a>
       </li>
 
       <li class="nav-item">
-        <a href="#" class="nav-link sidebar-link text-white-50 rounded">
-          <i class="bi bi-exclamation-circle me-2"></i> Denda Saya
+        <a href="#"
+           class="nav-link sidebar-link text-white-50 disabled rounded"
+           title="Denda Saya">
+          <i class="bi bi-exclamation-circle me-2"></i><span *ngIf="!collapsed">Denda Saya</span>
         </a>
       </li>
-
-      <li class="nav-item">
-        <a href="#" class="nav-link sidebar-link text-white-50 rounded">
-          <i class="bi bi-person me-2"></i> Profil &amp; Membership
-        </a>
-      </li>
-
-      <li class="nav-item" *ngIf="authService.isAdmin()">
-        <a routerLink="/admin/return"
-           routerLinkActive="active"
-           class="nav-link sidebar-link rounded">
-          <i class="bi bi-arrow-left-right me-2"></i> Sirkulasi (Admin)
-        </a>
-      </li>
-
     </ul>
+
+    <ng-container *ngIf="authService.isAdmin()">
+      <div class="nav-section small text-uppercase text-white-50 px-2 mt-3 mb-1" *ngIf="!collapsed">Kelola Perpustakaan</div>
+      <ul class="nav flex-column gap-1">
+
+        <li class="nav-item">
+          <a routerLink="/books-master"
+             routerLinkActive="active"
+             class="nav-link sidebar-link rounded"
+             title="Master Buku">
+            <i class="bi bi-book me-2"></i><span *ngIf="!collapsed">Master Buku</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/inventory"
+             routerLinkActive="active"
+             class="nav-link sidebar-link rounded"
+             title="Inventory & Stok">
+            <i class="bi bi-box-seam me-2"></i><span *ngIf="!collapsed">Inventory &amp; Stok</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/author"
+             routerLinkActive="active"
+             class="nav-link sidebar-link rounded"
+             title="Author">
+            <i class="bi bi-person-lines-fill me-2"></i><span *ngIf="!collapsed">Author</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/publisher"
+             routerLinkActive="active"
+             class="nav-link sidebar-link rounded"
+             title="Publisher">
+            <i class="bi bi-building me-2"></i><span *ngIf="!collapsed">Publisher</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/category"
+             routerLinkActive="active"
+             class="nav-link sidebar-link rounded"
+             title="Kategori">
+            <i class="bi bi-tags me-2"></i><span *ngIf="!collapsed">Kategori</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/admin/return"
+             routerLinkActive="active"
+             class="nav-link sidebar-link rounded"
+             title="Pengembalian">
+            <i class="bi bi-box-arrow-in-left me-2"></i><span *ngIf="!collapsed">Pengembalian</span>
+          </a>
+        </li>
+
+      </ul>
+    </ng-container>
   </nav>
 
   <!-- Tombol collapse -->
-  <button type="button" class="collapse-btn" (click)="toggle()"
-          [title]="collapsed ? 'Perbesar menu' : 'Kecilkan menu'">
-    <i class="bi" [ngClass]="collapsed ? 'bi-chevron-double-right' : 'bi-chevron-double-left'"></i>
-    <span>Kecilkan menu</span>
-  </button>
+  <div class="px-3 pb-3 pt-2">
+    <button type="button"
+            class="collapse-btn btn btn-sm btn-outline-light w-100 d-flex align-items-center justify-content-center gap-2"
+            (click)="toggle()"
+            [title]="collapsed ? 'Perbesar menu' : 'Kecilkan menu'">
+      <i class="bi" [ngClass]="collapsed ? 'bi-chevron-double-right' : 'bi-chevron-double-left'"></i>
+      <span *ngIf="!collapsed">{{ collapsed ? 'Perbesar menu' : 'Kecilkan menu' }}</span>
+    </button>
+  </div>
 
 </aside>
