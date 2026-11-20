@@ -49,10 +49,10 @@
                 <h6 class="fw-bold text-dark mb-1 text-truncate">{{ selectedBook.title }}</h6>
                 <div class="text-muted small mb-2">{{ selectedBook.authorName }}</div>
                 <div class="d-flex flex-wrap gap-2">
-                  <span class="badge badge-stock-danger">
-                    Stok {{ selectedBook.stock }} (dipinjam)
+                  <span class="badge" [ngClass]="selectedBook.stock > 0 ? 'badge-stock-success' : 'badge-stock-danger'">
+                    Stok {{ selectedBook.stock }} ({{ selectedBook.stock <= 0 ? 'dipinjam' : 'tersedia' }})
                   </span>
-                  <span class="badge badge-estimate">
+                  <span class="badge badge-estimate" *ngIf="selectedBook.stock <= 0">
                     Estimasi tersedia {{ selectedBook.estimatedAvailableDate }}
                   </span>
                 </div>

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import {
   BookService,
@@ -10,6 +12,11 @@ import {
   CatalogBook,
   CategoryResponse
 } from '../../services/book.service';
+
+import {
+  InventoryService,
+  InventoryResponse
+} from '../../services/inventory.service';
 
 import {
   AuthService,
@@ -50,6 +57,7 @@ export class CatalogComponent implements OnInit {
   constructor(
     private router: Router,
     private bookService: BookService,
+    private inventoryService: InventoryService,
     private authService: AuthService
   ) {}
 
@@ -97,27 +105,56 @@ export class CatalogComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
-    this.bookService.getAll({
-
-      limit: 100,
-
-      search: this.searchQuery.trim() || undefined,
-
-      category_id: this.activeCategoryId > 0
-        ? this.activeCategoryId
-        : undefined
-
+    forkJoin({
+      books: this.bookService.getAll({
+        limit: 100,
+        search: this.searchQuery.trim() || undefined,
+        category_id: this.activeCategoryId > 0
+          ? this.activeCategoryId
+          : undefined
+      }),
+      inventories: this.inventoryService.getAll().pipe(
+        catchError((err) => {
+          console.warn('Gagal memuat inventory, fallback ke stok buku:', err);
+          return of([] as InventoryResponse[]);
+        })
+      )
     }).subscribe({
 
-      next: (data: BookResponse[]) => {
+      next: ({ books, inventories }) => {
 
-        this.allBooks = data.map(
-          (book, index) => this.mapToCatalogBook(book, index)
-        );
+        // Hitung stok tersedia per bookId dari response API inventory
+        const stockMap = new Map<number, number>();
+        const hasInventoryData = inventories && inventories.length > 0;
+
+        for (const inv of inventories) {
+          const bId = Number(inv.bookId);
+          const isAvailable =
+            inv.availabilityStatus === 'AVAILABLE' ||
+            inv.statusName === 'AVAILABLE' ||
+            inv.availabilityStatus === 0;
+
+          if (isAvailable) {
+            stockMap.set(bId, (stockMap.get(bId) || 0) + 1);
+          }
+        }
+
+        this.allBooks = books.map((book, index) => {
+          const catalogBook = this.mapToCatalogBook(book, index);
+          const bId = Number(book.bookId);
+
+          if (hasInventoryData) {
+            const availableCount = stockMap.get(bId) || 0;
+            catalogBook.stock = availableCount;
+            catalogBook.isBorrowed = availableCount <= 0;
+          }
+
+          return catalogBook;
+        });
 
         this.loading = false;
 
-        console.log('Data buku dari API:', this.allBooks);
+        console.log('Data buku & stok dari API inventory:', this.allBooks);
 
       },
 

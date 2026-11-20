@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
 import { BookReservationService, BookReservationResponse } from '../../services/book-reservation.service';
 import { BookService, BookItem } from '../../services/book.service';
+import { InventoryService, InventoryResponse } from '../../services/inventory.service';
 import { AuthService, UserSummary } from '../../services/auth.service';
 
 @Component({
@@ -90,6 +93,7 @@ export class ReservationComponent implements OnInit {
     private router: Router,
     private reservationService: BookReservationService,
     private bookService: BookService,
+    private inventoryService: InventoryService,
     private authService: AuthService
   ) {}
 
@@ -133,21 +137,54 @@ export class ReservationComponent implements OnInit {
   }
 
   loadBooksFromApi(): void {
-    this.bookService.getAll().subscribe({
-      next: (data) => {
-        if (data && data.length > 0) {
-          // Merge API books
-          const mapped = data.map((b: any) => ({
-            bookId: b.bookId,
-            title: b.title,
-            authorName: b.author?.authorName || b.authorName || 'Penulis',
-            categoryName: b.category?.categoryName || 'Umum',
-            coverColor: this.getCoverColor(b.bookId),
-            coverUrl: b.coverUrl,
-            stock: b.availableStock ?? b.stock ?? 0,
-            isBorrowed: (b.availableStock ?? b.stock ?? 0) <= 0,
-            estimatedAvailableDate: '24 Nov 2026'
-          }));
+    forkJoin({
+      books: this.bookService.getAll(),
+      inventories: this.inventoryService.getAll().pipe(
+        catchError((err) => {
+          console.warn('Gagal memuat inventory, fallback ke data buku:', err);
+          return of([] as InventoryResponse[]);
+        })
+      )
+    }).subscribe({
+      next: ({ books, inventories }) => {
+        if (books && books.length > 0) {
+          // Buat map stok tersedia dari API inventory berdasarkan bookId
+          const stockMap = new Map<number, number>();
+          const hasInventoryData = inventories && inventories.length > 0;
+
+          for (const inv of inventories) {
+            const bId = Number(inv.bookId);
+            const isAvailable =
+              inv.availabilityStatus === 'AVAILABLE' ||
+              inv.statusName === 'AVAILABLE' ||
+              inv.availabilityStatus === 0;
+
+            if (isAvailable) {
+              stockMap.set(bId, (stockMap.get(bId) || 0) + 1);
+            }
+          }
+
+          const mapped = books.map((b: any) => {
+            const bId = Number(b.bookId);
+            let availableCount = b.availableStock ?? b.stock ?? 0;
+
+            if (hasInventoryData) {
+              availableCount = stockMap.get(bId) || 0;
+            }
+
+            return {
+              bookId: bId,
+              title: b.title,
+              authorName: b.author?.authorName || b.authorName || 'Penulis',
+              categoryName: b.category?.categoryName || 'Umum',
+              coverColor: this.getCoverColor(bId),
+              coverUrl: b.coverUrl,
+              stock: availableCount,
+              isBorrowed: availableCount <= 0,
+              estimatedAvailableDate: '24 Nov 2026'
+            };
+          });
+
           this.availableBooks = mapped;
           this.updateSelectedBook();
         }
