@@ -144,6 +144,20 @@ namespace AdinsLibrary.Data
                 .HasOne(f => f.BorrowingItem)
                 .WithMany(bi => bi.Fines)
                 .HasForeignKey(f => f.BorrowingItemId);
+
+
+            modelBuilder.Entity<Fine>(e =>
+            {
+                e.Property(f => f.FineType).HasConversion<string>().HasMaxLength(20);
+                // satu item tidak boleh punya dua denda dengan jenis sama
+                e.HasIndex(f => new { f.BorrowingItemId, f.FineType }).IsUnique();
+            });
+
+            modelBuilder.Entity<BorrowingItem>()
+                .Property(b => b.ReturnCondition).HasConversion<string>().HasMaxLength(20);
+
+            modelBuilder.Entity<Book>()
+                .Property(b => b.Price).HasDefaultValue(0m);
         }
     }
 }
