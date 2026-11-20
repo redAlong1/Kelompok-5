@@ -144,10 +144,11 @@ export class BookMasterComponent implements OnInit {
       publishers: this.http.get<PublisherOption[]>(this.publisherUrl, h),
     }).subscribe({
       next: (res) => {
-        this.items = res.books;
-        this.authors = res.authors;
-        this.categories = res.categories;
-        this.publishers = res.publishers;
+        this.items = (res.books || []).filter((b): b is BookResponse => !!b);
+        this.authors = res.authors || [];
+        this.categories = res.categories || [];
+        this.publishers = res.publishers || [];
+        this.currentPage = 1;
         this.applyFilter();
         this.isLoading = false;
       },
@@ -162,7 +163,7 @@ export class BookMasterComponent implements OnInit {
     const h = { headers: this.authHeaders() };
     this.http.get<BookResponse[]>(this.bookUrl, h).subscribe({
       next: (data) => {
-        this.items = data;
+        this.items = (data || []).filter((b): b is BookResponse => !!b);
         this.applyFilter();
       },
       error: (err) => {
@@ -185,11 +186,13 @@ export class BookMasterComponent implements OnInit {
       else if (this.sortDir === 'asc') this.sortDir = 'desc';
       else this.sortDir = '';
     }
+    this.currentPage = 1;
     this.applyFilter();
   }
 
   goToPage(page: number, event: Event): void {
     event.preventDefault();
+    if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
     this.updatePage();
   }
@@ -199,19 +202,26 @@ export class BookMasterComponent implements OnInit {
     let result = this.items.filter(
       (p) =>
         !q ||
-        p.title.toLowerCase().includes(q) ||
+        (p.title && p.title.toLowerCase().includes(q)) ||
         (p.isbn && p.isbn.toLowerCase().includes(q)) ||
         (p.author?.authorName && p.author.authorName.toLowerCase().includes(q)),
     );
     if (this.sortDir) {
       result = [...result].sort((a, b) => {
         if (this.sortField === 'price') {
-          return this.sortDir === 'asc' ? (a.price || 0) - (b.price || 0) : (b.price || 0) - (a.price || 0);
+          return this.sortDir === 'asc'
+            ? (a.price || 0) - (b.price || 0)
+            : (b.price || 0) - (a.price || 0);
         }
-        return this.sortDir === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+        return this.sortDir === 'asc'
+          ? (a.title || '').localeCompare(b.title || '')
+          : (b.title || '').localeCompare(a.title || '');
       });
     }
     this.filteredItems = result;
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
     this.updatePage();
   }
 
@@ -222,7 +232,12 @@ export class BookMasterComponent implements OnInit {
 
   getCoverImageUrl(url?: string): string {
     if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('blob:') || url.startsWith('data:')) {
+    if (
+      url.startsWith('http://') ||
+      url.startsWith('https://') ||
+      url.startsWith('blob:') ||
+      url.startsWith('data:')
+    ) {
       return url;
     }
     const backendBase = environment.apiUrl.replace(/\/api\/?$/, '');
@@ -234,7 +249,6 @@ export class BookMasterComponent implements OnInit {
     if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
 
-    // Reset value so user can re-select same file if needed
     input.value = '';
 
     if (!file.type.startsWith('image/')) {
@@ -250,7 +264,6 @@ export class BookMasterComponent implements OnInit {
     this.coverUploadError = '';
     this.isUploadingCover = true;
 
-    // Instant local preview
     const reader = new FileReader();
     reader.onload = () => {
       this.previewUrl = reader.result as string;
@@ -264,7 +277,7 @@ export class BookMasterComponent implements OnInit {
       .post<{ url: string; fileName: string; message: string }>(
         `${this.bookUrl}/upload-cover`,
         formData,
-        { headers: this.authHeaders() }
+        { headers: this.authHeaders() },
       )
       .subscribe({
         next: (res) => {
@@ -274,7 +287,8 @@ export class BookMasterComponent implements OnInit {
         },
         error: (err) => {
           this.isUploadingCover = false;
-          this.coverUploadError = err?.error?.message || 'Gagal mengunggah gambar cover.';
+          this.coverUploadError =
+            err?.error?.message || 'Gagal mengunggah gambar cover.';
         },
       });
   }
@@ -333,7 +347,11 @@ export class BookMasterComponent implements OnInit {
       this.formError = 'ISBN buku tidak boleh kosong.';
       return;
     }
-    if (this.form.price === null || this.form.price === undefined || this.form.price < 0) {
+    if (
+      this.form.price === null ||
+      this.form.price === undefined ||
+      this.form.price < 0
+    ) {
       this.formError = 'Harga buku harus lebih besar atau sama dengan 0.';
       return;
     }
@@ -420,6 +438,7 @@ export class BookMasterComponent implements OnInit {
     this.coverUploadError = '';
     this.formError = '';
   }
+
   closeBackdrop(): void {
     if (!this.isSaving) {
       this.showFormModal = false;

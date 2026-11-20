@@ -40,7 +40,7 @@
                      [(ngModel)]="searchReservation">
 
               <button class="btn btn-primary fw-semibold px-4 flex-shrink-0" (click)="openWalkInModal()">
-                <i class="bi bi-plus-lg me-1"></i> + Peminjaman Walk-In (Langsung)
+                <i class="bi bi-plus-lg me-1"></i>Peminjaman Walk-In (Langsung)
               </button>
             </div>
 
@@ -334,7 +334,7 @@
         <div class="mb-3">
           <label class="form-label small fw-semibold text-muted">Pilih Unit Eksemplar Fisik di Rak <span class="text-danger">*</span></label>
           <select class="form-select" [(ngModel)]="selectedInventoryId">
-            <option *ngFor="let u of availableUnitsForBook" [value]="u.inventoryId">
+            <option *ngFor="let u of availableUnitsForBook" [ngValue]="u.inventoryId">
               Unit #{{ u.inventoryId }} &bull; Lokasi: {{ u.shelfLocation || 'Rak Utama' }}
             </option>
           </select>

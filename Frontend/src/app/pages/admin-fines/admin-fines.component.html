@@ -1,0 +1,260 @@
+<div class="d-flex vh-100 overflow-hidden">
+
+  <main class="flex-grow-1 d-flex flex-column overflow-auto" style="background:#f0f2f5;">
+    <div class="p-4">
+
+      <!-- Header -->
+      <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2">
+        <div>
+          <h4 class="fw-bold text-dark mb-1">Kelola Denda Perpustakaan</h4>
+          <p class="text-primary small mb-0">Kelola dan verifikasi pelunasan tagihan denda keterlambatan, kerusakan, dan kehilangan buku.</p>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="alert alert-danger py-2.5 small mb-3 shadow-sm rounded-3" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="alert alert-success py-2.5 small mb-3 shadow-sm rounded-3" *ngIf="successMessage">{{ successMessage }}</div>
+
+      <!-- KPI Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-3 h-100 bg-white">
+            <div class="card-body p-3.5 d-flex align-items-center justify-content-between">
+              <div>
+                <small class="text-muted text-uppercase fw-semibold" style="font-size:12px;">Denda Belum Dilunasi</small>
+                <h3 class="fw-bold text-danger mb-0 mt-1">Rp {{ totalUnpaidAmount | number:'1.0-0' }}</h3>
+                <small class="text-danger small mt-1 d-block">{{ totalUnpaidCount }} tagihan menunggu pembayaran</small>
+              </div>
+              <div class="bg-danger-subtle text-danger p-3 rounded-circle fs-4">
+                <i class="bi bi-wallet2"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-3 h-100 bg-white">
+            <div class="card-body p-3.5 d-flex align-items-center justify-content-between">
+              <div>
+                <small class="text-muted text-uppercase fw-semibold" style="font-size:12px;">Total Denda Telah Lunas</small>
+                <h3 class="fw-bold text-success mb-0 mt-1">Rp {{ totalPaidAmount | number:'1.0-0' }}</h3>
+                <small class="text-success small mt-1 d-block">{{ totalPaidCount }} transaksi selesai</small>
+              </div>
+              <div class="bg-success-subtle text-success p-3 rounded-circle fs-4">
+                <i class="bi bi-check2-circle"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-3 h-100 bg-white">
+            <div class="card-body p-3.5 d-flex align-items-center justify-content-between">
+              <div>
+                <small class="text-muted text-uppercase fw-semibold" style="font-size:12px;">Total Keseluruhan Denda</small>
+                <h3 class="fw-bold text-primary mb-0 mt-1">Rp {{ (totalUnpaidAmount + totalPaidAmount) | number:'1.0-0' }}</h3>
+                <small class="text-muted small mt-1 d-block">{{ fines.length }} catatan denda diterbitkan</small>
+              </div>
+              <div class="bg-primary-subtle text-primary p-3 rounded-circle fs-4">
+                <i class="bi bi-receipt-cutoff"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Card -->
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body p-4">
+
+          <!-- Filter & Search Bar -->
+          <div class="row g-3 mb-4">
+            <div class="col-md-5">
+              <input type="text" class="form-control"
+                     placeholder="Cari nama member / judul buku / ID denda..."
+                     [(ngModel)]="search">
+            </div>
+
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="filterStatus" (change)="onFilterChange()">
+                <option value="ALL">Semua Status Denda</option>
+                <option value="UNPAID">Hanya Belum Lunas (UNPAID)</option>
+                <option value="PAID">Hanya Lunas (PAID)</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="filterType" (change)="onFilterChange()">
+                <option value="ALL">Semua Jenis Denda</option>
+                <option value="LATE">Keterlambatan (LATE)</option>
+                <option value="DAMAGED">Kerusakan (DAMAGED)</option>
+                <option value="LOST">Kehilangan (LOST)</option>
+              </select>
+            </div>
+
+            <div class="col-md-1 text-end">
+              <button class="btn btn-outline-secondary w-100" (click)="loadFines()" title="Segarkan Data">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Subtitle info -->
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div>
+              <h6 class="fw-bold text-dark mb-0">Catatan Denda Member</h6>
+              <small class="text-muted">Klik tombol "Tandai Lunas" saat member membayar denda secara tunai di kasir.</small>
+            </div>
+            <span class="badge bg-light text-dark border px-2.5 py-1">
+              Total: {{ filtered.length }} Data
+            </span>
+          </div>
+
+          <!-- Loading -->
+          <div class="text-center py-5" *ngIf="isLoading">
+            <div class="spinner-border text-primary" role="status"></div>
+            <div class="text-muted mt-2 small">Memuat data denda...</div>
+          </div>
+
+          <!-- Empty state -->
+          <div class="text-center py-5 text-muted" *ngIf="!isLoading && filtered.length === 0">
+            <i class="bi bi-inbox fs-1 text-muted d-block mb-2"></i>
+            <div>Tidak ada data denda sesuai filter.</div>
+          </div>
+
+          <!-- Table of Fines -->
+          <div class="table-responsive" *ngIf="!isLoading && filtered.length > 0">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr class="table-header">
+                  <th class="py-3 px-3 text-muted fw-semibold" style="font-size:13px; width:80px;">ID</th>
+                  <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Member / Peminjam</th>
+                  <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Judul Buku</th>
+                  <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Jenis Denda</th>
+                  <th class="py-3 text-muted fw-semibold text-end" style="font-size:13px;">Denda Pokok</th>
+                  <th class="py-3 text-muted fw-semibold text-end" style="font-size:13px;">Diskon</th>
+                  <th class="py-3 text-muted fw-semibold text-end" style="font-size:13px;">Total Tagihan</th>
+                  <th class="py-3 text-muted fw-semibold text-center" style="font-size:13px;">Status</th>
+                  <th class="py-3 text-muted fw-semibold text-end px-3" style="font-size:13px; width:140px;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let f of filtered">
+                  <td class="px-3 text-muted fw-semibold" style="font-size:13px;">
+                    #{{ f.fineId }}
+                  </td>
+                  <td>
+                    <div class="fw-semibold text-dark" style="font-size:14px;">{{ f.username || 'User #' + f.userId }}</div>
+                    <small class="text-muted">User ID: #{{ f.userId }}</small>
+                  </td>
+                  <td>
+                    <div class="text-dark fw-medium" style="font-size:14px;">{{ f.bookTitle }}</div>
+                    <small class="text-muted">Item ID #{{ f.borrowingItemId }}</small>
+                  </td>
+                  <td>
+                    <span class="badge rounded-pill px-2.5 py-1" [ngClass]="getFineTypeBadgeClass(f.fineType)" style="font-size:12px;">
+                      {{ getFineTypeLabel(f.fineType) }}
+                    </span>
+                  </td>
+                  <td class="text-end text-muted" style="font-size:13px;">
+                    Rp {{ f.baseAmount | number:'1.0-0' }}
+                  </td>
+                  <td class="text-end text-success" style="font-size:13px;">
+                    <span *ngIf="f.discountAmount > 0">- Rp {{ f.discountAmount | number:'1.0-0' }}</span>
+                    <span *ngIf="!f.discountAmount || f.discountAmount === 0" class="text-muted">-</span>
+                  </td>
+                  <td class="text-end fw-bold" [ngClass]="f.fineStatus === 'UNPAID' || f.fineStatus === 'Unpaid' ? 'text-danger' : 'text-dark'" style="font-size:14px;">
+                    Rp {{ f.amount | number:'1.0-0' }}
+                  </td>
+                  <td class="text-center">
+                    <span class="badge rounded-pill px-3 py-1 fw-semibold"
+                          [ngClass]="f.fineStatus === 'PAID' || f.fineStatus === 'Paid' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'"
+                          style="font-size:12px;">
+                      {{ f.fineStatus === 'PAID' || f.fineStatus === 'Paid' ? 'Lunas' : 'Belum Lunas' }}
+                    </span>
+                    <small class="text-muted d-block mt-0.5" *ngIf="f.paidDate" style="font-size:11px;">
+                      {{ f.paidDate | date:'d MMM yyyy' }}
+                    </small>
+                  </td>
+                  <td class="text-end px-3">
+                    <button class="btn btn-sm btn-success fw-semibold px-2.5"
+                            style="font-size:13px;"
+                            *ngIf="f.fineStatus === 'UNPAID' || f.fineStatus === 'Unpaid'"
+                            (click)="openPayModal(f)">
+                      <i class="bi bi-cash-stack me-1"></i> Tandai Lunas
+                    </button>
+                    <span class="text-success small fw-medium" *ngIf="f.fineStatus === 'PAID' || f.fineStatus === 'Paid'">
+                      <i class="bi bi-check-circle-fill me-1"></i> Selesai
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: KONFIRMASI PEMBAYARAN KASIR                           -->
+<!-- ============================================================ -->
+<div class="modal fade" [class.show]="showPayModal" [style.display]="showPayModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content border-0 shadow-lg rounded-3">
+      <div class="modal-header border-0 px-4 pt-4 pb-2">
+        <h6 class="modal-title fw-bold text-dark">
+          <i class="bi bi-cash-coin text-success me-1.5 fs-5"></i> Konfirmasi Pembayaran Denda Kasir
+        </h6>
+        <button type="button" class="btn-close" (click)="closePayModal()"></button>
+      </div>
+
+      <div class="modal-body px-4 py-2">
+        <p class="text-muted small mb-3">Pastikan uang denda telah diterima dari member sebelum menandai status denda lunas.</p>
+
+        <div class="p-3 bg-light rounded-3 mb-3 border" *ngIf="selectedFine">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">ID Denda:</span>
+            <span class="fw-bold text-dark">#{{ selectedFine.fineId }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Member Peminjam:</span>
+            <span class="fw-semibold text-dark">{{ selectedFine.username }} (ID #{{ selectedFine.userId }})</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Judul Buku:</span>
+            <span class="fw-semibold text-primary">{{ selectedFine.bookTitle }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Jenis Pelanggaran:</span>
+            <span class="badge" [ngClass]="getFineTypeBadgeClass(selectedFine.fineType)">
+              {{ getFineTypeLabel(selectedFine.fineType) }}
+            </span>
+          </div>
+          <hr class="my-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="fw-bold text-dark">Nominal Pembayaran Diterima:</span>
+            <span class="fs-5 fw-bold text-success">Rp {{ selectedFine.amount | number:'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-success-subtle text-success-emphasis rounded-3 small">
+          <i class="bi bi-check-circle me-1"></i> Setelah ditandai lunas, member dapat kembali meminjam buku seperti biasa.
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 px-4 pb-4 pt-2">
+        <button type="button" class="btn btn-outline-secondary px-4" (click)="closePayModal()" [disabled]="isProcessingPayment">Batal</button>
+        <button type="button" class="btn btn-success px-4 fw-semibold" (click)="confirmPay()" [disabled]="isProcessingPayment">
+          <span *ngIf="isProcessingPayment" class="spinner-border spinner-border-sm me-1"></span>
+          Konfirmasi Uang Diterima &amp; Lunaskan
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="showPayModal" (click)="closePayModal()"></div>
