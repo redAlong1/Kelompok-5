@@ -19,6 +19,7 @@ namespace AdinsLibrary.Models
         public string Password { get; set; } = string.Empty;
 
         public UserRole Role { get; set; } = UserRole.User;
+        public int Points { get; set; }
 
         [ForeignKey(nameof(MembershipTier))]
         public long MembershipTierId { get; set; }

@@ -6,5 +6,6 @@ namespace AdinsLibrary.Services
     {
         Task<LoginResponse?> LoginAsync(LoginRequest request);
         Task<RegisterResponse?> RegisterAsync(RegisterRequest request);
+        Task<UserSummary?> GetProfileAsync(long userId);
     }
 }

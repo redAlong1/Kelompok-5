@@ -1,5 +1,6 @@
 ﻿using AdinsLibrary.DTOs;
 using AdinsLibrary.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdinsLibrary.Controllers
@@ -33,6 +34,16 @@ namespace AdinsLibrary.Controllers
                 return BadRequest(new { status = "error", message = "Email sudah terdaftar" });
 
             return Ok(result);
+        }
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> Me()
+        {
+            if (!long.TryParse(User.FindFirst("userId")?.Value, out long userId))
+                return Unauthorized();
+
+            var profile = await _authService.GetProfileAsync(userId);
+            return profile == null ? NotFound() : Ok(profile);
         }
 
     }
