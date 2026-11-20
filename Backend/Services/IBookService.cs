@@ -1,4 +1,5 @@
-﻿using AdinsLibrary.Models;
+﻿using AdinsLibrary.DTOs;
+using AdinsLibrary.Models;
 
 namespace AdinsLibrary.Services
 {
@@ -6,8 +7,8 @@ namespace AdinsLibrary.Services
     {
         Task<Book?> GetByIdAsync(long id);
         Task<Book?> GetAllAsync(GetBooksQuery query);
-        Task<Book?> CreateBookAsync();
-        Task<Book?> UpdateBookAsync(long id);
+        Task<Book?> CreateBookAsync(BookRequest request);
+        Task<Book?> UpdateBookAsync(long id, UpdateBookRequest request);
         Task<Book?> DeleteBookAsync(long id);
     }
 }

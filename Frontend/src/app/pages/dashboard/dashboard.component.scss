@@ -1,0 +1,97 @@
+// ============================================================
+//  USER AVATAR (Header)
+// ============================================================
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+}
+
+// ============================================================
+//  STAT CARDS
+// ============================================================
+.stat-card {
+  border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+  }
+
+  .stat-icon {
+    font-size: 22px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a2744;
+    line-height: 1.2;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    margin-top: 2px;
+  }
+}
+
+// ============================================================
+//  CARD SHARED
+// ============================================================
+.card {
+  border-radius: 12px;
+}
+
+// ============================================================
+//  MINI BOOK COVER
+// ============================================================
+.mini-cover {
+  width: 52px;
+  height: 68px;
+  overflow: hidden;
+}
+
+// Cover variants (matches catalog)
+.cover-blue   { background: linear-gradient(145deg, #1854a5, #071b43); }
+.cover-teal   { background: linear-gradient(145deg, #0f766e, #042f2e); }
+.cover-green  { background: linear-gradient(145deg, #15803d, #052e16); }
+.cover-orange { background: linear-gradient(145deg, #c2410c, #431407); }
+.cover-brown  { background: linear-gradient(145deg, #92400e, #1c0a00); }
+.cover-purple { background: linear-gradient(145deg, #7e22ce, #2e1065); }
+.cover-dark   { background: linear-gradient(145deg, #334155, #0f172a); }
+.cover-pink   { background: linear-gradient(145deg, #be185d, #500724); }
+
+// ============================================================
+//  DAYS LEFT BADGE
+// ============================================================
+.days-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-days-urgent {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.badge-days-warning {
+  background: #fef9c3;
+  color: #ca8a04;
+}
+
+.badge-days-ok {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+// ============================================================
+//  PROGRESS BAR
+// ============================================================
+.progress {
+  background: #e2e8f0;
+}
