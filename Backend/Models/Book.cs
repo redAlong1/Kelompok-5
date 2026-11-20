@@ -8,9 +8,10 @@ namespace AdinsLibrary.Models
     {
         [Key]
         public long BookId { get; set; }
+        [MaxLength(500)]
+        public string? CoverUrl { get; set; }
         [Required]
-        [MaxLength(255)]
-        public string CoverUrl { get; set; }
+        public decimal Price { get; set; }
         [Required]
         [MaxLength(200)]
         public string Title { get; set; }

@@ -50,6 +50,10 @@ namespace AdinsLibrary.Data
                 .HasIndex(b => b.Isbn)
                 .IsUnique();
 
+            modelBuilder.Entity<Book>()
+            .Property(b => b.Price)
+    .       HasColumnType("numeric(12,2)");
+
             modelBuilder.Entity<Inventory>()
                 .Property(i => i.AvailabilityStatus)
                 .HasConversion<string>();

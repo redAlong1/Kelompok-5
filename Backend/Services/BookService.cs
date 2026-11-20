@@ -106,6 +106,10 @@ namespace AdinsLibrary.Services
                     ? filtered.OrderByDescending(b => b.Publisher?.PublisherName)
                     : filtered.OrderBy(b => b.Publisher?.PublisherName),
 
+                "price" => isDescending
+                    ? filtered.OrderByDescending(b => b.Price)
+                    : filtered.OrderBy(b => b.Price),
+
                 _ => isDescending
                     ? filtered.OrderByDescending(b => b.CreatedAt).ThenByDescending(b => b.BookId)
                     : filtered.OrderBy(b => b.CreatedAt).ThenBy(b => b.BookId)
@@ -122,6 +126,9 @@ namespace AdinsLibrary.Services
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
+            if(request.Price < 0)
+                throw new ArgumentException("Price tidak boleh kurang dari 0.", nameof(request.Price));
+
             string? normalizedIsbn = string.IsNullOrWhiteSpace(request.Isbn) ? null : request.Isbn.Trim();
             if (normalizedIsbn != null)
             {
@@ -135,6 +142,7 @@ namespace AdinsLibrary.Services
                 Title = request.Title.Trim(),
                 Isbn = normalizedIsbn,
                 CoverUrl = string.IsNullOrWhiteSpace(request.CoverUrl) ? null : request.CoverUrl.Trim(),
+                Price = request.Price,
                 Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim(),
                 AuthorId = request.AuthorId,
                 CategoryId = request.CategoryId,
@@ -175,6 +183,9 @@ namespace AdinsLibrary.Services
             if (existingBook == null)
                 return null;
 
+            if (request.Price < 0)
+                throw new ArgumentException("Price tidak boleh kurang dari 0.", nameof(request.Price));
+
             string? normalizedIsbn = string.IsNullOrWhiteSpace(request.Isbn) ? null : request.Isbn.Trim();
             if (normalizedIsbn != null)
             {
@@ -189,6 +200,7 @@ namespace AdinsLibrary.Services
             existingBook.Title = request.Title.Trim();
             existingBook.Isbn = normalizedIsbn;
             existingBook.CoverUrl = string.IsNullOrWhiteSpace(request.CoverUrl) ? null : request.CoverUrl.Trim();
+            existingBook.Price = request.Price;
             existingBook.Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim();
             existingBook.AuthorId = request.AuthorId;
             existingBook.CategoryId = request.CategoryId;
@@ -243,6 +255,7 @@ namespace AdinsLibrary.Services
                 BookId = book.BookId,
                 Title = book.Title,
                 Isbn = book.Isbn,
+                Price = book.Price,
                 CoverUrl = book.CoverUrl,
                 Description = book.Description,
                 CreatedAt = book.CreatedAt,

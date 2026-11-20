@@ -6,6 +6,7 @@
         public string Title { get; set; } = string.Empty;
         public string? Isbn { get; set; }
         public string? CoverUrl { get; set; }
+        public decimal Price { get; set; }
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; }
 
