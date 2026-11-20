@@ -7,8 +7,11 @@
         public string UserName { get; set; } = string.Empty;
         public long BookId { get; set; }
         public string BookTitle { get; set; } = string.Empty;
+        public string AuthorName { get; set; } = string.Empty;
+        public string? CoverUrl { get; set; }
         public DateTime ReservationDate { get; set; }
         public string Status { get; set; } = string.Empty;
+        public int QueueNumber { get; set; } = 1;
         public DateTime CreatedAt { get; set; }
     }
 }

@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -20,6 +19,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/catalog/catalog.component')
         .then(m => m.CatalogComponent)
+  },
+
+  {
+    path: 'reservations',
+    loadComponent: () =>
+      import('./pages/reservation/reservation.component')
+        .then(m => m.ReservationComponent)
   },
 
   {
