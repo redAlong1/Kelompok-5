@@ -61,4 +61,26 @@ export class BorrowingService {
   returnBooks(transactionId: number, items: ReturnItemRequest[]): Observable<ReturnResult> {
     return this.http.post<ReturnResult>(`${this.url}/${transactionId}/return`, { items });
   }
+
+  borrow(userId: number, inventoryIds: number[]): Observable<Borrowing> {
+    return this.http.post<Borrowing>(this.url, { userId, inventoryIds });
+  }
+
+  getReservations(status = 'ACTIVE'): Observable<any[]> {
+    let params = new HttpParams();
+    if (status) params = params.set('status', status);
+    return this.http.get<any[]>(`${environment.apiUrl}/reservations`, { params });
+  }
+
+  completeReservation(id: number): Observable<any> {
+    return this.http.patch(`${environment.apiUrl}/reservations/${id}/complete`, {});
+  }
+
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/users`);
+  }
+
+  getInventories(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/inventory`);
+  }
 }

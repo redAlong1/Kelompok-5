@@ -1,4 +1,5 @@
 ﻿using AdinsLibrary.DTOs;
+using AdinsLibrary.Models;
 using AdinsLibrary.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,14 @@ namespace AdinsLibrary.Controllers
         public BookReservationController(IBookReservationService service)
         {
             _service = service;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll([FromQuery] BookReservationStatus? status)
+        {
+            var result = await _service.GetAllAsync(status);
+            return Ok(result);
         }
 
         private long GetUserId()
@@ -62,6 +71,15 @@ namespace AdinsLibrary.Controllers
             var ok = await _service.CancelAsync(id, GetUserId());
             if (!ok) return NotFound();
             return Ok(new { status = "success", message = "Reservasi dibatalkan" });
+        }
+
+        [HttpPatch("{id:long}/complete")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Complete(long id)
+        {
+            var ok = await _service.CompleteAsync(id);
+            if (!ok) return NotFound();
+            return Ok(new { status = "success", message = "Reservasi selesai" });
         }
     }
 }

@@ -154,7 +154,10 @@ namespace AdinsLibrary.Data
             });
 
             modelBuilder.Entity<BorrowingItem>()
-                .Property(b => b.ReturnCondition).HasConversion<string>().HasMaxLength(20);
+                .Property(b => b.ReturnCondition)
+                .HasConversion<string>()
+                .HasMaxLength(20)
+                .IsRequired(false);
 
             modelBuilder.Entity<Book>()
                 .Property(b => b.Price).HasDefaultValue(0m);

@@ -321,6 +321,10 @@ export class BookMasterComponent implements OnInit {
   }
 
   saveItem(): void {
+    if (!this.form.coverUrl.trim()) {
+      this.formError = 'Cover buku wajib diunggah.';
+      return;
+    }
     if (!this.form.title.trim()) {
       this.formError = 'Judul buku tidak boleh kosong.';
       return;

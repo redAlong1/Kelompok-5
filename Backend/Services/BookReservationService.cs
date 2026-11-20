@@ -118,6 +118,59 @@ namespace AdinsLibrary.Services
             return result;
         }
 
+        public async Task<List<BookReservationResponse>> GetAllAsync(BookReservationStatus? status = null)
+        {
+            var reservations = await _reservationRepo.GetAllAsync(nameof(BookReservation.User), nameof(BookReservation.Book), "Book.Author");
+            var q = reservations.AsEnumerable();
+            if (status.HasValue)
+            {
+                q = q.Where(r => r.BookReservationStatus == status.Value);
+            }
+
+            var list = q.OrderBy(r => r.CreatedAt).ToList();
+            var result = new List<BookReservationResponse>();
+
+            foreach (var r in list)
+            {
+                int queue = 1;
+                if (r.BookReservationStatus == BookReservationStatus.ACTIVE)
+                {
+                    queue = reservations.Count(x => x.BookId == r.BookId && x.BookReservationStatus == BookReservationStatus.ACTIVE && x.CreatedAt <= r.CreatedAt);
+                }
+
+                result.Add(new BookReservationResponse
+                {
+                    BookReservationId = r.BookReservationId,
+                    UserId = r.UserId,
+                    UserName = r.User?.Username ?? string.Empty,
+                    BookId = r.BookId,
+                    BookTitle = r.Book?.Title ?? string.Empty,
+                    AuthorName = r.Book?.Author?.AuthorName ?? string.Empty,
+                    CoverUrl = r.Book?.CoverUrl,
+                    ReservationDate = r.ReservationDate,
+                    Status = r.BookReservationStatus.ToString(),
+                    QueueNumber = queue > 0 ? queue : 1,
+                    CreatedAt = r.CreatedAt
+                });
+            }
+
+            return result;
+        }
+
+        public async Task<bool> CompleteAsync(long id)
+        {
+            BookReservation? r = await _reservationRepo.GetByIdAsync(id);
+
+            if (r is null)
+                return false;
+
+            r.BookReservationStatus = BookReservationStatus.COMPLETE;
+            _reservationRepo.Update(r);
+            await _reservationRepo.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<bool> CancelAsync(long id, long userId)
         {
             BookReservation? r = await _reservationRepo.GetByIdAsync(id);
