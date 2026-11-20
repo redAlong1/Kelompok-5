@@ -21,14 +21,21 @@ namespace AdinsLibrary.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<T?> GetByIdAsync(long id, params string[] includeProperties)
+        public async Task<T?> GetByIdAsync(long id, params string[] includes)
         {
+            var keyName = _context.Model
+                .FindEntityType(typeof(T))!
+                .FindPrimaryKey()!
+                .Properties
+                .Single()
+                .Name;
+
             IQueryable<T> query = _dbSet;
-            foreach (var includeProperty in includeProperties)
-            {
-                query = query.Include(includeProperty);
-            }
-            return await query.FirstOrDefaultAsync(e => EF.Property<long>(e, "Id") == id);
+
+            foreach (var include in includes)
+                query = query.Include(include);
+
+            return await query.FirstOrDefaultAsync(e => EF.Property<long>(e, keyName) == id);
         }
 
         public async Task<List<T>> GetAllAsync()
@@ -49,7 +56,6 @@ namespace AdinsLibrary.Repositories
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
 
         public void Update(T entity)
