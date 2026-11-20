@@ -6,11 +6,18 @@ import {
   Router,
   RouterLink
 } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import {
   BookService,
   BookResponse
 } from '../../services/book.service';
+
+import {
+  InventoryService,
+  InventoryResponse
+} from '../../services/inventory.service';
 
 import { AuthService } from '../../services/auth.service';
 
@@ -76,6 +83,7 @@ export class BookDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private bookService: BookService,
+    private inventoryService: InventoryService,
     private authService: AuthService
   ) {}
 
@@ -114,11 +122,28 @@ export class BookDetailComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
-    this.bookService.getById(this.bookId).subscribe({
+    forkJoin({
+      book: this.bookService.getById(this.bookId),
+      inventories: this.inventoryService.getAll(this.bookId).pipe(
+        catchError((err) => {
+          console.warn('Gagal memuat inventory buku:', err);
+          return of([] as InventoryResponse[]);
+        })
+      )
+    }).subscribe({
 
-      next: (b: BookResponse) => {
+      next: ({ book: b, inventories }) => {
 
         this.loading = false;
+
+        let availableCount = b.availableStock ?? b.totalStock ?? 0;
+        if (inventories && inventories.length > 0) {
+          availableCount = inventories.filter(inv =>
+            inv.availabilityStatus === 'AVAILABLE' ||
+            inv.statusName === 'AVAILABLE' ||
+            inv.availabilityStatus === 0
+          ).length;
+        }
 
         this.book = {
 
@@ -141,7 +166,7 @@ export class BookDetailComponent implements OnInit {
             ? new Date(b.createdAt).getFullYear()
             : '-',
 
-          stock: b.availableStock ?? b.totalStock ?? 0,
+          stock: availableCount,
 
           rating: 4.8,
 
