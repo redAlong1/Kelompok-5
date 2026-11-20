@@ -23,11 +23,18 @@
       <div class="px-3 py-3 border-bottom">
         <div class="small text-muted mb-1">Membership</div>
         <div class="fw-bold tier-name">{{ user?.membershipTierName }}</div>
-      </div>
+        <div class="small text-muted">Maks. {{ user?.maxBorrowItems }} buku · {{ user?.borrowDurationDays }} hari</div>
 
-      <a routerLink="/profile" class="dropdown-item-custom" (click)="isOpen = false">
-        <i class="bi bi-person me-2"></i> Profil &amp; Membership
-      </a>
+        <div class="progress mt-2" style="height: 6px;">
+          <div class="progress-bar bg-warning" [style.width.%]="progress"></div>
+        </div>
+        <div class="small text-muted mt-1" *ngIf="user?.nextTierName; else maxTier">
+          {{ user?.points }} / {{ user?.nextTierMinPoints }} poin menuju {{ user?.nextTierName }}
+        </div>
+        <ng-template #maxTier>
+          <div class="small text-muted mt-1">{{ user?.points }} poin · tier tertinggi</div>
+        </ng-template>
+      </div>
 
       <button type="button" class="dropdown-item-custom text-danger" (click)="logout()">
         <i class="bi bi-box-arrow-left me-2"></i> Logout

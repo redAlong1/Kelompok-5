@@ -78,6 +78,10 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.refreshUser().subscribe(u => {
+      this.stats.membership = u.membershipTierName;
+      this.borrowLimit.max = u.maxBorrowItems;
+    });
     this.loadBorrowings();
     this.loadFines();
   }
@@ -173,8 +177,8 @@ export class DashboardComponent implements OnInit {
   // ---------- Helper tampilan ----------
   getActivityIcon(type: string, isLate?: boolean): string {
     if (type === 'return' && isLate) return 'bi-check-circle-fill text-danger';
-    if (type === 'borrow')  return 'bi-bookmark text-primary';
-    if (type === 'return')  return 'bi-check-circle text-success';
+    if (type === 'borrow') return 'bi-bookmark text-primary';
+    if (type === 'return') return 'bi-check-circle text-success';
     if (type === 'reserve') return 'bi-bookmark text-primary';
     return 'bi-info-circle text-muted';
   }
