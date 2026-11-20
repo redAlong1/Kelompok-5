@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
+import { AuthService } from '../../services/auth.service';        // SESUAIKAN path
+import { BorrowingService, Borrowing } from '../../services/borrowing.service';
+import { FineService } from '../../services/fine.service';
 
 interface BorrowedBook {
   id: number;
   title: string;
-  author: string;
   dueDate: string;
   daysLeft: number;
   coverColor: string;
@@ -17,6 +18,7 @@ interface Activity {
   type: 'borrow' | 'return' | 'reserve' | 'fine';
   description: string;
   date: string;
+  sortKey: number;
   isLate?: boolean;
 }
 
@@ -31,75 +33,146 @@ interface ReservedBook {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, SidebarComponent],
+  imports: [CommonModule, RouterLink],   // SidebarComponent dihapus: sidebar sudah ada di layout
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
 
-  today: string = 'Kamis, 19 November 2026';
-  userName: string = 'Andi';
+  today = new Date().toLocaleDateString('id-ID', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+  userName = '';
 
-  // Stat cards
+  isLoading = false;
+  errorMessage = '';
+
   stats = {
-    borrowed: 2,
-    reserved: 1,
-    fine: 5000,
-    membership: 'Silver'
+    borrowed: 0,
+    reserved: 0,
+    fine: 0,
+    membership: ''
   };
 
-  // Batas peminjaman
-  borrowLimit = { max: 5, current: 2 };
+  // Samakan dengan Borrowing:MaxItems di appsettings.json backend
+  borrowLimit = { max: 3, current: 0 };
+
+  dueSoonCount = 0;
+
+  borrowedBooks: BorrowedBook[] = [];
+  activities: Activity[] = [];
+
+  // Belum ada endpoint reservasi, jadi dikosongkan dulu
+  reservedBook: ReservedBook | null = null;
+
+  private readonly covers = ['cover-blue', 'cover-green', 'cover-brown'];
+
+  constructor(
+    private authService: AuthService,
+    private borrowingService: BorrowingService,
+    private fineService: FineService
+  ) {
+    const user = this.authService.getUser();
+    this.userName = user?.userName ?? '';
+    this.stats.membership = user?.membershipTierName ?? '-';
+  }
+
+  ngOnInit(): void {
+    this.loadBorrowings();
+    this.loadFines();
+  }
 
   get borrowPercent(): number {
-    return (this.borrowLimit.current / this.borrowLimit.max) * 100;
+    return Math.min(100, (this.borrowLimit.current / this.borrowLimit.max) * 100);
   }
 
   get remainingBorrow(): number {
-    return this.borrowLimit.max - this.borrowLimit.current;
+    return Math.max(0, this.borrowLimit.max - this.borrowLimit.current);
   }
 
-  // Buku sedang dipinjam
-  borrowedBooks: BorrowedBook[] = [
-    {
-      id: 1,
-      title: 'Clean Code',
-      author: 'Robert C. Martin',
-      dueDate: '24 Nov 2026',
-      daysLeft: 5,
-      coverColor: 'cover-blue',
-      coverLabel: 'Clean Code'
-    },
-    {
-      id: 2,
-      title: 'Laskar Pelangi',
-      author: 'Andrea Hirata',
-      dueDate: '22 Nov 2026',
-      daysLeft: 3,
-      coverColor: 'cover-green',
-      coverLabel: 'Laskar Pelangi'
+  // ---------- Data ----------
+  private loadBorrowings(): void {
+    this.isLoading = true;
+    this.borrowingService.getMine().subscribe({
+      next: (data) => {
+        this.buildBorrowedBooks(data);
+        this.buildActivities(data);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = this.getError(err);
+      }
+    });
+  }
+
+  private loadFines(): void {
+    this.fineService.getMine().subscribe({
+      next: (fines) => {
+        this.stats.fine = fines
+          .filter(f => f.fineStatus === 'UNPAID')
+          .reduce((sum, f) => sum + f.amount, 0);
+      },
+      error: (err) => (this.errorMessage = this.getError(err))
+    });
+  }
+
+  private buildBorrowedBooks(data: Borrowing[]): void {
+    const books: BorrowedBook[] = [];
+
+    for (const t of data) {
+      for (const i of t.items) {
+        if (i.returnDate) continue;                 // sudah dikembalikan
+        books.push({
+          id: i.borrowingItemId,
+          title: i.bookTitle,
+          dueDate: this.formatDate(t.dueDate),
+          daysLeft: this.daysUntil(t.dueDate),
+          coverColor: this.covers[books.length % this.covers.length],
+          coverLabel: i.bookTitle
+        });
+      }
     }
-  ];
 
-  // Reservasi aktif
-  reservedBook: ReservedBook = {
-    title: 'Dune',
-    author: 'Frank Herbert',
-    queue: 2,
-    coverColor: 'cover-brown',
-    coverLabel: 'Dune'
-  };
+    books.sort((a, b) => a.daysLeft - b.daysLeft);
+    this.borrowedBooks = books;
+    this.stats.borrowed = books.length;
+    this.borrowLimit.current = books.length;
+    this.dueSoonCount = books.filter(b => b.daysLeft <= 7).length;
+  }
 
-  // Aktivitas terbaru
-  activities: Activity[] = [
-    { type: 'borrow',  description: 'Meminjam buku Clean Code',                            date: '10 Nov 2026' },
-    { type: 'borrow',  description: 'Meminjam buku Laskar Pelangi',                        date: '8 Nov 2026' },
-    { type: 'return',  description: 'Mengembalikan Atomic Habits (terlambat 5 hari)',       date: '6 Nov 2026', isLate: true },
-    { type: 'reserve', description: 'Reservasi buku Dune',                                 date: '5 Nov 2026' },
-  ];
+  private buildActivities(data: Borrowing[]): void {
+    const list: Activity[] = [];
 
+    for (const t of data) {
+      const borrowTime = new Date(t.borrowDate).getTime();
+      for (const i of t.items) {
+        list.push({
+          type: 'borrow',
+          description: `Meminjam buku ${i.bookTitle}`,
+          date: this.formatDate(t.borrowDate),
+          sortKey: borrowTime
+        });
+
+        if (i.returnDate) {
+          const late = (i.lateDays ?? 0) > 0;
+          list.push({
+            type: 'return',
+            description: `Mengembalikan ${i.bookTitle}` + (late ? ` (terlambat ${i.lateDays} hari)` : ''),
+            date: this.formatDate(i.returnDate),
+            sortKey: new Date(i.returnDate).getTime(),
+            isLate: late
+          });
+        }
+      }
+    }
+
+    this.activities = list.sort((a, b) => b.sortKey - a.sortKey).slice(0, 5);
+  }
+
+  // ---------- Helper tampilan ----------
   getActivityIcon(type: string, isLate?: boolean): string {
-    if (type === 'return' && isLate) return 'bi-check-circle-fill text-success';
+    if (type === 'return' && isLate) return 'bi-check-circle-fill text-danger';
     if (type === 'borrow')  return 'bi-bookmark text-primary';
     if (type === 'return')  return 'bi-check-circle text-success';
     if (type === 'reserve') return 'bi-bookmark text-primary';
@@ -110,5 +183,28 @@ export class DashboardComponent {
     if (days <= 2) return 'badge-days-urgent';
     if (days <= 5) return 'badge-days-warning';
     return 'badge-days-ok';
+  }
+
+  getDaysLeftText(days: number): string {
+    return days >= 0 ? `${days} hari lagi` : `Terlambat ${Math.abs(days)} hari`;
+  }
+
+  private daysUntil(dateStr: string): number {
+    const due = new Date(dateStr.substring(0, 10) + 'T00:00:00');
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.round((due.getTime() - today.getTime()) / 86400000);
+  }
+
+  private formatDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'short', year: 'numeric'
+    });
+  }
+
+  private getError(err: any): string {
+    if (err.status === 0) return 'Tidak dapat terhubung ke server.';
+    if (err.status === 401) return 'Sesi habis, silakan login ulang.';
+    return err.error?.message ?? 'Gagal memuat data dashboard.';
   }
 }

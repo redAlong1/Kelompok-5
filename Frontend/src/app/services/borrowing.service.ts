@@ -50,14 +50,16 @@ export class BorrowingService {
 
   private readonly url = `${environment.apiUrl}/borrowings`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(status?: string): Observable<Borrowing[]> {
     let params = new HttpParams();
     if (status) params = params.set('status', status);
     return this.http.get<Borrowing[]>(this.url, { params });
   }
-
+  getMine(): Observable<Borrowing[]> {
+    return this.http.get<Borrowing[]>(`${this.url}/me`);
+  }
   returnBooks(transactionId: number, items: ReturnItemRequest[]): Observable<ReturnResult> {
     return this.http.post<ReturnResult>(`${this.url}/${transactionId}/return`, { items });
   }

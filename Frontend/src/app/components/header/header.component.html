@@ -1,0 +1,39 @@
+<header class="topbar d-flex justify-content-end align-items-center px-4 py-2 bg-white border-bottom">
+
+  <button type="button" class="btn btn-light border me-3 bell-btn">
+    <i class="bi bi-bell"></i>
+  </button>
+
+  <div class="profile-menu position-relative">
+
+    <button type="button" class="profile-trigger d-flex align-items-center gap-2" (click)="toggle()">
+      <span class="avatar">{{ initial }}</span>
+      <span class="fw-medium">{{ user?.userName }}</span>
+      <i class="bi" [ngClass]="isOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+    </button>
+
+    <div class="dropdown-panel shadow" *ngIf="isOpen">
+
+      <div class="px-3 py-3 border-bottom">
+        <div class="fw-semibold">{{ user?.userName }}</div>
+        <div class="small text-muted">{{ user?.email }}</div>
+        <span class="badge text-bg-primary mt-2" *ngIf="authService.isAdmin()">Admin</span>
+      </div>
+
+      <div class="px-3 py-3 border-bottom">
+        <div class="small text-muted mb-1">Membership</div>
+        <div class="fw-bold tier-name">{{ user?.membershipTierName }}</div>
+      </div>
+
+      <a routerLink="/profile" class="dropdown-item-custom" (click)="isOpen = false">
+        <i class="bi bi-person me-2"></i> Profil &amp; Membership
+      </a>
+
+      <button type="button" class="dropdown-item-custom text-danger" (click)="logout()">
+        <i class="bi bi-box-arrow-left me-2"></i> Logout
+      </button>
+
+    </div>
+  </div>
+
+</header>

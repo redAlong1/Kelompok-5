@@ -1,46 +1,151 @@
+// app-sidebar menempel di layar saat halaman di-scroll
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex-shrink: 0;
+  align-self: flex-start;
+  z-index: 120;
+}
+
 .sidebar {
-  background: linear-gradient(180deg, #1a2744 0%, #0f1b38 100%);
+  width: 250px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  background: linear-gradient(180deg, #14213d 0%, #0e1a33 100%);
+  transition: width 0.25s ease;
+  overflow: hidden;
 
-  .sidebar-logo {
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+  &.collapsed {
+    width: 76px;
 
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: #2563eb;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
+    .logo-text,
+    .sidebar-link span,
+    .nav-section,
+    .collapse-btn span {
+      display: none;
     }
 
-    .sidebar-subtitle {
-      font-size: 11px;
+    .sidebar-logo { justify-content: center; padding: 18px 0; }
+    .sidebar-link { justify-content: center; padding: 12px 0; }
+    .sidebar-link i { margin: 0; font-size: 1.2rem; }
+    .collapse-btn { justify-content: center; }
+  }
+}
+
+/* ---------- Logo ---------- */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.logo-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.logo-title { font-weight: 700; font-size: 0.95rem; line-height: 1.1; }
+.logo-subtitle { font-size: 0.72rem; opacity: 0.7; }
+
+/* ---------- Menu ---------- */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 12px;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+}
+
+.nav-section {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 16px 12px 6px;
+  white-space: nowrap;
+}
+
+.sidebar-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 2px;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+
+  i { font-size: 1.05rem; width: 20px; text-align: center; transition: transform 0.2s ease; }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+
+    i { transform: scale(1.15); }
+  }
+
+  // penanda aktif di sisi kiri
+  &.active {
+    background: #2563eb;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 8px;
+      bottom: 8px;
+      width: 4px;
+      border-radius: 0 4px 4px 0;
+      background: #93c5fd;
     }
   }
 
-  .sidebar-link {
-    font-size: 14px;
-    padding: 9px 12px;
-    color: rgba(255,255,255,0.5);
-    transition: background 0.15s, color 0.15s;
-
-    &:hover {
-      background: rgba(255,255,255,0.08);
-      color: #fff !important;
-    }
-
-    &.active {
-      background: #2563eb !important;
-      color: #fff !important;
-      font-weight: 600;
-    }
+  // menu yang halamannya belum dibuat
+  &.disabled {
+    opacity: 0.45;
+    pointer-events: none;
   }
+}
 
-  .membership-box {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.1);
-    font-size: 13px;
-  }
+/* ---------- Tombol collapse ---------- */
+.collapse-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 24px;
+  background: none;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
+
+  &:hover { color: #fff; background: rgba(255, 255, 255, 0.06); }
 }

@@ -1,31 +1,9 @@
 <div class="d-flex vh-100 overflow-hidden">
 
-  <!-- SHARED SIDEBAR -->
-  <app-sidebar></app-sidebar>
-
   <!-- ===== MAIN CONTENT ===== -->
   <main class="flex-grow-1 d-flex flex-column bg-light overflow-auto">
 
-    <!-- TOP HEADER -->
-    <header class="d-flex justify-content-between align-items-center bg-white px-4 py-3 border-bottom shadow-sm">
-      <div>
-        <h1 class="fs-5 fw-bold text-dark mb-0">Reservasi Buku</h1>
-        <p class="text-muted small mb-0">Antre untuk buku yang sedang dipinjam anggota lain.</p>
-      </div>
-      <div class="d-flex align-items-center gap-3">
-        <button class="btn btn-light btn-sm position-relative p-2 border">
-          <i class="bi bi-bell fs-5 text-muted"></i>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:9px;">1</span>
-        </button>
-        <div class="d-flex align-items-center gap-2">
-          <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center rounded-circle fw-bold" style="width:36px;height:36px;font-size:14px;">
-            {{ getUserInitial() }}
-          </div>
-          <span class="fw-semibold text-dark">{{ getUserDisplayName() }}</span>
-        </div>
-      </div>
-    </header>
-
+    
     <!-- CONTENT AREA -->
     <div class="p-4">
 

@@ -1,19 +1,59 @@
-<aside class="sidebar d-flex flex-column flex-shrink-0 text-white" style="width: 240px; min-height: 100vh;">
+<aside class="sidebar" [class.collapsed]="collapsed">
 
   <!-- Logo -->
-  <div class="sidebar-logo d-flex align-items-center px-4 py-3">
-    <div class="logo-icon me-2">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
       <i class="bi bi-book-fill"></i>
     </div>
-    <div>
-      <div class="fw-bold fs-6 lh-1">LibraryPlus</div>
-      <div class="sidebar-subtitle opacity-75">Member Area</div>
+    <div class="logo-text">
+      <div class="logo-title">AdIns Library</div>
+      <div class="logo-subtitle">{{ authService.isAdmin() ? 'Admin Area' : 'Member Area' }}</div>
     </div>
   </div>
 
-  <!-- Nav Menu -->
-  <nav class="flex-grow-1 px-3 mt-2">
-    <ul class="nav flex-column gap-1">
+  <!-- Menu (scroll sendiri) -->
+  <nav class="sidebar-nav">
+
+    <div class="nav-section">Menu Utama</div>
+
+    <a routerLink="/dashboard" routerLinkActive="active" class="sidebar-link" title="Dashboard">
+      <i class="bi bi-grid-1x2"></i><span>Dashboard</span>
+    </a>
+    <a routerLink="/catalog" routerLinkActive="active" class="sidebar-link" title="Katalog & Pinjam">
+      <i class="bi bi-journals"></i><span>Katalog &amp; Pinjam</span>
+    </a>
+    <a routerLink="/reservations" routerLinkActive="active" class="sidebar-link" title="Reservasi">
+      <i class="bi bi-calendar-check"></i><span>Reservasi</span>
+    </a>
+    <a href="#" class="sidebar-link disabled" title="Riwayat Peminjaman">
+      <i class="bi bi-clock-history"></i><span>Riwayat Peminjaman</span>
+    </a>
+    <a href="#" class="sidebar-link disabled" title="Denda Saya">
+      <i class="bi bi-exclamation-circle"></i><span>Denda Saya</span>
+    </a>
+
+    <ng-container *ngIf="authService.isAdmin()">
+      <div class="nav-section">Kelola Perpustakaan</div>
+
+      <a routerLink="/books-master" routerLinkActive="active" class="sidebar-link" title="Master Buku">
+        <i class="bi bi-book"></i><span>Master Buku</span>
+      </a>
+      <a routerLink="/inventory" routerLinkActive="active" class="sidebar-link" title="Inventory & Stok">
+        <i class="bi bi-box-seam"></i><span>Inventory &amp; Stok</span>
+      </a>
+      <a routerLink="/author" routerLinkActive="active" class="sidebar-link" title="Author">
+        <i class="bi bi-person-lines-fill"></i><span>Author</span>
+      </a>
+      <a routerLink="/publisher" routerLinkActive="active" class="sidebar-link" title="Publisher">
+        <i class="bi bi-building"></i><span>Publisher</span>
+      </a>
+      <a routerLink="/category" routerLinkActive="active" class="sidebar-link" title="Kategori">
+        <i class="bi bi-tags"></i><span>Kategori</span>
+      </a>
+      <a routerLink="/admin/return" routerLinkActive="active" class="sidebar-link" title="Pengembalian">
+        <i class="bi bi-box-arrow-in-left"></i><span>Pengembalian</span>
+      </a>
+    </ng-container>
 
       <li class="nav-item">
         <a routerLink="/dashboard"
@@ -108,18 +148,11 @@
     </ul>
   </nav>
 
-  <!-- Membership Info -->
-  <div class="membership-box mx-3 mb-2 p-3 rounded">
-    <div class="small text-white-50 mb-1">Membership</div>
-    <div class="fw-bold text-warning mb-1">Silver</div>
-    <div class="small text-white-50">Maks. 5 buku · 14 hari</div>
-  </div>
-
-  <!-- Logout Button -->
-  <div class="px-3 pb-3">
-    <button (click)="logout()" class="btn btn-link nav-link sidebar-link text-white-50 rounded w-100 text-start text-decoration-none border-0 p-2">
-      <i class="bi bi-box-arrow-right me-2"></i> Logout
-    </button>
-  </div>
+  <!-- Tombol collapse -->
+  <button type="button" class="collapse-btn" (click)="toggle()"
+          [title]="collapsed ? 'Perbesar menu' : 'Kecilkan menu'">
+    <i class="bi" [ngClass]="collapsed ? 'bi-chevron-double-right' : 'bi-chevron-double-left'"></i>
+    <span>Kecilkan menu</span>
+  </button>
 
 </aside>
