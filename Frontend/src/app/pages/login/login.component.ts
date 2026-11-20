@@ -79,7 +79,7 @@ export class LoginComponent {
     next: () => {
       this.isLoading = false;
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-      void this.router.navigateByUrl(returnUrl || '/');
+      void this.router.navigateByUrl(returnUrl || '/dashboard');
     },
     error: (err) => {
       this.isLoading = false;

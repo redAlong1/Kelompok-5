@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AdinsLibrary.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class _80jadi : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -98,14 +98,15 @@ namespace AdinsLibrary.Migrations
                 {
                     BookId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CoverUrl = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    CoverUrl = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Isbn = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     AuthorId = table.Column<long>(type: "bigint", nullable: false),
                     CategoryId = table.Column<long>(type: "bigint", nullable: false),
                     PublisherId = table.Column<long>(type: "bigint", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric(12,2)", nullable: false, defaultValue: 0m)
                 },
                 constraints: table =>
                 {
@@ -212,7 +213,7 @@ namespace AdinsLibrary.Migrations
                     BookBorrowingTransactionId = table.Column<long>(type: "bigint", nullable: false),
                     InventoryId = table.Column<long>(type: "bigint", nullable: false),
                     ReturnDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ReturnCondition = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    ReturnCondition = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     LateDays = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -239,6 +240,10 @@ namespace AdinsLibrary.Migrations
                     FineId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     BorrowingItemId = table.Column<long>(type: "bigint", nullable: false),
+                    FineType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    BaseAmount = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     FineStatus = table.Column<string>(type: "text", nullable: false),
                     PaidDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -308,9 +313,10 @@ namespace AdinsLibrary.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fines_BorrowingItemId",
+                name: "IX_Fines_BorrowingItemId_FineType",
                 table: "Fines",
-                column: "BorrowingItemId");
+                columns: new[] { "BorrowingItemId", "FineType" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Inventories_BookId",

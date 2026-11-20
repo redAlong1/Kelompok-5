@@ -1,14 +1,19 @@
 import { Routes } from '@angular/router';
 import { AdminReturnComponent } from './pages/admin-return/admin-return.component';
 import { adminGuard } from './guards/admin.guard';
+import { LandingComponent } from './pages/landing/landing.component';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'landing',
     pathMatch: 'full'
   },
 
+  {
+    path: 'landing',
+    component: LandingComponent
+  },
 
   { 
     path: 'admin/return',

@@ -136,6 +136,46 @@
     linear-gradient(145deg, #1854a5, #071b43);
 }
 
+.cover-purple {
+  background:
+    radial-gradient(circle at 85% 70%, #8b5fd4 0, transparent 35%),
+    linear-gradient(145deg, #7853bc, #302052);
+}
+
+.cover-orange {
+  background:
+    radial-gradient(circle at 85% 70%, #f3a950 0, transparent 35%),
+    linear-gradient(145deg, #e69a40, #994d23);
+}
+
+.cover-yellow {
+  background:
+    radial-gradient(circle at 85% 70%, #e5bb5b 0, transparent 35%),
+    linear-gradient(145deg, #d4a94b, #79602a);
+}
+
+.cover-green {
+  background:
+    radial-gradient(circle at 85% 70%, #20b87c 0, transparent 35%),
+    linear-gradient(145deg, #16a36a, #0b4f34);
+}
+
+.cover-teal {
+  background:
+    radial-gradient(circle at 85% 70%, #17a2b8 0, transparent 35%),
+    linear-gradient(145deg, #0f766e, #042f2e);
+}
+
+.book-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 5px;
+}
+
 .cover-label {
   font-size: 12px;
   letter-spacing: 2px;
@@ -459,5 +499,45 @@
   background:
     radial-gradient(circle at 85% 70%, #3167ad 0, transparent 35%),
     linear-gradient(145deg, #1854a5, #071b43);
+}
+
+.cover-purple {
+  background:
+    radial-gradient(circle at 85% 70%, #8b5fd4 0, transparent 35%),
+    linear-gradient(145deg, #7853bc, #302052);
+}
+
+.cover-orange {
+  background:
+    radial-gradient(circle at 85% 70%, #f3a950 0, transparent 35%),
+    linear-gradient(145deg, #e69a40, #994d23);
+}
+
+.cover-yellow {
+  background:
+    radial-gradient(circle at 85% 70%, #e5bb5b 0, transparent 35%),
+    linear-gradient(145deg, #d4a94b, #79602a);
+}
+
+.cover-green {
+  background:
+    radial-gradient(circle at 85% 70%, #20b87c 0, transparent 35%),
+    linear-gradient(145deg, #16a36a, #0b4f34);
+}
+
+.cover-teal {
+  background:
+    radial-gradient(circle at 85% 70%, #17a2b8 0, transparent 35%),
+    linear-gradient(145deg, #0f766e, #042f2e);
+}
+
+.book-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 5px;
 }
 }
