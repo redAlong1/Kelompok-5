@@ -1,9 +1,6 @@
 ﻿using AdinsLibrary.DTOs;
 using AdinsLibrary.Models;
 using AdinsLibrary.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq.Expressions;
 
 namespace AdinsLibrary.Services
 {
@@ -23,6 +20,10 @@ namespace AdinsLibrary.Services
         private readonly IRepository<Publisher> _publisherRepository;
         private readonly IRepository<Inventory> _inventoryRepository;
 
+        public async Task<Book?> GetByIdAsync(long id)
+        {
+            return await _bookRepository.GetByIdAsync(id);
+        }
 
 
         public BookService(
@@ -34,6 +35,17 @@ namespace AdinsLibrary.Services
             IRepository<Publisher> publisherRepository,
             IRepository<Inventory> inventoryRepository
 
+        public async Task<Book?> CreateBookAsync(BookRequest request)
+        {
+            var book = new Book
+            {
+                Title = request.Title,
+                Isbn = request.Isbn ?? string.Empty,
+                Description = request.Description ?? string.Empty,
+                AuthorId = request.AuthorId,
+                CategoryId = request.CategoryId,
+                PublisherId = request.PublisherId
+            };
 
         )
         {
