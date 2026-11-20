@@ -17,7 +17,7 @@ builder.Host.UseSerilog((ctx, config) =>
     config.ReadFrom.Configuration(ctx.Configuration)
         .WriteTo.Console()
         .WriteTo.File(
-            "logs/cinebook-.txt",
+            "logs/AdInsLibrary-.txt",
             rollingInterval: RollingInterval.Day,
             outputTemplate:
                 "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
@@ -66,6 +66,7 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IBookReservationService, BookReservationService>();
 builder.Services.AddScoped<IFineService, FineService>();
 builder.Services.AddScoped<IBookBorrowingTransactionService, BookBorrowingTransactionService>();
 

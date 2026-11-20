@@ -19,16 +19,32 @@ namespace AdinsLibrary.Controllers
 
         private long GetUserId()
         {
-            var claim = User.FindFirst("userId")?.Value;
+            var claim = User.FindFirst("userId")?.Value ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             return long.Parse(claim ?? "0");
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBookReservationRequest request)
         {
-            var result = await _service.CreateAsync(request, GetUserId());
+            var userId = GetUserId();
+            if (userId <= 0)
+                return Unauthorized(new { status = "error", message = "User tidak valid." });
+
+            var result = await _service.CreateAsync(request, userId);
             if (result is null)
                 return BadRequest(new { status = "error", message = "Buku tidak ditemukan" });
+
+            return CreatedAtAction(nameof(GetById), new { id = result.BookReservationId }, result);
+        }
+
+        [HttpGet("my")]
+        public async Task<IActionResult> GetMyReservations()
+        {
+            var userId = GetUserId();
+            if (userId <= 0)
+                return Unauthorized(new { status = "error", message = "User tidak valid." });
+
+            var result = await _service.GetMyReservationsAsync(userId);
             return Ok(result);
         }
 

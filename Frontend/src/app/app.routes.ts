@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 import { AdminReturnComponent } from './pages/admin-return/admin-return.component';
 import { adminGuard } from './guards/admin.guard';
@@ -28,6 +27,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/catalog/catalog.component')
         .then(m => m.CatalogComponent)
+  },
+
+  {
+    path: 'reservations',
+    loadComponent: () =>
+      import('./pages/reservation/reservation.component')
+        .then(m => m.ReservationComponent)
   },
 
   {

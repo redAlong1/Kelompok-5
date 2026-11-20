@@ -1,0 +1,178 @@
+// ============================================================
+//  INFO BANNER
+// ============================================================
+.info-banner {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+
+  .banner-text {
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+}
+
+// ============================================================
+//  BOOK PREVIEW BOX (BUAT RESERVASI)
+// ============================================================
+.book-preview-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.book-cover-thumb {
+  width: 90px;
+  height: 110px;
+  flex-shrink: 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  .cover-thumb-text {
+    font-size: 15px;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+.book-mini-thumb {
+  width: 48px;
+  height: 60px;
+  flex-shrink: 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  .mini-text {
+    font-size: 11px;
+    line-height: 1.1;
+  }
+}
+
+// ============================================================
+//  COVER COLOR VARIANTS
+// ============================================================
+.cover-brown {
+  background: radial-gradient(circle at 80% 80%, #b45309 0, transparent 40%),
+              linear-gradient(145deg, #92400e, #1c0a00);
+}
+
+.cover-blue {
+  background: radial-gradient(circle at 85% 70%, #3167ad 0, transparent 35%),
+              linear-gradient(145deg, #1854a5, #071b43);
+}
+
+.cover-teal {
+  background: radial-gradient(circle at 20% 80%, #0d9488 0, transparent 40%),
+              linear-gradient(145deg, #0f766e, #042f2e);
+}
+
+.cover-green {
+  background: radial-gradient(circle at 80% 30%, #22c55e 0, transparent 40%),
+              linear-gradient(145deg, #15803d, #052e16);
+}
+
+.cover-orange {
+  background: radial-gradient(circle at 20% 20%, #fb923c 0, transparent 50%),
+              linear-gradient(145deg, #c2410c, #431407);
+}
+
+.cover-purple {
+  background: radial-gradient(circle at 20% 20%, #9333ea 0, transparent 40%),
+              linear-gradient(145deg, #7e22ce, #2e1065);
+}
+
+.cover-dark {
+  background: radial-gradient(circle at 80% 20%, #475569 0, transparent 40%),
+              linear-gradient(145deg, #334155, #0f172a);
+}
+
+// ============================================================
+//  BADGES
+// ============================================================
+.badge-stock-danger {
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid #fecaca;
+}
+
+.badge-estimate {
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid #bfdbfe;
+}
+
+.badge-queue {
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid #fde68a;
+}
+
+.badge-complete {
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid #bbf7d0;
+}
+
+.badge-cancelled {
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+// ============================================================
+//  ACTIVE & HISTORY ITEMS
+// ============================================================
+.active-item {
+  background: #ffffff;
+  border-color: #f1f5f9 !important;
+  transition: all 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.btn-cancel {
+  border-color: #fca5a5;
+  color: #dc2626;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  background: #ffffff;
+
+  &:hover {
+    background: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
+  }
+}
+
+.history-item {
+  &:last-child {
+    border-bottom: none !important;
+  }
+}

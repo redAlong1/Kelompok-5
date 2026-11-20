@@ -11,12 +11,10 @@ namespace AdinsLibrary.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookService _bookService;
-        private readonly IWebHostEnvironment _env;
 
-        public BookController(IBookService bookService, IWebHostEnvironment env)
+        public BookController(IBookService bookService)
         {
             _bookService = bookService;
-            _env = env;
         }
 
         [HttpGet]
