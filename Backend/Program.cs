@@ -69,6 +69,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IBookReservationService, BookReservationService>();
 builder.Services.AddScoped<IFineService, FineService>();
 builder.Services.AddScoped<IBookBorrowingTransactionService, BookBorrowingTransactionService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
 
 
 var app = builder.Build();

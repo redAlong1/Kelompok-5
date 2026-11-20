@@ -32,9 +32,6 @@
       </li>
 
       <li class="nav-item">
-        <a routerLink="/reservations"
-           routerLinkActive="active"
-           class="nav-link sidebar-link rounded">
         <a routerLink="/publisher"
            routerLinkActive="active"
            class="nav-link sidebar-link rounded">
@@ -75,7 +72,9 @@
       </li>
 
       <li class="nav-item">
-        <a href="#" class="nav-link sidebar-link text-white-50 rounded">
+        <a routerLink="/reservations"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
           <i class="bi bi-calendar-check me-2"></i> Reservasi
         </a>
       </li>
@@ -97,7 +96,8 @@
           <i class="bi bi-person me-2"></i> Profil &amp; Membership
         </a>
       </li>
-            <li class="nav-item" *ngIf="authService.isAdmin()">
+
+      <li class="nav-item" *ngIf="authService.isAdmin()">
         <a routerLink="/admin/return"
            routerLinkActive="active"
            class="nav-link sidebar-link rounded">

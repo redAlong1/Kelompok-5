@@ -11,8 +11,6 @@ namespace AdinsLibrary.Models
         [MaxLength(500)]
         public string? CoverUrl { get; set; }
         [Required]
-        public decimal Price { get; set; }
-        [Required]
         [MaxLength(200)]
         public string Title { get; set; }
         [MaxLength(20)]
@@ -28,6 +26,7 @@ namespace AdinsLibrary.Models
         public Publisher? Publisher { get; set; }
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
+        [Required]
         [Column(TypeName = "decimal(10,2)")]
         public decimal Price { get; set; }
         public ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
