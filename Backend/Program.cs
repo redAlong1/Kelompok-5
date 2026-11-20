@@ -21,7 +21,7 @@ builder.Host.UseSerilog((ctx, config) =>
                 "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
 });
 
-var connStr = builder.Configuration.GetConnectionString("AdinsLibrary");
+var connStr = builder.Configuration.GetConnectionString("AdInsLibrary");
 builder.Services.AddDbContext<AdInsLibraryDbContext>(opt => opt.UseNpgsql(connStr));
 
 // Add services to the container.
@@ -58,6 +58,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IPublisherService, PublisherService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 
 var app = builder.Build();
 

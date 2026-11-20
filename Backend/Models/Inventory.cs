@@ -15,8 +15,6 @@ namespace AdinsLibrary.Models
         [Required]
         public AvailabilityStatus AvailabilityStatus { get; set; } = AvailabilityStatus.AVAILABLE;
         public ICollection<BorrowingItem> BorrowingItems { get; set; } = new List<BorrowingItem>();
-        public ICollection<Book> Books { get; set; } = new List<Book>();
-
 
     }
 }
