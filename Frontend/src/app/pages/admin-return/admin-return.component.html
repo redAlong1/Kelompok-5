@@ -1,0 +1,122 @@
+<div class="container-fluid py-4">
+
+  <div class="mb-4">
+    <h4 class="fw-bold mb-1">Pengembalian Buku</h4>
+    <p class="text-muted mb-0">Pilih transaksi, periksa kondisi tiap buku, lalu simpan.</p>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
+
+  <!-- Hasil denda -->
+  <div class="card mb-4" *ngIf="resultFines.length > 0">
+    <div class="card-header fw-semibold">Denda yang terbentuk</div>
+    <div class="table-responsive">
+      <table class="table mb-0 align-middle">
+        <thead>
+          <tr>
+            <th>Buku</th><th>Jenis</th><th class="text-end">Denda</th>
+            <th class="text-end">Diskon</th><th class="text-end">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of resultFines">
+            <td>{{ f.bookTitle }}</td>
+            <td><span class="badge text-bg-warning">{{ f.fineType }}</span></td>
+            <td class="text-end">Rp {{ f.baseAmount | number:'1.0-0' }}</td>
+            <td class="text-end">Rp {{ f.discountAmount | number:'1.0-0' }}</td>
+            <td class="text-end fw-bold">Rp {{ f.amount | number:'1.0-0' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Langkah 1: daftar transaksi -->
+  <div class="card" *ngIf="!selected">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span class="fw-semibold">Sedang dipinjam</span>
+      <input type="text" class="form-control form-control-sm search-input"
+             placeholder="Cari nama / ID transaksi" [(ngModel)]="search">
+    </div>
+
+    <div class="p-4 text-center text-muted" *ngIf="isLoading">Memuat data...</div>
+    <div class="p-4 text-center text-muted" *ngIf="!isLoading && filtered.length === 0">
+      Tidak ada peminjaman aktif.
+    </div>
+
+    <div class="table-responsive" *ngIf="!isLoading && filtered.length > 0">
+      <table class="table table-hover mb-0 align-middle">
+        <thead>
+          <tr>
+            <th>ID</th><th>Peminjam</th><th>Tgl Pinjam</th>
+            <th>Jatuh Tempo</th><th>Buku</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of filtered">
+            <td>#{{ b.bookBorrowingTransactionId }}</td>
+            <td>{{ b.username }}</td>
+            <td>{{ b.borrowDate }}</td>
+            <td>
+              {{ b.dueDate }}
+              <span class="badge text-bg-danger ms-1" *ngIf="isOverdue(b)">Terlambat</span>
+            </td>
+            <td>{{ b.items.length }} buku</td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-primary" (click)="select(b)">Proses</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Langkah 2: form pengembalian -->
+  <div class="card" *ngIf="selected">
+    <div class="card-header">
+      <div class="fw-semibold">
+        Transaksi #{{ selected.bookBorrowingTransactionId }} · {{ selected.username }}
+      </div>
+      <small class="text-muted">
+        Jatuh tempo {{ selected.dueDate }}
+        <span class="badge text-bg-danger ms-1" *ngIf="isOverdue(selected)">Terlambat</span>
+      </small>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table mb-0 align-middle">
+        <thead>
+          <tr><th style="width:50px"></th><th>Buku</th><th>Rak</th><th style="width:220px">Kondisi</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of rows">
+            <td><input type="checkbox" class="form-check-input" [(ngModel)]="r.selected"></td>
+            <td>{{ r.item.bookTitle }}</td>
+            <td>{{ r.item.shelfLocation }}</td>
+            <td>
+              <select class="form-select form-select-sm"
+                      [(ngModel)]="r.condition" [disabled]="!r.selected">
+                <option *ngFor="let c of conditions" [value]="c.value">{{ c.label }}</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer d-flex justify-content-between align-items-center">
+      <small class="text-muted">
+        Denda terlambat dihitung otomatis dari tanggal kembali.
+      </small>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" (click)="cancel()" [disabled]="isSaving">Batal</button>
+        <button class="btn btn-primary" (click)="submit()"
+                [disabled]="isSaving || selectedCount === 0">
+          {{ isSaving ? 'Menyimpan...' : 'Simpan Pengembalian (' + selectedCount + ')' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

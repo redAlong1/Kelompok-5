@@ -13,13 +13,15 @@
         <p class="text-muted small mb-0">Temukan dan pinjam buku dari koleksi perpustakaan.</p>
       </div>
       <div class="d-flex align-items-center gap-3">
-        <button class="btn btn-light btn-sm position-relative p-2">
+        <button class="btn btn-light btn-sm position-relative p-2 border">
           <i class="bi bi-bell fs-5 text-muted"></i>
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:9px;">3</span>
         </button>
         <div class="d-flex align-items-center gap-2">
-          <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center rounded-circle fw-bold" style="width:36px;height:36px;font-size:14px;">A</div>
-          <span class="fw-semibold text-dark">Andi</span>
+          <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center rounded-circle fw-bold" style="width:36px;height:36px;font-size:14px;">
+            {{ getUserInitial() }}
+          </div>
+          <span class="fw-semibold text-dark">{{ getUserDisplayName() }}</span>
         </div>
       </div>
     </header>
@@ -39,6 +41,7 @@
               class="form-control border-start-0 ps-0"
               placeholder="Cari judul, penulis, atau ISBN"
               [(ngModel)]="searchQuery"
+              (keyup.enter)="onSearch()"
             >
           </div>
         </div>
@@ -51,7 +54,7 @@
           </select>
         </div>
         <div class="col-md-2">
-          <button class="btn btn-primary w-100 fw-semibold shadow-sm">
+          <button class="btn btn-primary w-100 fw-semibold shadow-sm" (click)="onSearch()">
             <i class="bi bi-search me-1"></i> Cari
           </button>
         </div>
@@ -62,18 +65,29 @@
         <button
           *ngFor="let cat of categories"
           class="btn btn-sm category-tab"
-          [class.active]="activeCategory === cat"
+          [class.active]="activeCategory === cat.name"
           (click)="setCategory(cat)"
         >
-          {{ cat }}
+          {{ cat.name }}
         </button>
       </div>
 
       <!-- RESULT INFO -->
-      <p class="text-muted small mb-3">Menampilkan <strong>{{ books.length }}</strong> buku</p>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <p class="text-muted small mb-0">Menampilkan <strong>{{ books.length }}</strong> buku</p>
+        <button class="btn btn-sm btn-link text-decoration-none text-muted" (click)="loadBooks()" title="Refresh data">
+          <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+        </button>
+      </div>
+
+      <!-- LOADING STATE -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-2 small">Memuat koleksi buku dari perpustakaan...</p>
+      </div>
 
       <!-- BOOK GRID -->
-      <div class="row g-4">
+      <div class="row g-4" *ngIf="!loading">
         <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let book of books">
           <div class="card book-card border-0 shadow-sm h-100" (click)="goToDetail(book.bookId)" style="cursor:pointer;">
 
@@ -82,14 +96,14 @@
               <div class="book-cover-overlay"></div>
               <div class="position-relative z-1 w-100">
                 <div class="fw-bold text-white fs-6 book-title-cover">{{ book.title }}</div>
-                <div class="text-white-50 small mt-1">{{ book.authorName }}</div>
+                <div class="text-white-50 small mt-1 text-truncate">{{ book.authorName }}</div>
               </div>
             </div>
 
             <!-- Card Body -->
             <div class="card-body d-flex flex-column p-3">
               <h6 class="card-title fw-bold mb-1 text-dark text-truncate" title="{{ book.title }}">{{ book.title }}</h6>
-              <p class="text-muted small mb-2">{{ book.authorName }}</p>
+              <p class="text-muted small mb-2 text-truncate">{{ book.authorName }}</p>
 
               <!-- Rating & Stock -->
               <div class="d-flex align-items-center justify-content-between mb-3">
@@ -129,7 +143,7 @@
       </div>
 
       <!-- Empty State -->
-      <div *ngIf="books.length === 0" class="text-center py-5">
+      <div *ngIf="!loading && books.length === 0" class="text-center py-5">
         <i class="bi bi-search fs-1 text-muted"></i>
         <p class="text-muted mt-3">Tidak ada buku yang ditemukan.</p>
       </div>

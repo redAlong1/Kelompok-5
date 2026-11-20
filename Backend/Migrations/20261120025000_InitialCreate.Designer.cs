@@ -12,13 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AdinsLibrary.Migrations
 {
     [DbContext(typeof(AdInsLibraryDbContext))]
-<<<<<<<< HEAD:Backend/Migrations/20261119142358_initial db.Designer.cs
-    [Migration("20261119142358_initial db")]
-    partial class initialdb
-========
-    [Migration("20261119145013_ReplaceRoleTableWithEnum")]
-    partial class ReplaceRoleTableWithEnum
->>>>>>>> a5708202a3ccadf8203524858ac1234d6f053a99:Backend/Migrations/20261119145013_ReplaceRoleTableWithEnum.Designer.cs
+    [Migration("20261120025000_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -63,6 +58,14 @@ namespace AdinsLibrary.Migrations
 
                     b.Property<long>("CategoryId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("CoverUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -207,6 +210,9 @@ namespace AdinsLibrary.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -308,6 +314,9 @@ namespace AdinsLibrary.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("PublisherId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PublisherName")
                         .IsRequired()
