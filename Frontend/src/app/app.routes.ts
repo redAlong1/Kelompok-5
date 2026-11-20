@@ -1,5 +1,7 @@
 
 import { Routes } from '@angular/router';
+import { AdminReturnComponent } from './pages/admin-return/admin-return.component';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -8,6 +10,12 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
 
+
+  { 
+    path: 'admin/return',
+    component: AdminReturnComponent, 
+    canActivate: [adminGuard] 
+  },
   {
     path: 'dashboard',
     loadComponent: () =>

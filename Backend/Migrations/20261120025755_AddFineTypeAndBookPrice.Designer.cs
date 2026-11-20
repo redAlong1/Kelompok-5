@@ -12,13 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AdinsLibrary.Migrations
 {
     [DbContext(typeof(AdInsLibraryDbContext))]
-<<<<<<<< HEAD:Backend/Migrations/20261119142358_initial db.Designer.cs
-    [Migration("20261119142358_initial db")]
-    partial class initialdb
-========
-    [Migration("20261119145013_ReplaceRoleTableWithEnum")]
-    partial class ReplaceRoleTableWithEnum
->>>>>>>> a5708202a3ccadf8203524858ac1234d6f053a99:Backend/Migrations/20261119145013_ReplaceRoleTableWithEnum.Designer.cs
+    [Migration("20261120025755_AddFineTypeAndBookPrice")]
+    partial class AddFineTypeAndBookPrice
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -64,6 +59,14 @@ namespace AdinsLibrary.Migrations
                     b.Property<long>("CategoryId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("CoverUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -72,6 +75,11 @@ namespace AdinsLibrary.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
+
+                    b.Property<decimal>("Price")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("numeric(10,2)")
+                        .HasDefaultValue(0m);
 
                     b.Property<long>("PublisherId")
                         .HasColumnType("bigint");
@@ -177,9 +185,8 @@ namespace AdinsLibrary.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("ReturnCondition")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime?>("ReturnDate")
                         .HasColumnType("timestamp with time zone");
@@ -207,6 +214,9 @@ namespace AdinsLibrary.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -228,22 +238,37 @@ namespace AdinsLibrary.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("FineId"));
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric(10,2)");
+
+                    b.Property<decimal>("BaseAmount")
+                        .HasColumnType("numeric(10,2)");
+
                     b.Property<long>("BorrowingItemId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("numeric(10,2)");
+
                     b.Property<string>("FineStatus")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("FineType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime?>("PaidDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("FineId");
 
-                    b.HasIndex("BorrowingItemId");
+                    b.HasIndex("BorrowingItemId", "FineType")
+                        .IsUnique();
 
                     b.ToTable("Fines");
                 });
@@ -308,6 +333,9 @@ namespace AdinsLibrary.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("PublisherId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PublisherName")
                         .IsRequired()

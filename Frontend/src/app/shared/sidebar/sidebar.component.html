@@ -54,6 +54,13 @@
           <i class="bi bi-person me-2"></i> Profil &amp; Membership
         </a>
       </li>
+            <li class="nav-item" *ngIf="authService.isAdmin()">
+        <a routerLink="/admin/return"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-box-arrow-in-left me-2"></i> Pengembalian (Admin)
+        </a>
+      </li>
 
     </ul>
   </nav>

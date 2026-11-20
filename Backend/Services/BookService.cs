@@ -20,33 +20,12 @@ namespace AdinsLibrary.Services
         private readonly IRepository<Publisher> _publisherRepository;
         private readonly IRepository<Inventory> _inventoryRepository;
 
-        public async Task<Book?> GetByIdAsync(long id)
-        {
-            return await _bookRepository.GetByIdAsync(id);
-        }
-
-
         public BookService(
-
-
             IRepository<Book> bookRepository,
             IRepository<Author> authorRepository,
             IRepository<Category> categoryRepository,
             IRepository<Publisher> publisherRepository,
             IRepository<Inventory> inventoryRepository
-
-        public async Task<Book?> CreateBookAsync(BookRequest request)
-        {
-            var book = new Book
-            {
-                Title = request.Title,
-                Isbn = request.Isbn ?? string.Empty,
-                Description = request.Description ?? string.Empty,
-                AuthorId = request.AuthorId,
-                CategoryId = request.CategoryId,
-                PublisherId = request.PublisherId
-            };
-
         )
         {
             _bookRepository = bookRepository;
@@ -55,7 +34,6 @@ namespace AdinsLibrary.Services
             _publisherRepository = publisherRepository;
             _inventoryRepository = inventoryRepository;
         }
-
 
         public async Task<BookResponse?> GetByIdAsync(long id)
         {
