@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../services/auth.service'; // SESUAIKAN path
 
 @Component({
   selector: 'app-sidebar',
@@ -11,13 +11,19 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
-  constructor(
-    public authService: AuthService,
-    private router: Router
-  ) {}
 
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  collapsed = false;
+
+  constructor(public authService: AuthService) {
+    try {
+      this.collapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+    } catch { /* abaikan */ }
+  }
+
+  toggle(): void {
+    this.collapsed = !this.collapsed;
+    try {
+      localStorage.setItem('sidebarCollapsed', String(this.collapsed));
+    } catch { /* abaikan */ }
   }
 }
