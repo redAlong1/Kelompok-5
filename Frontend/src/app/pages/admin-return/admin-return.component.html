@@ -1,122 +1,415 @@
-<div class="container-fluid py-4">
+<div class="d-flex vh-100 overflow-hidden">
+  <app-sidebar></app-sidebar>
 
-  <div class="mb-4">
-    <h4 class="fw-bold mb-1">Pengembalian Buku</h4>
-    <p class="text-muted mb-0">Pilih transaksi, periksa kondisi tiap buku, lalu simpan.</p>
-  </div>
+  <main class="flex-grow-1 d-flex flex-column overflow-auto" style="background:#f0f2f5;">
+    <div class="p-4">
 
-  <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
-  <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
-
-  <!-- Hasil denda -->
-  <div class="card mb-4" *ngIf="resultFines.length > 0">
-    <div class="card-header fw-semibold">Denda yang terbentuk</div>
-    <div class="table-responsive">
-      <table class="table mb-0 align-middle">
-        <thead>
-          <tr>
-            <th>Buku</th><th>Jenis</th><th class="text-end">Denda</th>
-            <th class="text-end">Diskon</th><th class="text-end">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let f of resultFines">
-            <td>{{ f.bookTitle }}</td>
-            <td><span class="badge text-bg-warning">{{ f.fineType }}</span></td>
-            <td class="text-end">Rp {{ f.baseAmount | number:'1.0-0' }}</td>
-            <td class="text-end">Rp {{ f.discountAmount | number:'1.0-0' }}</td>
-            <td class="text-end fw-bold">Rp {{ f.amount | number:'1.0-0' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Langkah 1: daftar transaksi -->
-  <div class="card" *ngIf="!selected">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <span class="fw-semibold">Sedang dipinjam</span>
-      <input type="text" class="form-control form-control-sm search-input"
-             placeholder="Cari nama / ID transaksi" [(ngModel)]="search">
-    </div>
-
-    <div class="p-4 text-center text-muted" *ngIf="isLoading">Memuat data...</div>
-    <div class="p-4 text-center text-muted" *ngIf="!isLoading && filtered.length === 0">
-      Tidak ada peminjaman aktif.
-    </div>
-
-    <div class="table-responsive" *ngIf="!isLoading && filtered.length > 0">
-      <table class="table table-hover mb-0 align-middle">
-        <thead>
-          <tr>
-            <th>ID</th><th>Peminjam</th><th>Tgl Pinjam</th>
-            <th>Jatuh Tempo</th><th>Buku</th><th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let b of filtered">
-            <td>#{{ b.bookBorrowingTransactionId }}</td>
-            <td>{{ b.username }}</td>
-            <td>{{ b.borrowDate }}</td>
-            <td>
-              {{ b.dueDate }}
-              <span class="badge text-bg-danger ms-1" *ngIf="isOverdue(b)">Terlambat</span>
-            </td>
-            <td>{{ b.items.length }} buku</td>
-            <td class="text-end">
-              <button class="btn btn-sm btn-primary" (click)="select(b)">Proses</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Langkah 2: form pengembalian -->
-  <div class="card" *ngIf="selected">
-    <div class="card-header">
-      <div class="fw-semibold">
-        Transaksi #{{ selected.bookBorrowingTransactionId }} · {{ selected.username }}
+      <!-- Header -->
+      <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2">
+        <div>
+          <h4 class="fw-bold text-dark mb-1">Sirkulasi Perpustakaan</h4>
+          <p class="text-primary small mb-0">Kelola peminjaman buku (reservasi &amp; walk-in) serta pengembalian buku.</p>
+        </div>
       </div>
-      <small class="text-muted">
-        Jatuh tempo {{ selected.dueDate }}
-        <span class="badge text-bg-danger ms-1" *ngIf="isOverdue(selected)">Terlambat</span>
-      </small>
-    </div>
 
-    <div class="table-responsive">
-      <table class="table mb-0 align-middle">
-        <thead>
-          <tr><th style="width:50px"></th><th>Buku</th><th>Rak</th><th style="width:220px">Kondisi</th></tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let r of rows">
-            <td><input type="checkbox" class="form-check-input" [(ngModel)]="r.selected"></td>
-            <td>{{ r.item.bookTitle }}</td>
-            <td>{{ r.item.shelfLocation }}</td>
-            <td>
-              <select class="form-select form-select-sm"
-                      [(ngModel)]="r.condition" [disabled]="!r.selected">
-                <option *ngFor="let c of conditions" [value]="c.value">{{ c.label }}</option>
-              </select>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <!-- Navigation Tabs -->
+      <ul class="nav nav-pills mb-4 gap-2">
+        <li class="nav-item">
+          <button class="nav-link px-4 py-2 fw-semibold" [class.active]="activeTab === 'borrow'" (click)="setTab('borrow')">
+            <i class="bi bi-box-arrow-up-right me-2"></i> Peminjaman Buku
+            <span class="badge bg-danger ms-2" *ngIf="reservations.length > 0">{{ reservations.length }} antrean</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link px-4 py-2 fw-semibold" [class.active]="activeTab === 'return'" (click)="setTab('return')">
+            <i class="bi bi-box-arrow-in-left me-2"></i> Pengembalian Buku
+            <span class="badge bg-secondary ms-2" *ngIf="borrowings.length > 0">{{ borrowings.length }} aktif</span>
+          </button>
+        </li>
+      </ul>
 
-    <div class="card-footer d-flex justify-content-between align-items-center">
-      <small class="text-muted">
-        Denda terlambat dihitung otomatis dari tanggal kembali.
-      </small>
-      <div class="d-flex gap-2">
-        <button class="btn btn-outline-secondary" (click)="cancel()" [disabled]="isSaving">Batal</button>
-        <button class="btn btn-primary" (click)="submit()"
-                [disabled]="isSaving || selectedCount === 0">
-          {{ isSaving ? 'Menyimpan...' : 'Simpan Pengembalian (' + selectedCount + ')' }}
+      <!-- Alerts -->
+      <div class="alert alert-danger py-2 small mb-3" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="alert alert-success py-2 small mb-3" *ngIf="successMessage">{{ successMessage }}</div>
+
+      <!-- ======================================================== -->
+      <!-- TAB 1: PEMINJAMAN BUKU                                   -->
+      <!-- ======================================================== -->
+      <div *ngIf="activeTab === 'borrow'">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+
+            <!-- Action Bar -->
+            <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
+              <input type="text" class="form-control search-input"
+                     placeholder="Cari pemesan / judul buku..."
+                     [(ngModel)]="searchReservation">
+
+              <button class="btn btn-primary fw-semibold px-4 flex-shrink-0" (click)="openWalkInModal()">
+                <i class="bi bi-plus-lg me-1"></i> + Peminjaman Walk-In (Langsung)
+              </button>
+            </div>
+
+            <!-- Card Subtitle -->
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <div>
+                <h6 class="fw-bold text-dark mb-0">Antrean Booking / Reservasi Siap Ambil</h6>
+                <small class="text-muted">Member yang sudah memesan buku secara online dan siap mengambil buku fisik.</small>
+              </div>
+              <span class="badge bg-light text-dark border px-2.5 py-1" style="font-size:12px;">
+                Total: {{ filteredReservations.length }} Reservasi
+              </span>
+            </div>
+
+            <!-- Loading -->
+            <div class="text-center py-5" *ngIf="isLoadingReservations">
+              <div class="spinner-border text-primary" role="status"></div>
+              <div class="text-muted mt-2 small">Memuat data reservasi...</div>
+            </div>
+
+            <!-- Table of Reservations -->
+            <div *ngIf="!isLoadingReservations">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead>
+                    <tr class="table-header">
+                      <th class="py-3 px-3 text-muted fw-semibold" style="font-size:13px; width:70px;">Antrean</th>
+                      <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Nama Member</th>
+                      <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Judul Buku</th>
+                      <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Tgl Booking</th>
+                      <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Ketersediaan di Rak</th>
+                      <th class="py-3 text-muted fw-semibold text-end px-3" style="font-size:13px; width:160px;">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="filteredReservations.length === 0">
+                      <td colspan="6" class="text-center py-5 text-muted" style="font-size:14px;">
+                        Tidak ada antrean booking / reservasi aktif saat ini.
+                      </td>
+                    </tr>
+                    <tr *ngFor="let res of filteredReservations">
+                      <td class="px-3">
+                        <span class="badge rounded-pill bg-primary-subtle text-primary fw-bold px-2.5 py-1">
+                          Ke-{{ res.queueNumber || 1 }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="fw-semibold text-dark" style="font-size:14px;">{{ res.userName }}</div>
+                        <small class="text-muted">User ID: #{{ res.userId }}</small>
+                      </td>
+                      <td>
+                        <div class="text-dark fw-medium" style="font-size:14px;">{{ res.bookTitle }}</div>
+                        <small class="text-muted">{{ res.authorName || 'Buku ID #' + res.bookId }}</small>
+                      </td>
+                      <td class="text-secondary" style="font-size:13px;">
+                        {{ res.reservationDate | date:'d MMM yyyy' }}
+                      </td>
+                      <td>
+                        <span class="badge bg-success-subtle text-success px-2.5 py-1 rounded-pill" *ngIf="getUnitsForBook(res.bookId).length > 0">
+                          <i class="bi bi-check-circle me-1"></i> Tersedia {{ getUnitsForBook(res.bookId).length }} eksemplar
+                        </span>
+                        <span class="badge bg-warning-subtle text-warning-emphasis px-2.5 py-1 rounded-pill" *ngIf="getUnitsForBook(res.bookId).length === 0">
+                          <i class="bi bi-clock me-1"></i> Belum ada unit kembali
+                        </span>
+                      </td>
+                      <td class="text-end px-3">
+                        <button class="btn btn-sm btn-primary fw-semibold px-3"
+                                style="font-size:13px;"
+                                [disabled]="getUnitsForBook(res.bookId).length === 0"
+                                (click)="openProcessReservation(res)">
+                          <i class="bi bi-check2-circle me-1"></i> Proses Pinjam
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- TAB 2: PENGEMBALIAN BUKU                                 -->
+      <!-- ======================================================== -->
+      <div *ngIf="activeTab === 'return'">
+
+        <!-- Hasil denda -->
+        <div class="card border-0 shadow-sm mb-4" *ngIf="resultFines.length > 0">
+          <div class="card-header bg-white border-bottom py-3 px-4 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-exclamation-triangle text-warning fs-5"></i>
+              <h6 class="fw-bold text-dark mb-0">Denda yang Terbentuk</h6>
+            </div>
+            <button type="button" class="btn-close" (click)="resultFines = []" aria-label="Close"></button>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead>
+                  <tr class="table-header">
+                    <th class="py-3 px-4 text-muted fw-semibold" style="font-size:13px;">Buku</th>
+                    <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Jenis Denda</th>
+                    <th class="py-3 text-muted fw-semibold text-end" style="font-size:13px;">Denda Pokok</th>
+                    <th class="py-3 text-muted fw-semibold text-end" style="font-size:13px;">Diskon</th>
+                    <th class="py-3 text-muted fw-semibold text-end px-4" style="font-size:13px;">Total Denda</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let f of resultFines">
+                    <td class="px-4 text-dark fw-medium" style="font-size:14px;">{{ f.bookTitle }}</td>
+                    <td>
+                      <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis px-2.5 py-1" style="font-size:12px;">{{ f.fineType }}</span>
+                    </td>
+                    <td class="text-end text-muted" style="font-size:13px;">Rp {{ f.baseAmount | number:'1.0-0' }}</td>
+                    <td class="text-end text-muted" style="font-size:13px;">Rp {{ f.discountAmount | number:'1.0-0' }}</td>
+                    <td class="text-end fw-bold text-danger px-4" style="font-size:14px;">Rp {{ f.amount | number:'1.0-0' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Langkah 1: daftar transaksi yang dipinjam -->
+        <div class="card border-0 shadow-sm" *ngIf="!selected">
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
+              <input type="text" class="form-control search-input"
+                     placeholder="Cari nama peminjam / ID transaksi..." [(ngModel)]="search">
+              <div class="text-muted small">
+                Total: <span class="fw-semibold text-dark">{{ filtered.length }}</span> transaksi aktif
+              </div>
+            </div>
+
+            <div class="text-center py-5" *ngIf="isLoading">
+              <div class="spinner-border text-primary" role="status"></div>
+              <div class="text-muted mt-2 small">Memuat data peminjaman...</div>
+            </div>
+
+            <div class="text-center py-5 text-muted" *ngIf="!isLoading && filtered.length === 0" style="font-size:14px;">
+              Tidak ada peminjaman aktif.
+            </div>
+
+            <div class="table-responsive" *ngIf="!isLoading && filtered.length > 0">
+              <table class="table table-hover align-middle mb-0">
+                <thead>
+                  <tr class="table-header">
+                    <th class="py-3 px-3 text-muted fw-semibold" style="font-size:13px; width:100px;">ID Transaksi</th>
+                    <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Peminjam</th>
+                    <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Tgl Pinjam</th>
+                    <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Jatuh Tempo</th>
+                    <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Jumlah Buku</th>
+                    <th class="py-3 text-muted fw-semibold text-end px-3" style="font-size:13px; width:120px;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let b of filtered">
+                    <td class="px-3 text-muted fw-semibold" style="font-size:13px;">#{{ b.bookBorrowingTransactionId }}</td>
+                    <td class="text-dark fw-semibold" style="font-size:14px;">{{ b.username }}</td>
+                    <td class="text-secondary" style="font-size:13px;">{{ b.borrowDate }}</td>
+                    <td style="font-size:13px;">
+                      <span class="text-dark">{{ b.dueDate }}</span>
+                      <span class="badge rounded-pill bg-danger-subtle text-danger ms-2 px-2 py-0.5" *ngIf="isOverdue(b)" style="font-size:11px;">Terlambat</span>
+                    </td>
+                    <td class="text-muted" style="font-size:13px;">
+                      <span class="badge bg-light text-dark border px-2 py-1" style="font-size:12px;">
+                        <i class="bi bi-book me-1 text-primary"></i>{{ b.items.length }} buku
+                      </span>
+                    </td>
+                    <td class="text-end px-3">
+                      <button class="btn btn-sm btn-primary fw-semibold px-3" style="font-size:13px;" (click)="select(b)">Proses</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top" *ngIf="!isLoading && filtered.length > 0">
+              <small class="text-muted">
+                Menampilkan <span class="text-primary fw-semibold">{{ filtered.length }}</span> peminjaman aktif
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Langkah 2: form pengembalian (ketika transaksi dipilih) -->
+        <div class="card border-0 shadow-sm" *ngIf="selected">
+          <div class="card-header bg-white border-bottom py-3 px-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="fw-bold text-dark fs-6">Transaksi #{{ selected.bookBorrowingTransactionId }}</span>
+                <span class="text-muted">&bull;</span>
+                <span class="fw-semibold text-primary">{{ selected.username }}</span>
+              </div>
+              <div class="small text-muted mt-1">
+                Jatuh tempo: <span class="fw-medium text-dark">{{ selected.dueDate }}</span>
+                <span class="badge rounded-pill bg-danger-subtle text-danger ms-2 px-2 py-0.5" *ngIf="isOverdue(selected)" style="font-size:11px;">Terlambat</span>
+              </div>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" (click)="cancel()" [disabled]="isSaving">
+              <i class="bi bi-arrow-left me-1"></i> Kembali ke Daftar
+            </button>
+          </div>
+
+          <div class="card-body p-4">
+            <p class="text-muted small mb-3">Centang buku yang ingin dikembalikan dan pilih kondisi tiap buku:</p>
+
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead>
+                  <tr class="table-header">
+                    <th class="py-3 px-3 text-muted fw-semibold" style="width:50px;"></th>
+                    <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Judul Buku</th>
+                    <th class="py-3 text-muted fw-semibold" style="font-size:13px; width:200px;">Lokasi Rak</th>
+                    <th class="py-3 text-muted fw-semibold" style="font-size:13px; width:220px;">Kondisi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let r of rows" [class.table-light]="!r.selected">
+                    <td class="px-3">
+                      <input type="checkbox" class="form-check-input" [(ngModel)]="r.selected" style="cursor: pointer;">
+                    </td>
+                    <td>
+                      <div class="fw-semibold text-dark" style="font-size:14px;">{{ r.item.bookTitle }}</div>
+                      <small class="text-muted">Unit ID: #{{ r.item.inventoryId }}</small>
+                    </td>
+                    <td>
+                      <span class="badge bg-light text-dark border px-2 py-1" style="font-size:12px;">
+                        <i class="bi bi-geo-alt me-1 text-primary"></i>{{ r.item.shelfLocation || '-' }}
+                      </span>
+                    </td>
+                    <td>
+                      <select class="form-select form-select-sm"
+                              [(ngModel)]="r.condition" [disabled]="!r.selected">
+                        <option *ngFor="let c of conditions" [value]="c.value">{{ c.label }}</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card-footer bg-light-subtle border-top py-3 px-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <small class="text-muted d-flex align-items-center gap-1">
+              <i class="bi bi-info-circle text-primary"></i>
+              Denda terlambat dihitung otomatis dari tanggal kembali.
+            </small>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-secondary px-4" (click)="cancel()" [disabled]="isSaving">Batal</button>
+              <button class="btn btn-primary px-4 fw-semibold" (click)="submit()"
+                      [disabled]="isSaving || selectedCount === 0">
+                <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1"></span>
+                {{ isSaving ? 'Menyimpan...' : 'Simpan Pengembalian (' + selectedCount + ')' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: PROSES BOOKING / RESERVASI KE PEMINJAMAN              -->
+<!-- ============================================================ -->
+<div class="modal fade" [class.show]="showProcessModal" [style.display]="showProcessModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content border-0 shadow-lg rounded-3">
+      <div class="modal-header border-0 px-4 pt-4 pb-2">
+        <h6 class="modal-title fw-bold text-dark">Konfirmasi Peminjaman Buku (Booking)</h6>
+        <button type="button" class="btn-close" (click)="closeProcessModal()"></button>
+      </div>
+
+      <div class="modal-body px-4 py-2">
+        <div class="p-3 bg-light rounded-3 mb-3 border">
+          <div class="mb-2">
+            <small class="text-muted d-block">Nama Member</small>
+            <span class="fw-bold text-dark">{{ selectedReservation?.userName }} (ID: #{{ selectedReservation?.userId }})</span>
+          </div>
+          <div>
+            <small class="text-muted d-block">Judul Buku</small>
+            <span class="fw-bold text-primary">{{ selectedReservation?.bookTitle }}</span>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-semibold text-muted">Pilih Unit Eksemplar Fisik di Rak <span class="text-danger">*</span></label>
+          <select class="form-select" [(ngModel)]="selectedInventoryId">
+            <option *ngFor="let u of availableUnitsForBook" [value]="u.inventoryId">
+              Unit #{{ u.inventoryId }} &bull; Lokasi: {{ u.shelfLocation || 'Rak Utama' }}
+            </option>
+          </select>
+          <small class="text-muted">Unit fisik ini yang akan diserahkan kepada peminjam.</small>
+        </div>
+
+        <div class="p-2.5 bg-info-subtle text-info-emphasis rounded-3 small">
+          <i class="bi bi-info-circle me-1"></i> Durasi pinjam 14 hari terhitung mulai hari ini.
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 px-4 pb-4 pt-2">
+        <button type="button" class="btn btn-outline-secondary px-4" (click)="closeProcessModal()" [disabled]="isSaving">Batal</button>
+        <button type="button" class="btn btn-primary px-4 fw-semibold" (click)="confirmBorrowReservation()" [disabled]="isSaving || !selectedInventoryId">
+          <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1"></span>
+          Konfirmasi &amp; Serahkan Buku
         </button>
       </div>
     </div>
   </div>
-
 </div>
+
+<!-- ============================================================ -->
+<!-- MODAL: PEMINJAMAN WALK-IN (LANGSUNG DARI RAK)                -->
+<!-- ============================================================ -->
+<div class="modal fade" [class.show]="showWalkInModal" [style.display]="showWalkInModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content border-0 shadow-lg rounded-3">
+      <div class="modal-header border-0 px-4 pt-4 pb-2">
+        <h6 class="modal-title fw-bold text-dark">Peminjaman Walk-In (Langsung)</h6>
+        <button type="button" class="btn-close" (click)="closeWalkInModal()"></button>
+      </div>
+
+      <div class="modal-body px-4 py-2">
+        <div class="mb-3">
+          <label class="form-label small fw-semibold text-muted">Pilih Member Peminjam <span class="text-danger">*</span></label>
+          <select class="form-select" [(ngModel)]="walkInUserId">
+            <option [ngValue]="null" disabled>Pilih nama member...</option>
+            <option *ngFor="let u of users" [ngValue]="u.userId">
+              {{ u.username }} ({{ u.email }})
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-semibold text-muted">Pilih Unit Eksemplar Buku di Rak <span class="text-danger">*</span></label>
+          <select class="form-select" [(ngModel)]="walkInInventoryId">
+            <option [ngValue]="null" disabled>Pilih buku yang dibawa member...</option>
+            <option *ngFor="let inv of availableInventories" [ngValue]="inv.inventoryId">
+              {{ inv.bookTitle }} &bull; [Unit #{{ inv.inventoryId }} - Rak: {{ inv.shelfLocation || '-' }}]
+            </option>
+          </select>
+          <small class="text-muted">Hanya unit buku yang berstatus AVAILABLE yang dapat dipinjam.</small>
+        </div>
+
+        <div class="p-2.5 bg-info-subtle text-info-emphasis rounded-3 small">
+          <i class="bi bi-info-circle me-1"></i> Durasi pinjam 14 hari terhitung mulai hari ini.
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 px-4 pb-4 pt-2">
+        <button type="button" class="btn btn-outline-secondary px-4" (click)="closeWalkInModal()" [disabled]="isSaving">Batal</button>
+        <button type="button" class="btn btn-primary px-4 fw-semibold" (click)="confirmWalkInBorrow()" [disabled]="isSaving || !walkInUserId || !walkInInventoryId">
+          <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1"></span>
+          Simpan Peminjaman
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="showProcessModal || showWalkInModal" (click)="closeProcessModal(); closeWalkInModal();"></div>

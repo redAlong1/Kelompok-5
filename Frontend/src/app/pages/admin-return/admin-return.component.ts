@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
 import {
   Borrowing,
   BorrowingItem,
   BorrowingService,
   BookCondition,
   Fine
-} from '../../services/borrowing.service'; // SESUAIKAN path
+} from '../../services/borrowing.service';
 
 interface ReturnRow {
   item: BorrowingItem;
@@ -18,16 +19,18 @@ interface ReturnRow {
 @Component({
   selector: 'app-admin-return',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SidebarComponent],
   templateUrl: './admin-return.component.html',
   styleUrl: './admin-return.component.scss'
 })
 export class AdminReturnComponent implements OnInit {
 
+  activeTab: 'borrow' | 'return' = 'borrow';
+
+  // --- RETURN DATA ---
   borrowings: Borrowing[] = [];
   selected: Borrowing | null = null;
   rows: ReturnRow[] = [];
-
   search = '';
   isLoading = false;
   isSaving = false;
@@ -42,12 +45,43 @@ export class AdminReturnComponent implements OnInit {
     { value: 'LOST', label: 'Hilang' }
   ];
 
+  // --- BORROW DATA ---
+  reservations: any[] = [];
+  isLoadingReservations = false;
+  searchReservation = '';
+  users: any[] = [];
+  inventories: any[] = [];
+
+  // Modal: Proses Booking
+  showProcessModal = false;
+  selectedReservation: any = null;
+  availableUnitsForBook: any[] = [];
+  selectedInventoryId: number | null = null;
+
+  // Modal: Walk-in Borrow
+  showWalkInModal = false;
+  walkInUserId: number | null = null;
+  walkInInventoryId: number | null = null;
+
   constructor(private borrowingService: BorrowingService) {}
 
   ngOnInit(): void {
     this.loadBorrowings();
+    this.loadBorrowData();
   }
 
+  setTab(tab: 'borrow' | 'return'): void {
+    this.activeTab = tab;
+    this.errorMessage = '';
+    this.successMessage = '';
+    if (tab === 'borrow') {
+      this.loadBorrowData();
+    } else {
+      this.loadBorrowings();
+    }
+  }
+
+  // ---------- RETURN METHODS ----------
   loadBorrowings(): void {
     this.isLoading = true;
     this.borrowingService.getAll('BORROWED').subscribe({
@@ -77,7 +111,6 @@ export class AdminReturnComponent implements OnInit {
     this.successMessage = '';
     this.resultFines = [];
 
-    // hanya buku yang belum dikembalikan
     this.rows = b.items
       .filter(i => !i.returnDate)
       .map(i => ({ item: i, selected: true, condition: 'GOOD' as BookCondition }));
@@ -114,6 +147,149 @@ export class AdminReturnComponent implements OnInit {
         this.successMessage = 'Pengembalian berhasil disimpan.';
         this.selected = null;
         this.rows = [];
+        this.loadBorrowings();
+        this.loadBorrowData();
+      },
+      error: (err) => {
+        this.isSaving = false;
+        this.errorMessage = this.getError(err);
+      }
+    });
+  }
+
+  // ---------- BORROW & RESERVATION METHODS ----------
+  loadBorrowData(): void {
+    this.isLoadingReservations = true;
+    this.borrowingService.getReservations('ACTIVE').subscribe({
+      next: (data) => {
+        this.reservations = data;
+        this.isLoadingReservations = false;
+      },
+      error: () => {
+        this.isLoadingReservations = false;
+      }
+    });
+
+    this.borrowingService.getUsers().subscribe({
+      next: (data) => this.users = data,
+      error: () => {}
+    });
+
+    this.borrowingService.getInventories().subscribe({
+      next: (data) => this.inventories = data,
+      error: () => {}
+    });
+  }
+
+  get filteredReservations(): any[] {
+    const q = this.searchReservation.trim().toLowerCase();
+    if (!q) return this.reservations;
+    return this.reservations.filter(r =>
+      (r.userName && r.userName.toLowerCase().includes(q)) ||
+      (r.bookTitle && r.bookTitle.toLowerCase().includes(q))
+    );
+  }
+
+  get availableInventories(): any[] {
+    return this.inventories.filter(i =>
+      i.availabilityStatus === 0 ||
+      i.availabilityStatus === 'AVAILABLE' ||
+      i.statusName === 'AVAILABLE'
+    );
+  }
+
+  getUnitsForBook(bookId: number): any[] {
+    return this.availableInventories.filter(i => i.bookId === bookId);
+  }
+
+  openProcessReservation(res: any): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+    const units = this.getUnitsForBook(res.bookId);
+
+    if (units.length === 0) {
+      this.errorMessage = `Semua unit eksemplar buku "${res.bookTitle}" saat ini masih berstatus dipinjam. Tunggu buku dikembalikan ke perpustakaan.`;
+      return;
+    }
+
+    this.selectedReservation = res;
+    this.availableUnitsForBook = units;
+    this.selectedInventoryId = units[0].inventoryId;
+    this.showProcessModal = true;
+  }
+
+  closeProcessModal(): void {
+    this.showProcessModal = false;
+    this.selectedReservation = null;
+    this.availableUnitsForBook = [];
+    this.selectedInventoryId = null;
+  }
+
+  confirmBorrowReservation(): void {
+    if (!this.selectedReservation || !this.selectedInventoryId) return;
+
+    this.isSaving = true;
+    this.errorMessage = '';
+
+    const userId = this.selectedReservation.userId;
+    const invId = this.selectedInventoryId;
+    const resId = this.selectedReservation.bookReservationId;
+
+    this.borrowingService.borrow(userId, [invId]).subscribe({
+      next: () => {
+        this.borrowingService.completeReservation(resId).subscribe({
+          next: () => {
+            this.isSaving = false;
+            this.successMessage = `Peminjaman buku "${this.selectedReservation?.bookTitle}" untuk ${this.selectedReservation?.userName} berhasil dicatat!`;
+            this.closeProcessModal();
+            this.loadBorrowData();
+            this.loadBorrowings();
+          },
+          error: () => {
+            this.isSaving = false;
+            this.successMessage = `Peminjaman berhasil dicatat!`;
+            this.closeProcessModal();
+            this.loadBorrowData();
+            this.loadBorrowings();
+          }
+        });
+      },
+      error: (err) => {
+        this.isSaving = false;
+        this.errorMessage = this.getError(err);
+      }
+    });
+  }
+
+  openWalkInModal(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.walkInUserId = null;
+    this.walkInInventoryId = null;
+    this.showWalkInModal = true;
+  }
+
+  closeWalkInModal(): void {
+    this.showWalkInModal = false;
+    this.walkInUserId = null;
+    this.walkInInventoryId = null;
+  }
+
+  confirmWalkInBorrow(): void {
+    if (!this.walkInUserId || !this.walkInInventoryId) {
+      this.errorMessage = 'Pilih member dan unit buku terlebih dahulu.';
+      return;
+    }
+
+    this.isSaving = true;
+    this.errorMessage = '';
+
+    this.borrowingService.borrow(this.walkInUserId, [this.walkInInventoryId]).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.successMessage = 'Peminjaman walk-in berhasil dicatat!';
+        this.closeWalkInModal();
+        this.loadBorrowData();
         this.loadBorrowings();
       },
       error: (err) => {
