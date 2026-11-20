@@ -14,6 +14,9 @@ namespace AdinsLibrary.DTOs
         [StringLength(500)]
         public string? CoverUrl { get; set; }
 
+        [Range(0, 1000000000, ErrorMessage = "Price harus lebih besar atau sama dengan 0.")]
+        public decimal Price { get; set; }
+
         [StringLength(2000)]
         public string? Description { get; set; }
 
