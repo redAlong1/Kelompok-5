@@ -35,6 +35,47 @@
         <a routerLink="/reservations"
            routerLinkActive="active"
            class="nav-link sidebar-link rounded">
+        <a routerLink="/publisher"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-building me-2"></i> Publisher
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/author"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-person-lines-fill me-2"></i> Author
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/category"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-tags me-2"></i> Kategori
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/books-master"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-book me-2"></i> Master Buku
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/inventory"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-box-seam me-2"></i> Inventory &amp; Stok
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="#" class="nav-link sidebar-link text-white-50 rounded">
           <i class="bi bi-calendar-check me-2"></i> Reservasi
         </a>
       </li>
@@ -54,6 +95,13 @@
       <li class="nav-item">
         <a href="#" class="nav-link sidebar-link text-white-50 rounded">
           <i class="bi bi-person me-2"></i> Profil &amp; Membership
+        </a>
+      </li>
+            <li class="nav-item" *ngIf="authService.isAdmin()">
+        <a routerLink="/admin/return"
+           routerLinkActive="active"
+           class="nav-link sidebar-link rounded">
+          <i class="bi bi-box-arrow-in-left me-2"></i> Pengembalian (Admin)
         </a>
       </li>
 

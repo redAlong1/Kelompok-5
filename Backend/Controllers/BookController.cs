@@ -2,6 +2,7 @@
 using AdinsLibrary.Models;
 using AdinsLibrary.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace AdinsLibrary.Controllers
 {
@@ -97,6 +98,45 @@ namespace AdinsLibrary.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [HttpPost("upload-cover")]
+        public async Task<IActionResult> UploadCover([FromForm] IFormFile? file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest(new { message = "File gambar tidak boleh kosong." });
+
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(extension))
+                return BadRequest(new { message = "Format file tidak didukung. Harap unggah format JPG, PNG, WEBP, atau GIF." });
+
+            const long maxFileSize = 5 * 1024 * 1024; // 5 MB
+            if (file.Length > maxFileSize)
+                return BadRequest(new { message = "Ukuran gambar tidak boleh melebihi 5 MB." });
+
+            var uploadsFolder = Path.Combine(_env.ContentRootPath, "uploads", "covers");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var uniqueFileName = $"cover_{DateTime.UtcNow:yyyyMMddHHmmss}_{Guid.NewGuid():N}{extension}";
+            var destinationPath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var stream = new FileStream(destinationPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var relativeUrl = $"/uploads/covers/{uniqueFileName}";
+            return Ok(new
+            {
+                url = relativeUrl,
+                fileName = uniqueFileName,
+                message = "Cover buku berhasil diunggah."
+            });
         }
     }
 }

@@ -17,8 +17,7 @@ namespace AdinsLibrary.Models
         public long InventoryId { get; set; }
         public Inventory? Inventory { get; set; }
         public DateTime? ReturnDate { get; set; }
-        [MaxLength(100)]
-        public string ReturnCondition { get; set; }
+        public BookCondition? ReturnCondition { get; set; }
         public int? LateDays { get; set; }
         public ICollection<Fine> Fines { get; set; } = new List<Fine>();
 

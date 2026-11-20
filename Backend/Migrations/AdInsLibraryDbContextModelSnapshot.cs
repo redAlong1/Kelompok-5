@@ -74,6 +74,11 @@ namespace AdinsLibrary.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<decimal>("Price")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("numeric(10,2)")
+                        .HasDefaultValue(0m);
+
                     b.Property<long>("PublisherId")
                         .HasColumnType("bigint");
 
@@ -178,9 +183,8 @@ namespace AdinsLibrary.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("ReturnCondition")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime?>("ReturnDate")
                         .HasColumnType("timestamp with time zone");
@@ -232,22 +236,37 @@ namespace AdinsLibrary.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("FineId"));
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric(10,2)");
+
+                    b.Property<decimal>("BaseAmount")
+                        .HasColumnType("numeric(10,2)");
+
                     b.Property<long>("BorrowingItemId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("numeric(10,2)");
+
                     b.Property<string>("FineStatus")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("FineType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime?>("PaidDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("FineId");
 
-                    b.HasIndex("BorrowingItemId");
+                    b.HasIndex("BorrowingItemId", "FineType")
+                        .IsUnique();
 
                     b.ToTable("Fines");
                 });
