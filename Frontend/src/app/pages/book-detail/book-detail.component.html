@@ -16,8 +16,29 @@
       </div>
 
       <div class="nav-actions">
-        <a routerLink="/login" class="login-btn">Login</a>
-        <a routerLink="/register" class="register-btn">Register</a>
+
+        <!-- Jika belum login -->
+        <ng-container *ngIf="!loggedIn; else loggedInMenu">
+
+          <a routerLink="/login" class="login-btn">
+            Login
+          </a>
+
+          <a routerLink="/register" class="register-btn">
+            Register
+          </a>
+
+        </ng-container>
+
+        <!-- Jika sudah login -->
+        <ng-template #loggedInMenu>
+
+          <a routerLink="/dashboard" class="login-btn">
+            Dashboard
+          </a>
+
+        </ng-template>
+
       </div>
 
     </div>
@@ -28,9 +49,11 @@
   <div class="container breadcrumb-area">
 
     <a routerLink="/">Beranda</a>
+
     <i class="bi bi-chevron-right"></i>
 
     <a routerLink="/" fragment="catalog">Katalog</a>
+
     <i class="bi bi-chevron-right"></i>
 
     <span>{{ book.title }}</span>
@@ -41,33 +64,93 @@
   <!-- BOOK DETAIL -->
   <main class="container detail-container">
 
-    <div class="row g-5">
+    <!-- LOADING -->
+    <div *ngIf="loading" class="text-center py-5">
+
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+
+      <p class="mt-2 text-muted">
+        Memuat informasi buku...
+      </p>
+
+    </div>
+
+
+    <!-- ERROR -->
+    <div
+      *ngIf="!loading && errorMessage"
+      class="alert alert-danger text-center my-4"
+    >
+
+      {{ errorMessage }}
+
+      <div class="mt-3">
+
+        <a
+          routerLink="/"
+          class="btn btn-outline-danger btn-sm"
+        >
+          Kembali ke Beranda
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- BOOK CONTENT -->
+    <div
+      class="row g-5"
+      *ngIf="!loading && !errorMessage"
+    >
 
       <!-- BOOK COVER -->
       <div class="col-lg-4">
 
         <div class="cover-wrapper">
 
-          <div class="book-cover" [ngClass]="book.coverClass">
+          <div
+            class="book-cover"
+            [ngClass]="book.coverClass"
+          >
 
-            <span class="cover-label">A Handbook of</span>
+            <ng-container
+              *ngIf="book.coverUrl; else gradientCover"
+            >
 
-            <h1>
-              CLEAN<br>
-              CODE
-            </h1>
+              <img
+                [src]="book.coverUrl"
+                [alt]="book.title"
+                class="book-cover-img"
+              />
 
-            <div class="cover-decoration">
-              <i class="bi bi-code-slash"></i>
-            </div>
+            </ng-container>
 
-            <span class="cover-subtitle">
-              A Handbook of Agile Software Craftsmanship
-            </span>
+            <ng-template #gradientCover>
 
-            <div class="cover-author">
-              {{ book.author }}
-            </div>
+              <span class="cover-label">
+                {{ book.category }}
+              </span>
+
+              <h1>
+                {{ book.title }}
+              </h1>
+
+              <div class="cover-decoration">
+                <i class="bi bi-book-half"></i>
+              </div>
+
+              <span class="cover-subtitle">
+                Official Library Collection
+              </span>
+
+              <div class="cover-author">
+                {{ book.author }}
+              </div>
+
+            </ng-template>
 
           </div>
 
@@ -76,8 +159,11 @@
         </div>
 
         <div class="cover-caption">
+
           <i class="bi bi-shield-check"></i>
+
           Official Library Collection
+
         </div>
 
       </div>
@@ -88,11 +174,17 @@
 
         <div class="book-information">
 
+          <!-- CATEGORY -->
           <span class="category-badge">
+
             <i class="bi bi-bookmark-fill"></i>
+
             {{ book.category }}
+
           </span>
 
+
+          <!-- TITLE -->
           <h1>{{ book.title }}</h1>
 
           <p class="author-name">
@@ -104,16 +196,20 @@
           <div class="rating-area">
 
             <div class="stars">
+
               <i class="bi bi-star-fill"></i>
               <i class="bi bi-star-fill"></i>
               <i class="bi bi-star-fill"></i>
               <i class="bi bi-star-fill"></i>
               <i class="bi bi-star-half"></i>
+
             </div>
 
             <strong>{{ book.rating }}</strong>
 
-            <span>({{ book.reviews }} ulasan)</span>
+            <span>
+              ({{ book.reviews }} ulasan)
+            </span>
 
           </div>
 
@@ -132,33 +228,57 @@
           <div class="metadata-section">
 
             <div class="metadata-item">
+
               <i class="bi bi-bookmark"></i>
+
               <span>Kategori</span>
+
               <strong>{{ book.category }}</strong>
+
             </div>
 
+
             <div class="metadata-item">
+
               <i class="bi bi-building"></i>
+
               <span>Penerbit</span>
+
               <strong>{{ book.publisher }}</strong>
+
             </div>
 
+
             <div class="metadata-item">
+
               <i class="bi bi-calendar"></i>
+
               <span>Tahun Terbit</span>
+
               <strong>{{ book.year }}</strong>
+
             </div>
 
+
             <div class="metadata-item">
+
               <i class="bi bi-box-seam"></i>
+
               <span>Stok Tersedia</span>
+
               <strong>{{ book.stock }} Buku</strong>
+
             </div>
 
+
             <div class="metadata-item">
+
               <i class="bi bi-upc"></i>
+
               <span>ISBN</span>
+
               <strong>{{ book.isbn }}</strong>
+
             </div>
 
           </div>
@@ -169,6 +289,7 @@
             class="stock-status"
             [class.out-of-stock]="book.stock <= 0"
           >
+
             <i
               class="bi"
               [ngClass]="book.stock > 0
@@ -178,27 +299,38 @@
 
             {{ book.stock > 0
               ? 'Buku tersedia untuk dipinjam'
-              : 'Buku sedang tidak tersedia' }}
+              : 'Buku sedang tidak tersedia'
+            }}
+
           </div>
 
 
           <!-- ACTION BUTTONS -->
           <div class="action-area">
 
+            <!-- BORROW BOOK -->
             <button
+              type="button"
               class="borrow-btn"
               [disabled]="book.stock <= 0"
               (click)="borrowBook()"
             >
+
               <i class="bi bi-book-half"></i>
+
               Pinjam Buku
+
             </button>
 
+
+            <!-- FAVORITE -->
             <button
+              type="button"
               class="favorite-btn"
               [class.favorited]="isFavorite"
               (click)="toggleFavorite()"
             >
+
               <i
                 class="bi"
                 [ngClass]="isFavorite
@@ -208,15 +340,26 @@
 
               {{ isFavorite
                 ? 'Ditambahkan ke Favorit'
-                : 'Tambah ke Favorit' }}
+                : 'Tambah ke Favorit'
+              }}
+
             </button>
 
           </div>
 
-          <p class="login-notice">
+
+          <!-- LOGIN NOTICE -->
+          <p
+            class="login-notice"
+            *ngIf="!loggedIn"
+          >
+
             <i class="bi bi-info-circle"></i>
+
             Silakan login terlebih dahulu untuk melakukan peminjaman.
+
           </p>
+
 
         </div>
 
@@ -233,8 +376,11 @@
     <div class="container footer-content">
 
       <a routerLink="/" class="brand">
+
         <i class="bi bi-book-half"></i>
+
         LibraryPlus
+
       </a>
 
       <span>

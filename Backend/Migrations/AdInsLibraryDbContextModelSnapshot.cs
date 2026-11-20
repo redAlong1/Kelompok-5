@@ -58,9 +58,8 @@ namespace AdinsLibrary.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("CoverUrl")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -76,7 +75,7 @@ namespace AdinsLibrary.Migrations
 
                     b.Property<decimal>("Price")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("numeric(10,2)")
+                        .HasColumnType("numeric(12,2)")
                         .HasDefaultValue(0m);
 
                     b.Property<long>("PublisherId")

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AdinsLibrary.Migrations
 {
     [DbContext(typeof(AdInsLibraryDbContext))]
-    [Migration("20261120025755_AddFineTypeAndBookPrice")]
-    partial class AddFineTypeAndBookPrice
+    [Migration("20261120071414_80%jadi")]
+    partial class _80jadi
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -60,9 +60,8 @@ namespace AdinsLibrary.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("CoverUrl")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -78,7 +77,7 @@ namespace AdinsLibrary.Migrations
 
                     b.Property<decimal>("Price")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("numeric(10,2)")
+                        .HasColumnType("numeric(12,2)")
                         .HasDefaultValue(0m);
 
                     b.Property<long>("PublisherId")

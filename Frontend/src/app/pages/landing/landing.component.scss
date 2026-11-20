@@ -467,6 +467,24 @@
   background: linear-gradient(145deg, #d4a94b, #79602a);
 }
 
+.cover-green {
+  background: linear-gradient(145deg, #16a36a, #0b4f34);
+}
+
+.cover-teal {
+  background: linear-gradient(145deg, #0f766e, #042f2e);
+}
+
+.book-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 7px;
+}
+
 .book-information {
   padding: 5px 15px 17px;
 }
@@ -624,4 +642,22 @@
     flex-wrap: wrap;
     gap: 15px;
   }
+
+
+.book-cover {
+  display: block;
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.book-cover-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 }
