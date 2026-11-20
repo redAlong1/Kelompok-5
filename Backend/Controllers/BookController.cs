@@ -20,9 +20,9 @@ namespace AdinsLibrary.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Book>> GetAll([FromQuery] GetBooksQuery query)
+        public async Task<ActionResult<Book>> GetAll()
         {
-            var books = await _bookService.GetAllAsync(query ?? new GetBooksQuery());
+            var books = await _bookService.GetAllAsync();
             return Ok(books);
         }
 

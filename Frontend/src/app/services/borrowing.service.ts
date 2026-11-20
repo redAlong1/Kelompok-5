@@ -27,12 +27,17 @@ export interface Borrowing {
 
 export interface Fine {
   fineId: number;
+  borrowingItemId: number;
+  userId?: number;
+  username?: string;
   bookTitle: string;
   fineType: string;
   baseAmount: number;
   discountAmount: number;
   amount: number;
   fineStatus: string;
+  paidDate?: string | null;
+  createdAt?: string;
 }
 
 export interface ReturnItemRequest {

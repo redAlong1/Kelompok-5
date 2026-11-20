@@ -40,86 +40,14 @@ namespace AdinsLibrary.Services
             var book = await _bookRepository.GetByIdAsync(id, BookIncludes);
             return book == null ? null : MapToResponse(book);
         }
-        public async Task<List<BookResponse?>> GetAllAsync(GetBooksQuery query)
+        public async Task<List<BookResponse?>> GetAllAsync()
         {
-            query ??= new GetBooksQuery();
-
             var books = await _bookRepository.GetAllAsync(BookIncludes);
-            var filtered = books.AsEnumerable();
-
-            if (query.Search != null)
-            {
-                string keyword = query.Search.Trim();
-                filtered = filtered.Where(b =>
-                    b.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                    b.Author.AuthorName.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                    (!string.IsNullOrWhiteSpace(b.Isbn) &&
-                    b.Isbn.Contains(keyword, StringComparison.OrdinalIgnoreCase)));
-            }
-
-            if (query.CategoryId > 0)
-            {
-                filtered = filtered.Where(b => b.CategoryId == query.CategoryId);
-            }
-
-            if (query.StockStatus != null)
-            {
-                string status = query.StockStatus.Trim().ToLowerInvariant();
-                if (status == "available")
-                {
-                    filtered = filtered.Where(b =>
-                        b.Inventories != null &&
-                        b.Inventories.Any(i => i.AvailabilityStatus == AvailabilityStatus.AVAILABLE));
-                }
-                else if (status == "borrowed")
-                {
-                    filtered = filtered.Where(b =>
-                        b.Inventories == null ||
-                        b.Inventories.Any(i => i.AvailabilityStatus == AvailabilityStatus.BORROWED));
-                }
-                else if (status == "reserved")
-                {
-                    filtered = filtered.Where(b =>
-                        b.Inventories == null ||
-                        b.Inventories.Any(i => i.AvailabilityStatus == AvailabilityStatus.RESERVED));
-                }
-            }
-
-            string sortKey = query.Sort?.Trim().ToLower() ?? string.Empty;
-            bool isDescending = query.Order == 1 || query.Order == -1;
-
-            filtered = sortKey switch
-            {
-                "title" => isDescending
-                    ? filtered.OrderByDescending(b => b.Title)
-                    : filtered.OrderBy(b => b.Title),
-
-                "author" => isDescending
-                    ? filtered.OrderByDescending(b => b.Author?.AuthorName)
-                    : filtered.OrderBy(b => b.Author?.AuthorName),
-
-                "category" => isDescending
-                    ? filtered.OrderByDescending(b => b.Category?.CategoryName)
-                    : filtered.OrderBy(b => b.Category?.CategoryName),
-
-                "publisher" => isDescending
-                    ? filtered.OrderByDescending(b => b.Publisher?.PublisherName)
-                    : filtered.OrderBy(b => b.Publisher?.PublisherName),
-
-                "price" => isDescending
-                    ? filtered.OrderByDescending(b => b.Price)
-                    : filtered.OrderBy(b => b.Price),
-
-                _ => isDescending
-                    ? filtered.OrderByDescending(b => b.CreatedAt).ThenByDescending(b => b.BookId)
-                    : filtered.OrderBy(b => b.CreatedAt).ThenBy(b => b.BookId)
-            };
-
-            return filtered
-            .Skip(query.Skip)
-            .Take(query.Limit)
-            .Select(MapToResponse)
-            .ToList();
+            return books
+                .OrderByDescending(b => b.CreatedAt)
+                .ThenBy(b => b.BookId)
+                .Select(MapToResponse)
+                .ToList();
         }
         public async Task<BookResponse?> CreateBookAsync(BookRequest request)
         {

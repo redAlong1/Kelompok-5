@@ -1,0 +1,214 @@
+<div class="d-flex vh-100 overflow-hidden">
+
+  <main class="flex-grow-1 d-flex flex-column overflow-auto" style="background:#f0f2f5;">
+    <div class="p-4">
+
+      <!-- Header -->
+      <div class="mb-4">
+        <h4 class="fw-bold text-dark mb-1">Riwayat &amp; Peminjaman Saya</h4>
+        <p class="text-muted small mb-0">Pantau buku yang sedang Anda pinjam, tanggal batas pengembalian, dan riwayat peminjaman terdahulu.</p>
+      </div>
+
+      <!-- Alert jika ada buku terlambat -->
+      <div class="alert alert-danger d-flex align-items-center justify-content-between p-3 mb-4 shadow-sm rounded-3 border-danger" *ngIf="totalOverdueBooks > 0">
+        <div class="d-flex align-items-center gap-3">
+          <i class="bi bi-clock-history fs-3 text-danger"></i>
+          <div>
+            <h6 class="fw-bold text-danger mb-1">Ada {{ totalOverdueBooks }} buku melewati batas waktu pengembalian!</h6>
+            <div class="small text-danger-emphasis">
+              Buku yang terlambat akan dikenakan denda harian. Segera lakukan pengembalian ke meja sirkulasi perpustakaan.
+            </div>
+          </div>
+        </div>
+        <span class="badge bg-danger px-3 py-2 fs-6 rounded-pill">Terlambat</span>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-3 h-100 bg-white">
+            <div class="card-body p-3.5 d-flex align-items-center justify-content-between">
+              <div>
+                <small class="text-muted text-uppercase fw-semibold" style="font-size:12px;">Sedang Dipinjam</small>
+                <h3 class="fw-bold text-primary mb-0 mt-1">{{ totalActiveBooks }} Buku</h3>
+                <small class="text-muted small mt-1 d-block">{{ activeBorrowings.length }} transaksi aktif</small>
+              </div>
+              <div class="bg-primary-subtle text-primary p-3 rounded-circle fs-4">
+                <i class="bi bi-book-half"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-3 h-100 bg-white">
+            <div class="card-body p-3.5 d-flex align-items-center justify-content-between">
+              <div>
+                <small class="text-muted text-uppercase fw-semibold" style="font-size:12px;">Buku Terlambat</small>
+                <h3 class="fw-bold text-danger mb-0 mt-1">{{ totalOverdueBooks }} Buku</h3>
+                <small class="text-danger small mt-1 d-block" *ngIf="totalOverdueBooks > 0">Segera kembalikan</small>
+                <small class="text-success small mt-1 d-block" *ngIf="totalOverdueBooks === 0">Semua tepat waktu</small>
+              </div>
+              <div class="bg-danger-subtle text-danger p-3 rounded-circle fs-4">
+                <i class="bi bi-exclamation-triangle"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-3 h-100 bg-white">
+            <div class="card-body p-3.5 d-flex align-items-center justify-content-between">
+              <div>
+                <small class="text-muted text-uppercase fw-semibold" style="font-size:12px;">Selesai Dikembalikan</small>
+                <h3 class="fw-bold text-success mb-0 mt-1">{{ totalFinishedBooks }} Buku</h3>
+                <small class="text-muted small mt-1 d-block">{{ finishedBorrowings.length }} transaksi selesai</small>
+              </div>
+              <div class="bg-success-subtle text-success p-3 rounded-circle fs-4">
+                <i class="bi bi-check2-circle"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action & Filter Bar -->
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body p-3">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <!-- Tabs -->
+            <ul class="nav nav-pills gap-2">
+              <li class="nav-item">
+                <button class="nav-link px-3 py-1.5 fw-semibold" [class.active]="activeTab === 'active'" (click)="activeTab = 'active'">
+                  <i class="bi bi-book me-1.5"></i> Sedang Dipinjam
+                  <span class="badge bg-primary ms-1.5" *ngIf="activeBorrowings.length > 0">{{ activeBorrowings.length }}</span>
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link px-3 py-1.5 fw-semibold" [class.active]="activeTab === 'history'" (click)="activeTab = 'history'">
+                  <i class="bi bi-clock-history me-1.5"></i> Riwayat Selesai
+                  <span class="badge bg-secondary ms-1.5" *ngIf="finishedBorrowings.length > 0">{{ finishedBorrowings.length }}</span>
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link px-3 py-1.5 fw-semibold" [class.active]="activeTab === 'all'" (click)="activeTab = 'all'">
+                  Semua ({{ borrowings.length }})
+                </button>
+              </li>
+            </ul>
+
+            <!-- Search -->
+            <div style="min-width: 260px;">
+              <input type="text" class="form-control form-control-sm"
+                     placeholder="Cari judul buku / ID transaksi..." [(ngModel)]="search">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div class="text-center py-5" *ngIf="isLoading">
+        <div class="spinner-border text-primary" role="status"></div>
+        <div class="text-muted mt-2 small">Memuat data peminjaman...</div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="card border-0 shadow-sm rounded-3 text-center py-5" *ngIf="!isLoading && filtered.length === 0">
+        <div class="card-body py-5">
+          <i class="bi bi-inbox fs-1 text-muted d-block mb-2"></i>
+          <h6 class="fw-semibold text-dark">Tidak ada data peminjaman pada tab ini.</h6>
+          <p class="text-muted small mb-3">Jelajahi katalog buku untuk melakukan peminjaman buku favorit Anda!</p>
+          <a routerLink="/catalog" class="btn btn-primary btn-sm px-4 fw-semibold">
+            <i class="bi bi-journals me-1"></i> Buka Katalog Buku
+          </a>
+        </div>
+      </div>
+
+      <!-- List of Borrowing Cards -->
+      <div class="row g-3" *ngIf="!isLoading && filtered.length > 0">
+        <div class="col-12" *ngFor="let b of filtered">
+          <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+            <!-- Header card transaksi -->
+            <div class="card-header bg-white border-bottom py-3 px-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-primary-subtle text-primary fw-bold px-2.5 py-1 rounded-pill" style="font-size:12px;">
+                  Transaksi #{{ b.bookBorrowingTransactionId }}
+                </span>
+                <span class="text-muted">&bull;</span>
+                <span class="small text-secondary">Dipinjam: <strong>{{ b.borrowDate }}</strong></span>
+              </div>
+
+              <!-- Status jatuh tempo -->
+              <div class="d-flex align-items-center gap-2">
+                <div class="small">
+                  Batas Kembali: <strong [ngClass]="isOverdue(b) ? 'text-danger' : 'text-dark'">{{ b.dueDate }}</strong>
+                </div>
+
+                <span class="badge rounded-pill bg-danger text-white px-2.5 py-1" *ngIf="isOverdue(b)" style="font-size:11px;">
+                  <i class="bi bi-exclamation-triangle-fill me-1"></i> Terlambat
+                </span>
+                <span class="badge rounded-pill bg-success-subtle text-success px-2.5 py-1" *ngIf="!isOverdue(b) && hasActiveItems(b)" style="font-size:11px;">
+                  Sisa {{ getDaysRemaining(b.dueDate) }} hari
+                </span>
+                <span class="badge rounded-pill bg-secondary-subtle text-secondary px-2.5 py-1" *ngIf="isAllReturned(b)" style="font-size:11px;">
+                  <i class="bi bi-check-circle-fill me-1"></i> Semua Kembali
+                </span>
+              </div>
+            </div>
+
+            <!-- Body: Daftar Buku di dalam transaksi -->
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="py-2.5 px-4 text-muted small fw-semibold" style="width: 45%;">Judul Buku</th>
+                      <th class="py-2.5 text-muted small fw-semibold" style="width: 20%;">Lokasi Rak</th>
+                      <th class="py-2.5 text-muted small fw-semibold text-center" style="width: 15%;">Status Kembali</th>
+                      <th class="py-2.5 px-4 text-muted small fw-semibold text-end" style="width: 20%;">Kondisi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of b.items" [class.table-light]="item.returnDate">
+                      <td class="px-4">
+                        <div class="fw-semibold text-dark" style="font-size:14px;">{{ item.bookTitle }}</div>
+                        <small class="text-muted">Unit Eksemplar #{{ item.inventoryId }}</small>
+                      </td>
+                      <td class="text-secondary small">
+                        <span class="badge bg-light text-dark border px-2 py-1">
+                          <i class="bi bi-geo-alt text-primary me-1"></i> {{ item.shelfLocation || '-' }}
+                        </span>
+                      </td>
+                      <td class="text-center">
+                        <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis px-2.5 py-1" *ngIf="!item.returnDate" style="font-size:12px;">
+                          <i class="bi bi-book me-1"></i> Masih Dipinjam
+                        </span>
+                        <div *ngIf="item.returnDate">
+                          <span class="badge rounded-pill bg-success-subtle text-success px-2.5 py-1" style="font-size:12px;">
+                            <i class="bi bi-check2 me-1"></i> Sudah Dikembalikan
+                          </span>
+                          <small class="text-muted d-block mt-0.5" style="font-size:11px;">{{ item.returnDate | date:'d MMM yyyy' }}</small>
+                        </div>
+                      </td>
+                      <td class="px-4 text-end">
+                        <span class="badge rounded-pill px-2.5 py-1" [ngClass]="getConditionBadge(item.returnCondition)" style="font-size:12px;" *ngIf="item.returnDate">
+                          {{ getConditionLabel(item.returnCondition) }}
+                        </span>
+                        <span class="text-muted small" *ngIf="!item.returnDate">-</span>
+                        <div *ngIf="item.lateDays && item.lateDays > 0" class="text-danger small mt-0.5" style="font-size:11px;">
+                          (Telat {{ item.lateDays }} hari)
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

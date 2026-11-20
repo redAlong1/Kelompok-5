@@ -86,7 +86,7 @@ export class AdminReturnComponent implements OnInit {
     this.isLoading = true;
     this.borrowingService.getAll('BORROWED').subscribe({
       next: (data) => {
-        this.borrowings = data;
+        this.borrowings = (data || []).map(b => this.normalizeBorrowing(b));
         this.isLoading = false;
       },
       error: (err) => {
@@ -121,9 +121,14 @@ export class AdminReturnComponent implements OnInit {
     this.rows = [];
   }
 
-  isOverdue(b: Borrowing): boolean {
-    const today = new Date().toISOString().substring(0, 10);
-    return b.dueDate < today;
+  isOverdue(b: Borrowing | null): boolean {
+    if (!b) return false;
+    const due = this.parseDateOnly(b.dueDate);
+    if (!due) return false;
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return due < today;
   }
 
   get selectedCount(): number {
@@ -162,7 +167,10 @@ export class AdminReturnComponent implements OnInit {
     this.isLoadingReservations = true;
     this.borrowingService.getReservations('ACTIVE').subscribe({
       next: (data) => {
-        this.reservations = data;
+        this.reservations = (data || []).map(r => ({
+          ...r,
+          reservationDate: r.reservationDate ? this.formatDateOnly(r.reservationDate) : r.reservationDate
+        }));
         this.isLoadingReservations = false;
       },
       error: () => {
@@ -297,6 +305,52 @@ export class AdminReturnComponent implements OnInit {
         this.errorMessage = this.getError(err);
       }
     });
+  }
+
+  private normalizeBorrowing(b: Borrowing): Borrowing {
+    return {
+      ...b,
+      borrowDate: this.formatDateOnly(b.borrowDate),
+      dueDate: this.formatDateOnly(b.dueDate),
+      items: (b.items || []).map(item => ({
+        ...item,
+        returnDate: item.returnDate ? this.formatDateOnly(item.returnDate) : null
+      }))
+    };
+  }
+
+  private parseDateOnly(val: any): Date | null {
+    if (!val) return null;
+
+    if (typeof val === 'object' && val.year && val.month && val.day) {
+      return new Date(Number(val.year), Number(val.month) - 1, Number(val.day));
+    }
+
+    if (typeof val === 'string') {
+      const clean = val.split('T')[0];
+      const parts = clean.split('-');
+      if (parts.length === 3) {
+        return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+      }
+      const parsed = new Date(val);
+      return isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    if (val instanceof Date) {
+      return isNaN(val.getTime()) ? null : val;
+    }
+
+    return null;
+  }
+
+  private formatDateOnly(val: any): string {
+    const date = this.parseDateOnly(val);
+    if (!date) return '-';
+
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 
   private getError(err: any): string {
