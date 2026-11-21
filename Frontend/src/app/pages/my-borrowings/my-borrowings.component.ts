@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
 import { Borrowing, BorrowingService } from '../../services/borrowing.service';
 
 @Component({
   selector: 'app-my-borrowings',
   standalone: true,
-  imports: [CommonModule, FormsModule, SidebarComponent],
+  imports: [CommonModule, FormsModule, RouterLink, SidebarComponent],
   templateUrl: './my-borrowings.component.html',
   styleUrl: './my-borrowings.component.scss',
 })
@@ -18,10 +19,20 @@ export class MyBorrowingsComponent implements OnInit {
   errorMessage = '';
   search = '';
 
-  constructor(private borrowingService: BorrowingService) {}
+  constructor(
+    private borrowingService: BorrowingService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
+  }
+
+  goToCatalog(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
+    this.router.navigate(['/catalog']);
   }
 
   loadData(): void {

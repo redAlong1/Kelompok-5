@@ -10,15 +10,18 @@ namespace AdinsLibrary.Services
         private readonly IRepository<BookReservation> _reservationRepo;
         private readonly IRepository<Book> _bookRepo;
         private readonly IRepository<User> _userRepo;
+        private readonly IRepository<Inventory> _inventoryRepo;
 
         public BookReservationService(
             IRepository<BookReservation> reservationRepo,
             IRepository<Book> bookRepo,
-            IRepository<User> userRepo)
+            IRepository<User> userRepo,
+            IRepository<Inventory> inventoryRepo)
         {
             _reservationRepo = reservationRepo;
             _bookRepo = bookRepo;
             _userRepo = userRepo;
+            _inventoryRepo = inventoryRepo;
         }
 
         public async Task<BookReservationResponse?> CreateAsync(
@@ -28,7 +31,7 @@ namespace AdinsLibrary.Services
             if (book is null)
                 return null;
 
-            User? user = await _userRepo.GetByIdAsync(userId);
+            User? user = await _userRepo.GetByIdAsync(userId, nameof(User.MembershipTier));
 
             BookReservation reservation = new BookReservation
             {
@@ -40,6 +43,19 @@ namespace AdinsLibrary.Services
             };
 
             await _reservationRepo.AddAsync(reservation);
+
+            // Update 1 unit inventory yang tersedia untuk buku ini menjadi RESERVED
+            var inventories = await _inventoryRepo.GetAllAsync();
+            var availableUnit = inventories.FirstOrDefault(i =>
+                i.BookId == request.BookId &&
+                i.AvailabilityStatus == AvailabilityStatus.AVAILABLE);
+
+            if (availableUnit is not null)
+            {
+                availableUnit.AvailabilityStatus = AvailabilityStatus.RESERVED;
+                _inventoryRepo.Update(availableUnit);
+            }
+
             await _reservationRepo.SaveChangesAsync();
 
             var allReservations = await _reservationRepo.GetAllAsync();
@@ -57,13 +73,14 @@ namespace AdinsLibrary.Services
                 ReservationDate = reservation.ReservationDate,
                 Status = reservation.BookReservationStatus.ToString(),
                 QueueNumber = queue > 0 ? queue : 1,
+                BorrowDurationDays = user?.MembershipTier?.BorrowDurationDays,
                 CreatedAt = reservation.CreatedAt
             };
         }
 
         public async Task<BookReservationResponse?> GetByIdAsync(long id)
         {
-            BookReservation? r = await _reservationRepo.GetByIdAsync(id, nameof(BookReservation.User), nameof(BookReservation.Book), "Book.Author");
+            BookReservation? r = await _reservationRepo.GetByIdAsync(id, nameof(BookReservation.User), $"{nameof(BookReservation.User)}.{nameof(User.MembershipTier)}", nameof(BookReservation.Book), "Book.Author");
             if (r is null)
                 return null;
 
@@ -82,13 +99,14 @@ namespace AdinsLibrary.Services
                 ReservationDate = r.ReservationDate,
                 Status = r.BookReservationStatus.ToString(),
                 QueueNumber = queue > 0 ? queue : 1,
+                BorrowDurationDays = r.User?.MembershipTier?.BorrowDurationDays,
                 CreatedAt = r.CreatedAt
             };
         }
 
         public async Task<List<BookReservationResponse>> GetMyReservationsAsync(long userId)
         {
-            var reservations = await _reservationRepo.GetAllAsync(nameof(BookReservation.User), nameof(BookReservation.Book), "Book.Author");
+            var reservations = await _reservationRepo.GetAllAsync(nameof(BookReservation.User), $"{nameof(BookReservation.User)}.{nameof(User.MembershipTier)}", nameof(BookReservation.Book), "Book.Author");
             var userReservations = reservations.Where(r => r.UserId == userId).OrderByDescending(r => r.CreatedAt).ToList();
 
             var result = new List<BookReservationResponse>();
@@ -112,6 +130,7 @@ namespace AdinsLibrary.Services
                     ReservationDate = r.ReservationDate,
                     Status = r.BookReservationStatus.ToString(),
                     QueueNumber = queue > 0 ? queue : 1,
+                    BorrowDurationDays = r.User?.MembershipTier?.BorrowDurationDays,
                     CreatedAt = r.CreatedAt
                 });
             }
@@ -121,7 +140,7 @@ namespace AdinsLibrary.Services
 
         public async Task<List<BookReservationResponse>> GetAllAsync(BookReservationStatus? status = null)
         {
-            var reservations = await _reservationRepo.GetAllAsync(nameof(BookReservation.User), nameof(BookReservation.Book), "Book.Author");
+            var reservations = await _reservationRepo.GetAllAsync(nameof(BookReservation.User), $"{nameof(BookReservation.User)}.{nameof(User.MembershipTier)}", nameof(BookReservation.Book), "Book.Author");
             var q = reservations.AsEnumerable();
             if (status.HasValue)
             {
@@ -151,6 +170,7 @@ namespace AdinsLibrary.Services
                     ReservationDate = r.ReservationDate,
                     Status = r.BookReservationStatus.ToString(),
                     QueueNumber = queue > 0 ? queue : 1,
+                    BorrowDurationDays = r.User?.MembershipTier?.BorrowDurationDays,
                     CreatedAt = r.CreatedAt
                 });
             }
@@ -187,6 +207,19 @@ namespace AdinsLibrary.Services
 
             r.BookReservationStatus = BookReservationStatus.CANCELLED;
             _reservationRepo.Update(r);
+
+            // Kembalikan 1 unit inventory berstatus RESERVED untuk buku ini menjadi AVAILABLE
+            var inventories = await _inventoryRepo.GetAllAsync();
+            var reservedUnit = inventories.FirstOrDefault(i =>
+                i.BookId == r.BookId &&
+                i.AvailabilityStatus == AvailabilityStatus.RESERVED);
+
+            if (reservedUnit is not null)
+            {
+                reservedUnit.AvailabilityStatus = AvailabilityStatus.AVAILABLE;
+                _inventoryRepo.Update(reservedUnit);
+            }
+
             await _reservationRepo.SaveChangesAsync();
 
             return true;

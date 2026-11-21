@@ -1,202 +1,169 @@
 <div class="login-page">
-
   <div class="login-container">
-
     <!-- LEFT SIDE: BRANDING -->
     <section class="brand-section">
-
       <div class="brand-overlay"></div>
 
       <div class="brand-content">
-
         <a routerLink="/" class="brand-logo">
           <i class="bi bi-book-half"></i>
           AdInsLibrary
         </a>
 
         <div class="brand-message">
-
           <div class="brand-icon">
             <i class="bi bi-book-half"></i>
           </div>
 
           <h1>
-            Membaca hari ini,<br>
-            untuk masa depan<br>
+            Membaca hari ini,<br />
+            untuk masa depan<br />
             yang lebih baik.
           </h1>
 
           <p>
-            Temukan pengetahuan baru dan jelajahi
-            berbagai koleksi buku bersama AdInsLibrary.
+            Temukan pengetahuan baru dan jelajahi berbagai koleksi buku bersama
+            AdInsLibrary.
           </p>
 
           <div class="brand-divider"></div>
 
           <span>YOUR KNOWLEDGE STARTS HERE</span>
-
         </div>
 
         <div class="brand-footer">
           © 2026 AdInsLibrary. All rights reserved.
         </div>
-
       </div>
-
     </section>
-
 
     <!-- RIGHT SIDE: LOGIN FORM -->
     <section class="form-section">
-
       <div class="form-wrapper">
-
         <!-- MOBILE LOGO -->
         <a routerLink="/" class="mobile-brand">
           <i class="bi bi-book-half"></i>
           AdInsLibrary
         </a>
 
-
         <!-- HEADING -->
         <div class="form-heading">
-
-          <span class="welcome-label">
-            WELCOME BACK
-          </span>
+          <span class="welcome-label"> WELCOME BACK </span>
 
           <h2>Login</h2>
 
           <p>Masuk ke akun Anda untuk melanjutkan.</p>
-
         </div>
-
 
         <!-- FORM -->
         <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
-
           <!-- USERNAME -->
           <div class="form-group">
-
-            <label for="username">
-              Username atau Email
-            </label>
+            <label for="username"> Username atau Email </label>
 
             <div class="input-wrapper">
-
               <i class="bi bi-person"></i>
 
-              <input id="username" type="text" formControlName="username" placeholder="Masukkan email"
-                [class.input-error]="username?.invalid && username?.touched">
-
+              <input
+                id="username"
+                type="text"
+                formControlName="username"
+                placeholder="Masukkan email"
+                [class.input-error]="username?.invalid && username?.touched"
+              />
             </div>
 
-            <small class="error-message" *ngIf="username?.hasError('required') && username?.touched">
+            <small
+              class="error-message"
+              *ngIf="username?.hasError('required') && username?.touched"
+            >
               Username atau email wajib diisi.
             </small>
-
           </div>
-
 
           <!-- PASSWORD -->
           <div class="form-group">
-
             <div class="label-row">
               <label for="password">Password</label>
             </div>
 
             <div class="input-wrapper">
-
               <i class="bi bi-lock"></i>
 
-              <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
-                placeholder="Masukkan password" [class.input-error]="password?.invalid && password?.touched">
+              <input
+                id="password"
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="Masukkan password"
+                [class.input-error]="password?.invalid && password?.touched"
+              />
 
-              <button type="button" class="password-toggle" (click)="togglePassword()">
-                <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePassword()"
+              >
+                <i
+                  class="bi"
+                  [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"
+                ></i>
               </button>
-
             </div>
 
-            <small class="error-message" *ngIf="password?.hasError('required') && password?.touched">
+            <small
+              class="error-message"
+              *ngIf="password?.hasError('required') && password?.touched"
+            >
               Password wajib diisi.
             </small>
 
-            <small class="error-message" *ngIf="password?.hasError('minlength') && password?.touched">
+            <small
+              class="error-message"
+              *ngIf="password?.hasError('minlength') && password?.touched"
+            >
               Password minimal 6 karakter.
             </small>
-
           </div>
-
 
           <!-- REMEMBER ME -->
           <div class="form-options">
-
             <label class="remember-option">
-
-              <input type="checkbox" formControlName="rememberMe">
+              <input type="checkbox" formControlName="rememberMe" />
 
               <span>Ingat saya</span>
-
             </label>
 
-            <a routerLink="/forgot-password">
-              Lupa password?
-            </a>
-
+            <a routerLink="/forgot-password"> Lupa password? </a>
           </div>
           <div class="login-error" *ngIf="errorMessage">
             {{ errorMessage }}
           </div>
-          <div class="login-error" *ngIf="errorMessage">
-            {{ errorMessage }}
-          </div>
-
 
           <!-- SUBMIT -->
           <button type="submit" class="login-submit" [disabled]="isLoading">
-
             <span *ngIf="!isLoading">
               Masuk
               <i class="bi bi-arrow-right"></i>
             </span>
 
-            <span *ngIf="isLoading">
-              Memproses...
-            </span>
-
+            <span *ngIf="isLoading"> Memproses... </span>
           </button>
-
         </form>
-
 
         <!-- REGISTER -->
         <div class="register-prompt">
-
           Belum punya akun?
 
-          <a routerLink="/register">
-            Daftar di sini
-          </a>
-
+          <a routerLink="/register"> Daftar di sini </a>
         </div>
-
 
         <!-- SECURITY -->
         <div class="security-info">
-
           <i class="bi bi-shield-check"></i>
 
-          <span>
-            Your account information is protected.
-          </span>
-
+          <span> Your account information is protected. </span>
         </div>
-
       </div>
-
     </section>
-
   </div>
-
 </div>

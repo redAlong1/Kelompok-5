@@ -5,9 +5,15 @@ import { FormsModule } from '@angular/forms';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
-import { BookReservationService, BookReservationResponse } from '../../services/book-reservation.service';
+import {
+  BookReservationService,
+  BookReservationResponse,
+} from '../../services/book-reservation.service';
 import { BookService, BookItem } from '../../services/book.service';
-import { InventoryService, InventoryResponse } from '../../services/inventory.service';
+import {
+  InventoryService,
+  InventoryResponse,
+} from '../../services/inventory.service';
 import { AuthService, UserSummary } from '../../services/auth.service';
 
 @Component({
@@ -15,10 +21,9 @@ import { AuthService, UserSummary } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule, SidebarComponent],
   templateUrl: './reservation.component.html',
-  styleUrl: './reservation.component.scss'
+  styleUrl: './reservation.component.scss',
 })
 export class ReservationComponent implements OnInit {
-
   currentUser: UserSummary | null = null;
   loading: boolean = false;
   submitting: boolean = false;
@@ -43,7 +48,7 @@ export class ReservationComponent implements OnInit {
     private reservationService: BookReservationService,
     private bookService: BookService,
     private inventoryService: InventoryService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +62,7 @@ export class ReservationComponent implements OnInit {
     this.loadBooksFromApi();
 
     // Check query params untuk pre-select book
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       if (params['bookId']) {
         const id = Number(params['bookId']);
         if (!isNaN(id)) {
@@ -72,7 +77,9 @@ export class ReservationComponent implements OnInit {
   }
 
   updateSelectedBook(): void {
-    const found = this.availableBooks.find(b => b.bookId === Number(this.selectedBookId));
+    const found = this.availableBooks.find(
+      (b) => b.bookId === Number(this.selectedBookId),
+    );
     if (found) {
       this.selectedBook = found;
     } else if (this.availableBooks.length > 0) {
@@ -92,8 +99,8 @@ export class ReservationComponent implements OnInit {
         catchError((err) => {
           console.warn('Gagal memuat inventory, fallback ke data buku:', err);
           return of([] as InventoryResponse[]);
-        })
-      )
+        }),
+      ),
     }).subscribe({
       next: ({ books, inventories }) => {
         if (books && books.length > 0) {
@@ -130,7 +137,7 @@ export class ReservationComponent implements OnInit {
               coverUrl: b.coverUrl,
               stock: availableCount,
               isBorrowed: availableCount <= 0,
-              estimatedAvailableDate: '24 Nov 2026'
+              estimatedAvailableDate: '24 Nov 2026',
             };
           });
 
@@ -141,7 +148,7 @@ export class ReservationComponent implements OnInit {
       error: () => {
         // Fallback ke local books
         this.updateSelectedBook();
-      }
+      },
     });
   }
 
@@ -157,8 +164,8 @@ export class ReservationComponent implements OnInit {
       next: (res) => {
         this.loading = false;
         if (res && res.length > 0) {
-          this.activeReservations = res.filter(r => r.status === 'ACTIVE');
-          this.historyReservations = res.filter(r => r.status !== 'ACTIVE');
+          this.activeReservations = res.filter((r) => r.status === 'ACTIVE');
+          this.historyReservations = res.filter((r) => r.status !== 'ACTIVE');
         } else {
           this.setupDemoReservations();
         }
@@ -166,7 +173,7 @@ export class ReservationComponent implements OnInit {
       error: () => {
         this.loading = false;
         this.setupDemoReservations();
-      }
+      },
     });
   }
 
@@ -183,7 +190,11 @@ export class ReservationComponent implements OnInit {
     }
 
     if (!this.authService.isLoggedIn()) {
-      if (confirm('Anda perlu login untuk melakukan reservasi. Pergi ke halaman login?')) {
+      if (
+        confirm(
+          'Anda perlu login untuk melakukan reservasi. Pergi ke halaman login?',
+        )
+      ) {
         this.router.navigate(['/login']);
       }
       return;
@@ -192,30 +203,36 @@ export class ReservationComponent implements OnInit {
     this.submitting = true;
     this.alertMessage = null;
 
-    this.reservationService.create({
-      bookId: this.selectedBook.bookId,
-      notes: this.notes
-    }).subscribe({
-      next: (res) => {
-        this.submitting = false;
-        this.showAlert('success', `Reservasi buku "${this.selectedBook?.title}" berhasil dibuat!`);
-        this.notes = '';
+    this.reservationService
+      .create({
+        bookId: this.selectedBook.bookId,
+        notes: this.notes,
+      })
+      .subscribe({
+        next: (res) => {
+          this.submitting = false;
+          this.showAlert(
+            'success',
+            `Reservasi buku "${this.selectedBook?.title}" berhasil dibuat!`,
+          );
+          this.notes = '';
 
-        // Masukkan ke daftar reservasi aktif
-        const newReservation: BookReservationResponse = {
-          ...res,
-          bookTitle: res.bookTitle || this.selectedBook?.title || 'Buku',
-          authorName: res.authorName || this.selectedBook?.authorName,
-          queueNumber: res.queueNumber || (this.activeReservations.length + 1)
-        };
-        this.activeReservations.unshift(newReservation);
-      },
-      error: (err) => {
-        this.submitting = false;
-        const msg = err.error?.message || 'Terjadi kesalahan saat memproses reservasi.';
-        this.showAlert('danger', msg);
-      }
-    });
+          // Masukkan ke daftar reservasi aktif
+          const newReservation: BookReservationResponse = {
+            ...res,
+            bookTitle: res.bookTitle || this.selectedBook?.title || 'Buku',
+            authorName: res.authorName || this.selectedBook?.authorName,
+            queueNumber: res.queueNumber || this.activeReservations.length + 1,
+          };
+          this.activeReservations.unshift(newReservation);
+        },
+        error: (err) => {
+          this.submitting = false;
+          const msg =
+            err.error?.message || 'Terjadi kesalahan saat memproses reservasi.';
+          this.showAlert('danger', msg);
+        },
+      });
   }
 
   cancelReservation(item: BookReservationResponse): void {
@@ -227,22 +244,33 @@ export class ReservationComponent implements OnInit {
       this.reservationService.cancel(item.bookReservationId).subscribe({
         next: () => {
           this.applyLocalCancel(item);
-          this.showAlert('success', `Reservasi buku "${item.bookTitle}" telah dibatalkan.`);
+          this.showAlert(
+            'success',
+            `Reservasi buku "${item.bookTitle}" telah dibatalkan.`,
+          );
         },
         error: (err) => {
           // Fallback lokal jika demo
           this.applyLocalCancel(item);
-          this.showAlert('success', `Reservasi buku "${item.bookTitle}" telah dibatalkan.`);
-        }
+          this.showAlert(
+            'success',
+            `Reservasi buku "${item.bookTitle}" telah dibatalkan.`,
+          );
+        },
       });
     } else {
       this.applyLocalCancel(item);
-      this.showAlert('success', `Reservasi buku "${item.bookTitle}" telah dibatalkan.`);
+      this.showAlert(
+        'success',
+        `Reservasi buku "${item.bookTitle}" telah dibatalkan.`,
+      );
     }
   }
 
   private applyLocalCancel(item: BookReservationResponse): void {
-    this.activeReservations = this.activeReservations.filter(r => r.bookReservationId !== item.bookReservationId);
+    this.activeReservations = this.activeReservations.filter(
+      (r) => r.bookReservationId !== item.bookReservationId,
+    );
     item.status = 'CANCELLED';
     this.historyReservations.unshift(item);
   }
@@ -255,7 +283,14 @@ export class ReservationComponent implements OnInit {
   }
 
   getCoverColor(id: number): string {
-    const colors = ['cover-brown', 'cover-blue', 'cover-teal', 'cover-green', 'cover-orange', 'cover-purple'];
+    const colors = [
+      'cover-brown',
+      'cover-blue',
+      'cover-teal',
+      'cover-green',
+      'cover-orange',
+      'cover-purple',
+    ];
     return colors[id % colors.length];
   }
 

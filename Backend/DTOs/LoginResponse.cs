@@ -13,6 +13,7 @@
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string RoleName { get; set; } = string.Empty;
+        public long membershipId { get; set; } = 0;
         public string MembershipTierName { get; set; } = string.Empty;
 
         public int Points { get; set; }

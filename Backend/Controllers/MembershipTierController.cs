@@ -6,8 +6,6 @@ namespace AdinsLibrary.Controllers
 {
     [ApiController]
     [Route("api/member-tier")]
-    [Route("api/membertier")]
-    [Route("api/membership-tier")]
     public class MembershipTierController : ControllerBase
     {
         private readonly IMembershipTierService _tierService;

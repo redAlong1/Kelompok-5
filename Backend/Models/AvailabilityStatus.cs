@@ -2,9 +2,9 @@
 {
     public enum AvailabilityStatus
     {
-        UNAVAILABLE,
         AVAILABLE,
         BORROWED,
-        RESERVED
+        RESERVED,
+        UNAVAILABLE
     }
 }

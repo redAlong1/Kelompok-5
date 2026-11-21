@@ -56,7 +56,10 @@ namespace AdinsLibrary.Services
             if (inventories.Count != inventoryIds.Count)
                 return (null, "Ada salinan buku yang tidak ditemukan");
 
-            var unavailable = inventories.FirstOrDefault(i => i.AvailabilityStatus != AvailabilityStatus.AVAILABLE);
+            var unavailable = inventories.FirstOrDefault(i =>
+                i.AvailabilityStatus != AvailabilityStatus.AVAILABLE &&
+                i.AvailabilityStatus != AvailabilityStatus.RESERVED);
+
             if (unavailable != null)
                 return (null, $"Buku '{unavailable.Book?.Title}' sedang tidak tersedia");
 

@@ -12,6 +12,7 @@
         public DateTime ReservationDate { get; set; }
         public string Status { get; set; } = string.Empty;
         public int QueueNumber { get; set; } = 1;
+        public int? BorrowDurationDays { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

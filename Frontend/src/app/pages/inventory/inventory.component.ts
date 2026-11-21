@@ -28,10 +28,9 @@ export interface BookOption {
   standalone: true,
   imports: [CommonModule, FormsModule, SidebarComponent],
   templateUrl: './inventory.component.html',
-  styleUrl: './inventory.component.scss'
+  styleUrl: './inventory.component.scss',
 })
 export class InventoryComponent implements OnInit {
-
   private readonly inventoryUrl = `${environment.apiUrl}/inventory`;
   private readonly bookUrl = `${environment.apiUrl}/book`;
 
@@ -59,17 +58,20 @@ export class InventoryComponent implements OnInit {
   addForm = {
     bookId: 0,
     shelfLocation: '',
-    quantity: 1
+    quantity: 1,
   };
 
   editForm = {
     shelfLocation: '',
-    availabilityStatus: 0
+    availabilityStatus: 0,
   };
 
   selectedItem: InventoryItem | null = null;
 
-  constructor(private http: HttpClient, private auth: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private auth: AuthService,
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -80,15 +82,18 @@ export class InventoryComponent implements OnInit {
   }
 
   get availableCount(): number {
-    return this.items.filter(i => this.normalizeStatus(i) === 'AVAILABLE').length;
+    return this.items.filter((i) => this.normalizeStatus(i) === 'AVAILABLE')
+      .length;
   }
 
   get borrowedCount(): number {
-    return this.items.filter(i => this.normalizeStatus(i) === 'BORROWED').length;
+    return this.items.filter((i) => this.normalizeStatus(i) === 'BORROWED')
+      .length;
   }
 
   get reservedCount(): number {
-    return this.items.filter(i => this.normalizeStatus(i) === 'RESERVED').length;
+    return this.items.filter((i) => this.normalizeStatus(i) === 'RESERVED')
+      .length;
   }
 
   get totalPages(): number {
@@ -100,11 +105,16 @@ export class InventoryComponent implements OnInit {
   }
 
   get rangeStart(): number {
-    return this.filteredItems.length === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
+    return this.filteredItems.length === 0
+      ? 0
+      : (this.currentPage - 1) * this.pageSize + 1;
   }
 
   get rangeEnd(): number {
-    return Math.min(this.currentPage * this.pageSize, this.filteredItems.length);
+    return Math.min(
+      this.currentPage * this.pageSize,
+      this.filteredItems.length,
+    );
   }
 
   loadData(): void {
@@ -114,49 +124,68 @@ export class InventoryComponent implements OnInit {
 
     forkJoin({
       inventories: this.http.get<InventoryItem[]>(this.inventoryUrl, h),
-      books: this.http.get<BookOption[]>(this.bookUrl, h)
+      books: this.http.get<BookOption[]>(this.bookUrl, h),
     }).subscribe({
-      next: res => {
+      next: (res) => {
         this.items = res.inventories;
         this.books = res.books;
         this.applyFilter();
         this.isLoading = false;
       },
       error: () => {
-        this.errorMsg = 'Gagal memuat data inventory. Pastikan server backend aktif.';
+        this.errorMsg =
+          'Gagal memuat data inventory. Pastikan server backend aktif.';
         this.isLoading = false;
-      }
+      },
     });
   }
 
   loadInventories(): void {
     const h = { headers: this.authHeaders() };
     this.http.get<InventoryItem[]>(this.inventoryUrl, h).subscribe({
-      next: data => {
+      next: (data) => {
         this.items = data;
         this.applyFilter();
       },
-      error: err => {
-        this.errorMsg = err?.error?.message || 'Gagal memperbarui data inventory.';
-      }
+      error: (err) => {
+        this.errorMsg =
+          err?.error?.message || 'Gagal memperbarui data inventory.';
+      },
     });
   }
 
   normalizeStatus(item: InventoryItem): string {
     if (typeof item.availabilityStatus === 'string') {
-      return item.availabilityStatus.toUpperCase();
+      const upper = item.availabilityStatus.trim().toUpperCase();
+      if (upper === '0' || upper === 'AVAILABLE') return 'AVAILABLE';
+      if (upper === '1' || upper === 'BORROWED') return 'BORROWED';
+      if (upper === '2' || upper === 'RESERVED') return 'RESERVED';
+      if (upper === '3' || upper === 'UNAVAILABLE') return 'UNAVAILABLE';
+      if (upper) return upper;
     }
+
     if (item.availabilityStatus === 0) return 'AVAILABLE';
     if (item.availabilityStatus === 1) return 'BORROWED';
     if (item.availabilityStatus === 2) return 'RESERVED';
-    return item.statusName ? item.statusName.toUpperCase() : 'AVAILABLE';
+    if (item.availabilityStatus === 3) return 'UNAVAILABLE';
+
+    if (item.statusName) {
+      return item.statusName.trim().toUpperCase();
+    }
+
+    return 'AVAILABLE';
   }
 
   statusBadgeClass(item: InventoryItem): string {
     const s = this.normalizeStatus(item);
-    if (s === 'AVAILABLE') return 'bg-success-subtle text-success border border-success-subtle';
-    if (s === 'BORROWED') return 'bg-warning-subtle text-warning-emphasis border border-warning-subtle';
-    if (s === 'RESERVED') return 'bg-info-subtle text-info-emphasis border border-info-subtle';
+    if (s === 'AVAILABLE')
+      return 'bg-success-subtle text-success border border-success-subtle';
+    if (s === 'BORROWED')
+      return 'bg-warning-subtle text-warning-emphasis border border-warning-subtle';
+    if (s === 'RESERVED')
+      return 'bg-info-subtle text-info-emphasis border border-info-subtle';
+    if (s === 'UNAVAILABLE')
+      return 'bg-danger-subtle text-danger border border-danger-subtle';
     return 'bg-secondary-subtle text-secondary';
   }
 
@@ -165,6 +194,7 @@ export class InventoryComponent implements OnInit {
     if (s === 'AVAILABLE') return 'Tersedia';
     if (s === 'BORROWED') return 'Dipinjam';
     if (s === 'RESERVED') return 'Direservasi';
+    if (s === 'UNAVAILABLE') return 'Tidak Tersedia';
     return s;
   }
 
@@ -194,22 +224,28 @@ export class InventoryComponent implements OnInit {
 
   private applyFilter(): void {
     const q = this.searchQuery.trim().toLowerCase();
-    let result = this.items.filter(item => {
-      const matchSearch = !q ||
+    let result = this.items.filter((item) => {
+      const matchSearch =
+        !q ||
         (item.bookTitle && item.bookTitle.toLowerCase().includes(q)) ||
         (item.bookIsbn && item.bookIsbn.toLowerCase().includes(q)) ||
         (item.shelfLocation && item.shelfLocation.toLowerCase().includes(q)) ||
         item.inventoryId.toString().includes(q);
 
-      const matchStatus = !this.statusFilter || this.normalizeStatus(item) === this.statusFilter;
+      const matchStatus =
+        !this.statusFilter || this.normalizeStatus(item) === this.statusFilter;
 
       return matchSearch && matchStatus;
     });
 
     if (this.sortDir === 'asc') {
-      result = [...result].sort((a, b) => a.bookTitle.localeCompare(b.bookTitle));
+      result = [...result].sort((a, b) =>
+        a.bookTitle.localeCompare(b.bookTitle),
+      );
     } else if (this.sortDir === 'desc') {
-      result = [...result].sort((a, b) => b.bookTitle.localeCompare(a.bookTitle));
+      result = [...result].sort((a, b) =>
+        b.bookTitle.localeCompare(a.bookTitle),
+      );
     }
 
     this.filteredItems = result;
@@ -226,7 +262,7 @@ export class InventoryComponent implements OnInit {
     this.addForm = {
       bookId: this.books.length > 0 ? this.books[0].bookId : 0,
       shelfLocation: '',
-      quantity: 1
+      quantity: 1,
     };
     this.showAddModal = true;
   }
@@ -237,10 +273,11 @@ export class InventoryComponent implements OnInit {
     let statusCode = 0;
     if (currentStatus === 'BORROWED') statusCode = 1;
     else if (currentStatus === 'RESERVED') statusCode = 2;
+    else if (currentStatus === 'UNAVAILABLE') statusCode = 3;
 
     this.editForm = {
       shelfLocation: item.shelfLocation || '',
-      availabilityStatus: statusCode
+      availabilityStatus: statusCode,
     };
     this.formError = '';
     this.showEditModal = true;
@@ -269,20 +306,23 @@ export class InventoryComponent implements OnInit {
       bookId: Number(this.addForm.bookId),
       shelfLocation: this.addForm.shelfLocation.trim(),
       quantity: Number(this.addForm.quantity),
-      availabilityStatus: 0
+      availabilityStatus: 0,
     };
 
-    this.http.post(this.inventoryUrl, body, { headers: this.authHeaders() }).subscribe({
-      next: () => {
-        this.isSaving = false;
-        this.showAddModal = false;
-        this.loadInventories();
-      },
-      error: err => {
-        this.isSaving = false;
-        this.formError = err?.error?.message || 'Gagal menambahkan eksemplar inventory.';
-      }
-    });
+    this.http
+      .post(this.inventoryUrl, body, { headers: this.authHeaders() })
+      .subscribe({
+        next: () => {
+          this.isSaving = false;
+          this.showAddModal = false;
+          this.loadInventories();
+        },
+        error: (err) => {
+          this.isSaving = false;
+          this.formError =
+            err?.error?.message || 'Gagal menambahkan eksemplar inventory.';
+        },
+      });
   }
 
   saveEdit(): void {
@@ -293,21 +333,26 @@ export class InventoryComponent implements OnInit {
 
     const body = {
       shelfLocation: this.editForm.shelfLocation.trim(),
-      availabilityStatus: Number(this.editForm.availabilityStatus)
+      availabilityStatus: Number(this.editForm.availabilityStatus),
     };
 
-    this.http.put(`${this.inventoryUrl}/${this.selectedItem.inventoryId}`, body, { headers: this.authHeaders() }).subscribe({
-      next: () => {
-        this.isSaving = false;
-        this.showEditModal = false;
-        this.selectedItem = null;
-        this.loadInventories();
-      },
-      error: err => {
-        this.isSaving = false;
-        this.formError = err?.error?.message || 'Gagal memperbarui eksemplar.';
-      }
-    });
+    this.http
+      .put(`${this.inventoryUrl}/${this.selectedItem.inventoryId}`, body, {
+        headers: this.authHeaders(),
+      })
+      .subscribe({
+        next: () => {
+          this.isSaving = false;
+          this.showEditModal = false;
+          this.selectedItem = null;
+          this.loadInventories();
+        },
+        error: (err) => {
+          this.isSaving = false;
+          this.formError =
+            err?.error?.message || 'Gagal memperbarui eksemplar.';
+        },
+      });
   }
 
   deleteItem(): void {
@@ -316,18 +361,22 @@ export class InventoryComponent implements OnInit {
     this.isSaving = true;
     this.formError = '';
 
-    this.http.delete(`${this.inventoryUrl}/${this.selectedItem.inventoryId}`, { headers: this.authHeaders() }).subscribe({
-      next: () => {
-        this.isSaving = false;
-        this.showDeleteModal = false;
-        this.selectedItem = null;
-        this.loadInventories();
-      },
-      error: err => {
-        this.isSaving = false;
-        this.formError = err?.error?.message || 'Gagal menghapus eksemplar.';
-      }
-    });
+    this.http
+      .delete(`${this.inventoryUrl}/${this.selectedItem.inventoryId}`, {
+        headers: this.authHeaders(),
+      })
+      .subscribe({
+        next: () => {
+          this.isSaving = false;
+          this.showDeleteModal = false;
+          this.selectedItem = null;
+          this.loadInventories();
+        },
+        error: (err) => {
+          this.isSaving = false;
+          this.formError = err?.error?.message || 'Gagal menghapus eksemplar.';
+        },
+      });
   }
 
   closeModals(): void {
