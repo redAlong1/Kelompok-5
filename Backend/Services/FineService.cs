@@ -40,10 +40,12 @@ namespace AdinsLibrary.Services
                 return (null, "Data buku atau membership tidak lengkap");
 
             decimal price = book.Price;
-            decimal rate = _config.GetValue<decimal>("Fine:RatePerDay");
+            decimal first3DaysRate = _config.GetValue<decimal?>("Fine:RatePerDay") ?? 2000m;
+            decimal after3DaysRate = _config.GetValue<decimal?>("Fine:RatePerDayAfter3Days") ?? 5000m;
             decimal lightPct = _config.GetValue<decimal>("Fine:DamagedPercentLight");
             decimal heavyPct = _config.GetValue<decimal>("Fine:DamagedPercentHeavy");
             decimal lostFee = _config.GetValue<decimal>("Fine:LostAdminFee");
+            decimal tierDiscountPct = tier.Discount;
 
             var condition = item.ReturnCondition ?? BookCondition.GOOD;
 
@@ -63,8 +65,8 @@ namespace AdinsLibrary.Services
             {
                 decimal damagedBase = condition switch
                 {
-                    BookCondition.DAMAGED_LIGHT => price * lightPct / 100,
-                    BookCondition.DAMAGED_HEAVY => price * heavyPct / 100,
+                    BookCondition.DAMAGED_LIGHT => price * lightPct / 100m,
+                    BookCondition.DAMAGED_HEAVY => price * heavyPct / 100m,
                     _ => 0m
                 };
                 damagedBase = Math.Round(damagedBase, 2);
@@ -74,8 +76,10 @@ namespace AdinsLibrary.Services
 
                 if (lateDays > 0)
                 {
-                    // Terlambat dibatasi harga buku, dan total denda tidak boleh > harga buku
-                    decimal lateBase = Math.Min(lateDays * rate, price - damagedBase);
+                    decimal rawLateFine = CalculateTieredLateFine(lateDays, first3DaysRate, after3DaysRate);
+                    decimal maxAllowedLate = Math.Max(0m, price - damagedBase);
+                    decimal lateBase = Math.Min(rawLateFine, maxAllowedLate);
+
                     if (lateBase > 0)
                         drafts.Add((FineType.LATE, Math.Round(lateBase, 2)));
                 }
@@ -83,7 +87,7 @@ namespace AdinsLibrary.Services
 
             foreach (var d in drafts)
             {
-                decimal discount = Math.Round(d.Base * tier.Discount / 100, 2);
+                decimal discount = Math.Round(d.Base * tierDiscountPct / 100m, 2);
                 _db.Fines.Add(new Fine
                 {
                     BorrowingItemId = item.BorrowingItemId,
@@ -130,7 +134,8 @@ namespace AdinsLibrary.Services
         public async Task<List<AccruingFineResponse>> GetAccruingAsync(long userId)
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
-            decimal rate = _config.GetValue<decimal>("Fine:RatePerDay");
+            decimal first3DaysRate = _config.GetValue<decimal?>("Fine:RatePerDay") ?? 2000m;
+            decimal after3DaysRate = _config.GetValue<decimal?>("Fine:RatePerDayAfter3Days") ?? 5000m;
 
             var items = await _db.BorrowingItems
                 .Include(i => i.Inventory).ThenInclude(inv => inv!.Book)
@@ -147,11 +152,13 @@ namespace AdinsLibrary.Services
                 if (book == null) continue;
 
                 DateOnly due = i.BookBorrowingTransaction.DueDate;
-                int lateDays = today.DayNumber - due.DayNumber;
-                decimal discountPct = i.BookBorrowingTransaction.User?.MembershipTier?.Discount ?? 0;
+                int lateDays = Math.Max(0, today.DayNumber - due.DayNumber);
+                decimal discountPct = i.BookBorrowingTransaction.User?.MembershipTier?.Discount ?? 0m;
 
-                decimal baseAmount = Math.Min(lateDays * rate, book.Price);
-                decimal amount = Math.Round(baseAmount - baseAmount * discountPct / 100, 2);
+                decimal rawLateFine = CalculateTieredLateFine(lateDays, first3DaysRate, after3DaysRate);
+                decimal baseAmount = Math.Min(rawLateFine, book.Price);
+                decimal discountAmount = Math.Round(baseAmount * discountPct / 100m, 2);
+                decimal amount = Math.Round(baseAmount - discountAmount, 2);
 
                 result.Add(new AccruingFineResponse
                 {
@@ -188,6 +195,16 @@ namespace AdinsLibrary.Services
         }
 
         // ---------- Helper ----------
+        private static decimal CalculateTieredLateFine(int lateDays, decimal first3DaysRate, decimal after3DaysRate)
+        {
+            if (lateDays <= 0) return 0m;
+
+            int first3Days = Math.Min(lateDays, 3);
+            int remainingDays = Math.Max(0, lateDays - 3);
+
+            return (first3Days * first3DaysRate) + (remainingDays * after3DaysRate);
+        }
+
         private IQueryable<Fine> FineQuery() => _db.Fines
             .Include(f => f.BorrowingItem).ThenInclude(i => i!.Inventory).ThenInclude(inv => inv!.Book)
             .Include(f => f.BorrowingItem).ThenInclude(i => i!.BookBorrowingTransaction).ThenInclude(t => t.User);

@@ -1,25 +1,39 @@
 <div class="d-flex vh-100 overflow-hidden">
-
-  <main class="flex-grow-1 d-flex flex-column overflow-auto" style="background:#f0f2f5;">
+  <main
+    class="flex-grow-1 d-flex flex-column overflow-auto"
+    style="background: #f0f2f5"
+  >
     <div class="p-4">
-
       <h4 class="fw-bold text-dark mb-1">Master Buku</h4>
-      <p class="text-primary small mb-4">Kelola daftar buku yang tersedia di perpustakaan.</p>
+      <p class="text-primary small mb-4">
+        Kelola daftar buku yang tersedia di perpustakaan.
+      </p>
 
       <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
-
           <!-- Action Bar -->
-          <div class="d-flex align-items-center justify-content-between mb-4 gap-3">
-            <input type="text" class="form-control search-input" placeholder="Cari judul buku..."
-              [(ngModel)]="searchQuery" (input)="onSearch()" />
-            <button class="btn btn-primary fw-semibold px-4 flex-shrink-0" (click)="openAddModal()">
+          <div
+            class="d-flex align-items-center justify-content-between mb-4 gap-3"
+          >
+            <input
+              type="text"
+              class="form-control search-input"
+              placeholder="Cari judul buku..."
+              [(ngModel)]="searchQuery"
+              (input)="onSearch()"
+            />
+            <button
+              class="btn btn-primary fw-semibold px-4 flex-shrink-0"
+              (click)="openAddModal()"
+            >
               + Tambah Buku
             </button>
           </div>
 
           <!-- Error -->
-          <div *ngIf="errorMsg" class="alert alert-danger py-2 small mb-3">{{ errorMsg }}</div>
+          <div *ngIf="errorMsg" class="alert alert-danger py-2 small mb-3">
+            {{ errorMsg }}
+          </div>
 
           <!-- Loading -->
           <div *ngIf="isLoading" class="text-center py-5">
@@ -32,69 +46,176 @@
             <table class="table table-hover align-middle mb-0">
               <thead>
                 <tr class="table-header">
-                  <th class="py-3 px-3 text-muted fw-semibold" style="font-size:13px; width:50px;">No</th>
-                  <th class="py-3 text-muted fw-semibold" style="font-size:13px;">
-                    <span class="d-flex align-items-center gap-1 cursor-pointer user-select-none" (click)="toggleSort('title')">
+                  <th
+                    class="py-3 px-3 text-muted fw-semibold"
+                    style="font-size: 13px; width: 50px"
+                  >
+                    No
+                  </th>
+                  <th
+                    class="py-3 text-muted fw-semibold"
+                    style="font-size: 13px"
+                  >
+                    <span
+                      class="d-flex align-items-center gap-1 cursor-pointer user-select-none"
+                      (click)="toggleSort('title')"
+                    >
                       Judul Buku
-                      <i class="bi" [class.bi-arrow-down-up]="sortField !== 'title' || sortDir === ''"
-                                     [class.bi-arrow-up]="sortField === 'title' && sortDir === 'asc'"
-                                     [class.bi-arrow-down]="sortField === 'title' && sortDir === 'desc'"
-                         style="font-size:11px;"></i>
+                      <i
+                        class="bi"
+                        [class.bi-arrow-down-up]="
+                          sortField !== 'title' || sortDir === ''
+                        "
+                        [class.bi-arrow-up]="
+                          sortField === 'title' && sortDir === 'asc'
+                        "
+                        [class.bi-arrow-down]="
+                          sortField === 'title' && sortDir === 'desc'
+                        "
+                        style="font-size: 11px"
+                      ></i>
                     </span>
                   </th>
-                  <th class="py-3 text-muted fw-semibold" style="font-size:13px;">
-                    <span class="d-flex align-items-center gap-1 cursor-pointer user-select-none" (click)="toggleSort('price')">
+                  <th
+                    class="py-3 text-muted fw-semibold"
+                    style="font-size: 13px"
+                  >
+                    <span
+                      class="d-flex align-items-center gap-1 cursor-pointer user-select-none"
+                      (click)="toggleSort('price')"
+                    >
                       Harga
-                      <i class="bi" [class.bi-arrow-down-up]="sortField !== 'price' || sortDir === ''"
-                                     [class.bi-arrow-up]="sortField === 'price' && sortDir === 'asc'"
-                                     [class.bi-arrow-down]="sortField === 'price' && sortDir === 'desc'"
-                         style="font-size:11px;"></i>
+                      <i
+                        class="bi"
+                        [class.bi-arrow-down-up]="
+                          sortField !== 'price' || sortDir === ''
+                        "
+                        [class.bi-arrow-up]="
+                          sortField === 'price' && sortDir === 'asc'
+                        "
+                        [class.bi-arrow-down]="
+                          sortField === 'price' && sortDir === 'desc'
+                        "
+                        style="font-size: 11px"
+                      ></i>
                     </span>
                   </th>
-                  <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Author</th>
-                  <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Kategori</th>
-                  <th class="py-3 text-muted fw-semibold" style="font-size:13px;">Penerbit</th>
-                  <th class="py-3 text-muted fw-semibold text-center" style="font-size:13px; width:90px;">Stok</th>
-                  <th class="py-3 text-muted fw-semibold" style="font-size:13px; width:160px;">Aksi</th>
+                  <th
+                    class="py-3 text-muted fw-semibold"
+                    style="font-size: 13px"
+                  >
+                    Author
+                  </th>
+                  <th
+                    class="py-3 text-muted fw-semibold"
+                    style="font-size: 13px"
+                  >
+                    Kategori
+                  </th>
+                  <th
+                    class="py-3 text-muted fw-semibold"
+                    style="font-size: 13px"
+                  >
+                    Penerbit
+                  </th>
+                  <th
+                    class="py-3 text-muted fw-semibold text-center"
+                    style="font-size: 13px; width: 90px"
+                  >
+                    Stok
+                  </th>
+                  <th
+                    class="py-3 text-muted fw-semibold"
+                    style="font-size: 13px; width: 160px"
+                  >
+                    Aksi
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngIf="pagedItems.length === 0">
-                  <td colspan="8" class="text-center py-5 text-muted" style="font-size:14px;">
+                  <td
+                    colspan="8"
+                    class="text-center py-5 text-muted"
+                    style="font-size: 14px"
+                  >
                     Tidak ada data buku ditemukan.
                   </td>
                 </tr>
                 <tr *ngFor="let item of pagedItems; let i = index">
-                  <td class="px-3 text-muted" style="font-size:14px;">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                  <td class="px-3 text-muted" style="font-size: 14px">
+                    {{ (currentPage - 1) * pageSize + i + 1 }}
+                  </td>
                   <td>
                     <div class="d-flex align-items-center gap-3">
-                      <img *ngIf="item.coverUrl" [src]="getCoverImageUrl(item.coverUrl)" class="book-thumb rounded shadow-sm" alt="Cover" />
-                      <div *ngIf="!item.coverUrl" class="book-thumb book-thumb-placeholder rounded d-flex align-items-center justify-content-center text-muted">
+                      <img
+                        *ngIf="item.coverUrl"
+                        [src]="getCoverImageUrl(item.coverUrl)"
+                        class="book-thumb rounded shadow-sm"
+                        alt="Cover"
+                      />
+                      <div
+                        *ngIf="!item.coverUrl"
+                        class="book-thumb book-thumb-placeholder rounded d-flex align-items-center justify-content-center text-muted"
+                      >
                         <i class="bi bi-book"></i>
                       </div>
                       <div>
-                        <div class="fw-semibold text-dark" style="font-size:14px;">{{ item.title }}</div>
-                        <div class="text-muted" style="font-size:12px;" *ngIf="item.isbn">ISBN: {{ item.isbn }}</div>
+                        <div
+                          class="fw-semibold text-dark"
+                          style="font-size: 14px"
+                        >
+                          {{ item.title }}
+                        </div>
+                        <div
+                          class="text-muted"
+                          style="font-size: 12px"
+                          *ngIf="item.isbn"
+                        >
+                          ISBN: {{ item.isbn }}
+                        </div>
                       </div>
                     </div>
                   </td>
                   <td>
-                    <span class="fw-semibold text-dark" style="font-size:13px;">Rp {{ (item.price || 0) | number:'1.0-0' }}</span>
+                    <span class="fw-semibold text-dark" style="font-size: 13px"
+                      >Rp {{ item.price || 0 | number: "1.0-2" }}</span
+                    >
                   </td>
-                  <td class="text-muted" style="font-size:13px;">{{ item.author?.authorName || '-' }}</td>
-                  <td class="text-muted" style="font-size:13px;">{{ item.category?.categoryName || '-' }}</td>
-                  <td class="text-muted" style="font-size:13px;">{{ item.publisher?.publisherName || '-' }}</td>
+                  <td class="text-muted" style="font-size: 13px">
+                    {{ item.author?.authorName || "-" }}
+                  </td>
+                  <td class="text-muted" style="font-size: 13px">
+                    {{ item.category?.categoryName || "-" }}
+                  </td>
+                  <td class="text-muted" style="font-size: 13px">
+                    {{ item.publisher?.publisherName || "-" }}
+                  </td>
                   <td class="text-center">
-                    <span class="stock-badge"
-                          [class.stock-ok]="item.availableStock > 0"
-                          [class.stock-empty]="item.availableStock === 0">
+                    <span
+                      class="stock-badge"
+                      [class.stock-ok]="item.availableStock > 0"
+                      [class.stock-empty]="item.availableStock === 0"
+                    >
                       {{ item.availableStock }}/{{ item.totalStock }}
                     </span>
                   </td>
                   <td>
                     <div class="d-flex gap-2">
-                      <button class="btn btn-sm btn-outline-secondary px-3" style="font-size:13px;" (click)="openEditModal(item)">Edit</button>
-                      <button class="btn btn-sm btn-outline-danger px-3" style="font-size:13px;" (click)="confirmDelete(item)">Hapus</button>
+                      <button
+                        class="btn btn-sm btn-outline-secondary px-3"
+                        style="font-size: 13px"
+                        (click)="openEditModal(item)"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        class="btn btn-sm btn-outline-danger px-3"
+                        style="font-size: 13px"
+                        (click)="confirmDelete(item)"
+                      >
+                        Hapus
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -102,22 +223,38 @@
             </table>
 
             <!-- Footer -->
-            <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top">
+            <div
+              class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top"
+            >
               <small class="text-muted">
                 Menampilkan
-                <span class="text-primary fw-semibold">{{ rangeStart }}–{{ rangeEnd }}</span>
-                dari <span class="text-dark fw-semibold">{{ filteredItems.length }}</span> buku
+                <span class="text-primary fw-semibold"
+                  >{{ rangeStart }}–{{ rangeEnd }}</span
+                >
+                dari
+                <span class="text-dark fw-semibold">{{
+                  filteredItems.length
+                }}</span>
+                buku
               </small>
               <nav>
                 <ul class="pagination pagination-sm mb-0">
-                  <li class="page-item" *ngFor="let p of pages" [class.active]="p === currentPage">
-                    <a class="page-link" href="#" (click)="goToPage(p, $event)">{{ p }}</a>
+                  <li
+                    class="page-item"
+                    *ngFor="let p of pages"
+                    [class.active]="p === currentPage"
+                  >
+                    <a
+                      class="page-link"
+                      href="#"
+                      (click)="goToPage(p, $event)"
+                      >{{ p }}</a
+                    >
                   </li>
                 </ul>
               </nav>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -127,121 +264,241 @@
 <!-- ============================================================ -->
 <!--  MODAL: TAMBAH / EDIT BUKU                                   -->
 <!-- ============================================================ -->
-<div class="modal fade" [class.show]="showFormModal" [style.display]="showFormModal ? 'block' : 'none'" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-lg" (click)="$event.stopPropagation()">
+<div
+  class="modal fade"
+  [class.show]="showFormModal"
+  [style.display]="showFormModal ? 'block' : 'none'"
+  tabindex="-1"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-lg"
+    (click)="$event.stopPropagation()"
+  >
     <div class="modal-content border-0 shadow-lg rounded-3">
       <div class="modal-header border-0 px-4 pt-4 pb-2">
-        <h6 class="modal-title fw-bold text-dark">{{ isEditMode ? 'Edit Buku' : 'Tambah Buku Baru' }}</h6>
-        <button type="button" class="btn-close" (click)="closeFormModal()"></button>
+        <h6 class="modal-title fw-bold text-dark">
+          {{ isEditMode ? "Edit Buku" : "Tambah Buku Baru" }}
+        </h6>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeFormModal()"
+        ></button>
       </div>
       <div class="modal-body px-4 pb-2">
-        <div *ngIf="formError" class="alert alert-danger py-2 small mb-3">{{ formError }}</div>
+        <div *ngIf="formError" class="alert alert-danger py-2 small mb-3">
+          {{ formError }}
+        </div>
 
         <div class="row g-3">
           <!-- Cover Image Picker -->
           <div class="col-12">
-            <label class="form-label small fw-semibold text-muted d-block">Cover Buku <span class="text-danger">*</span></label>
-            <input #coverFileInput type="file" accept="image/png,image/jpeg,image/webp,image/gif"
-                   (change)="onFileSelected($event)" class="d-none" />
+            <label class="form-label small fw-semibold text-muted d-block"
+              >Cover Buku <span class="text-danger">*</span></label
+            >
+            <input
+              #coverFileInput
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              (change)="onFileSelected($event)"
+              class="d-none"
+            />
 
             <!-- Preview Card (jika sudah ada cover yang dipilih/dimiliki) -->
-            <div *ngIf="previewUrl" class="cover-preview-card p-3 border rounded-3 bg-light d-flex align-items-center gap-3">
-              <img [src]="previewUrl" alt="Cover Preview" class="cover-preview-img rounded shadow-sm" />
+            <div
+              *ngIf="previewUrl"
+              class="cover-preview-card p-3 border rounded-3 bg-light d-flex align-items-center gap-3"
+            >
+              <img
+                [src]="previewUrl"
+                alt="Cover Preview"
+                class="cover-preview-img rounded shadow-sm"
+              />
               <div class="flex-grow-1 min-w-0">
-                <div class="fw-semibold small text-dark mb-1">Gambar Cover Terpilih</div>
-                <div class="text-muted small text-truncate mb-2" style="max-width: 380px;">
-                  {{ form.coverUrl || 'File lokal tersimpan' }}
+                <div class="fw-semibold small text-dark mb-1">
+                  Gambar Cover Terpilih
+                </div>
+                <div
+                  class="text-muted small text-truncate mb-2"
+                  style="max-width: 380px"
+                >
+                  {{ form.coverUrl || "File lokal tersimpan" }}
                 </div>
                 <div class="d-flex gap-2">
-                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="coverFileInput.click()" [disabled]="isUploadingCover">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="coverFileInput.click()"
+                    [disabled]="isUploadingCover"
+                  >
                     <i class="bi bi-arrow-repeat me-1"></i> Ganti Gambar
                   </button>
-                  <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeCover()" [disabled]="isUploadingCover">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="removeCover()"
+                    [disabled]="isUploadingCover"
+                  >
                     <i class="bi bi-trash me-1"></i> Hapus
                   </button>
                 </div>
               </div>
-              <div *ngIf="isUploadingCover" class="spinner-border spinner-border-sm text-primary" role="status"></div>
+              <div
+                *ngIf="isUploadingCover"
+                class="spinner-border spinner-border-sm text-primary"
+                role="status"
+              ></div>
             </div>
 
             <!-- Dropzone / Picker Button (jika belum ada cover) -->
-            <div *ngIf="!previewUrl"
-                 class="cover-dropzone border border-2 border-dashed rounded-3 p-4 text-center cursor-pointer bg-light-subtle"
-                 (click)="coverFileInput.click()">
+            <div
+              *ngIf="!previewUrl"
+              class="cover-dropzone border border-2 border-dashed rounded-3 p-4 text-center cursor-pointer bg-light-subtle"
+              (click)="coverFileInput.click()"
+            >
               <div *ngIf="!isUploadingCover">
                 <i class="bi bi-image text-primary fs-2 d-block mb-1"></i>
-                <div class="fw-semibold text-dark small">Pilih Gambar Cover</div>
-                <div class="text-muted small" style="font-size: 11px;">Mendukung JPG, PNG, WEBP, GIF (maks. 5MB) &bull; Tersimpan di folder lokal Kelompok-5</div>
+                <div class="fw-semibold text-dark small">
+                  Pilih Gambar Cover
+                </div>
+                <div class="text-muted small" style="font-size: 11px">
+                  Mendukung JPG, PNG, WEBP, GIF (maks. 5MB) &bull; Tersimpan di
+                  folder lokal Kelompok-5
+                </div>
               </div>
               <div *ngIf="isUploadingCover" class="py-2">
-                <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                <div class="small text-muted">Mengunggah gambar cover ke local storage...</div>
+                <div
+                  class="spinner-border spinner-border-sm text-primary mb-2"
+                  role="status"
+                ></div>
+                <div class="small text-muted">
+                  Mengunggah gambar cover ke local storage...
+                </div>
               </div>
             </div>
 
-            <div *ngIf="coverUploadError" class="text-danger small mt-1">{{ coverUploadError }}</div>
+            <div *ngIf="coverUploadError" class="text-danger small mt-1">
+              {{ coverUploadError }}
+            </div>
           </div>
 
           <!-- Judul -->
           <div class="col-12">
-            <label class="form-label small fw-semibold text-muted">Judul Buku <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" placeholder="Masukkan judul buku..." [(ngModel)]="form.title" />
+            <label class="form-label small fw-semibold text-muted"
+              >Judul Buku <span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Masukkan judul buku..."
+              [(ngModel)]="form.title"
+            />
           </div>
 
           <!-- ISBN -->
           <div class="col-md-6">
-            <label class="form-label small fw-semibold text-muted">ISBN <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" placeholder="Misal: 978-602-..." [(ngModel)]="form.isbn" />
+            <label class="form-label small fw-semibold text-muted"
+              >ISBN <span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Misal: 978-602-..."
+              [(ngModel)]="form.isbn"
+            />
           </div>
 
           <!-- Price -->
           <div class="col-md-6">
-            <label class="form-label small fw-semibold text-muted">Harga (Rp) <span class="text-danger">*</span></label>
+            <label class="form-label small fw-semibold text-muted"
+              >Harga (Rp) <span class="text-danger">*</span></label
+            >
             <div class="input-group">
-              <span class="input-group-text bg-light text-muted fw-semibold">Rp</span>
-              <input type="number" min="0" step="1000" class="form-control" placeholder="0" [(ngModel)]="form.price" />
+              <span class="input-group-text bg-light text-muted fw-semibold"
+                >Rp</span
+              >
+              <input
+                type="text"
+                inputmode="decimal"
+                class="form-control"
+                [value]="priceInput"
+                (input)="onPriceInput($event)"
+              />
             </div>
           </div>
 
           <!-- Author -->
           <div class="col-md-4">
-            <label class="form-label small fw-semibold text-muted">Author <span class="text-danger">*</span></label>
+            <label class="form-label small fw-semibold text-muted"
+              >Author <span class="text-danger">*</span></label
+            >
             <select class="form-select" [(ngModel)]="form.authorId">
               <option [ngValue]="0" disabled>Pilih author...</option>
-              <option *ngFor="let a of authors" [ngValue]="a.authorId">{{ a.authorName }}</option>
+              <option *ngFor="let a of authors" [ngValue]="a.authorId">
+                {{ a.authorName }}
+              </option>
             </select>
           </div>
 
           <!-- Category -->
           <div class="col-md-4">
-            <label class="form-label small fw-semibold text-muted">Kategori <span class="text-danger">*</span></label>
+            <label class="form-label small fw-semibold text-muted"
+              >Kategori <span class="text-danger">*</span></label
+            >
             <select class="form-select" [(ngModel)]="form.categoryId">
               <option [ngValue]="0" disabled>Pilih kategori...</option>
-              <option *ngFor="let c of categories" [ngValue]="c.categoryId">{{ c.categoryName }}</option>
+              <option *ngFor="let c of categories" [ngValue]="c.categoryId">
+                {{ c.categoryName }}
+              </option>
             </select>
           </div>
 
           <!-- Publisher -->
           <div class="col-md-4">
-            <label class="form-label small fw-semibold text-muted">Penerbit <span class="text-danger">*</span></label>
+            <label class="form-label small fw-semibold text-muted"
+              >Penerbit <span class="text-danger">*</span></label
+            >
             <select class="form-select" [(ngModel)]="form.publisherId">
               <option [ngValue]="0" disabled>Pilih penerbit...</option>
-              <option *ngFor="let p of publishers" [ngValue]="p.publisherId">{{ p.publisherName }}</option>
+              <option *ngFor="let p of publishers" [ngValue]="p.publisherId">
+                {{ p.publisherName }}
+              </option>
             </select>
           </div>
 
           <!-- Description -->
           <div class="col-12">
-            <label class="form-label small fw-semibold text-muted">Deskripsi <span class="text-danger">*</span></label>
-            <textarea class="form-control" rows="3" placeholder="Masukkan deskripsi buku" [(ngModel)]="form.description"></textarea>
+            <label class="form-label small fw-semibold text-muted"
+              >Deskripsi <span class="text-danger">*</span></label
+            >
+            <textarea
+              class="form-control"
+              rows="3"
+              placeholder="Masukkan deskripsi buku"
+              [(ngModel)]="form.description"
+            ></textarea>
           </div>
         </div>
       </div>
       <div class="modal-footer border-0 px-4 pb-4 pt-2">
-        <button type="button" class="btn btn-light px-4" (click)="closeFormModal()">Batal</button>
-        <button type="button" class="btn btn-primary px-4 fw-semibold" (click)="saveItem()" [disabled]="isSaving">
-          <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1"></span>
-          {{ isEditMode ? 'Simpan' : 'Tambah' }}
+        <button
+          type="button"
+          class="btn btn-light px-4"
+          (click)="closeFormModal()"
+        >
+          Batal
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary px-4 fw-semibold"
+          (click)="saveItem()"
+          [disabled]="isSaving"
+        >
+          <span
+            *ngIf="isSaving"
+            class="spinner-border spinner-border-sm me-1"
+          ></span>
+          {{ isEditMode ? "Simpan" : "Tambah" }}
         </button>
       </div>
     </div>
@@ -249,23 +506,57 @@
 </div>
 
 <!-- Modal Hapus -->
-<div class="modal fade" [class.show]="showDeleteModal" [style.display]="showDeleteModal ? 'block' : 'none'" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-sm" (click)="$event.stopPropagation()">
+<div
+  class="modal fade"
+  [class.show]="showDeleteModal"
+  [style.display]="showDeleteModal ? 'block' : 'none'"
+  tabindex="-1"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-sm"
+    (click)="$event.stopPropagation()"
+  >
     <div class="modal-content border-0 shadow-lg rounded-3">
       <div class="modal-body text-center px-4 py-4">
-        <div class="delete-icon mb-3"><i class="bi bi-exclamation-triangle-fill text-danger"></i></div>
+        <div class="delete-icon mb-3">
+          <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+        </div>
         <h6 class="fw-bold text-dark mb-2">Hapus Buku?</h6>
-        <p class="text-muted small mb-0">Yakin ingin menghapus <strong>{{ selectedItem?.title }}</strong>?</p>
-        <div *ngIf="formError" class="alert alert-danger py-2 small mt-3 mb-0">{{ formError }}</div>
+        <p class="text-muted small mb-0">
+          Yakin ingin menghapus <strong>{{ selectedItem?.title }}</strong
+          >?
+        </p>
+        <div *ngIf="formError" class="alert alert-danger py-2 small mt-3 mb-0">
+          {{ formError }}
+        </div>
       </div>
       <div class="modal-footer border-0 px-4 pb-4 pt-0 d-flex gap-2">
-        <button type="button" class="btn btn-light flex-grow-1" (click)="showDeleteModal = false">Batal</button>
-        <button type="button" class="btn btn-danger flex-grow-1 fw-semibold" (click)="deleteItem()" [disabled]="isSaving">
-          <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1"></span>Hapus
+        <button
+          type="button"
+          class="btn btn-light flex-grow-1"
+          (click)="showDeleteModal = false"
+        >
+          Batal
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger flex-grow-1 fw-semibold"
+          (click)="deleteItem()"
+          [disabled]="isSaving"
+        >
+          <span
+            *ngIf="isSaving"
+            class="spinner-border spinner-border-sm me-1"
+          ></span
+          >Hapus
         </button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal-backdrop fade show" *ngIf="showFormModal || showDeleteModal" (click)="closeBackdrop()"></div>
+<div
+  class="modal-backdrop fade show"
+  *ngIf="showFormModal || showDeleteModal"
+  (click)="closeBackdrop()"
+></div>

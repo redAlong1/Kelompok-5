@@ -142,6 +142,18 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/category/category.component')
             .then(m => m.CategoryComponent)
+      },
+      {
+        path: 'member-tier',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./pages/member-tier/member-tier.component')
+            .then(m => m.MemberTierComponent)
+      },
+      {
+        path: 'membertier',
+        redirectTo: 'member-tier',
+        pathMatch: 'full'
       }
     ]
   },
