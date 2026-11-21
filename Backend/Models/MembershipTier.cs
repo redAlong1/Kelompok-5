@@ -13,6 +13,9 @@ namespace AdinsLibrary.Models
         [Column(TypeName = "decimal(5,2)")]
         public decimal Discount { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public int MinPoints { get; set; }
+        public int MaxBorrowItems { get; set; } = 3;
+        public int BorrowDurationDays { get; set; } = 14;
         public ICollection<User> Users { get; set; } = new List<User>();
 
     }

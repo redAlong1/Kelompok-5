@@ -32,8 +32,6 @@ namespace AdinsLibrary.Services
             if (user is null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
                 return null;
 
-            MembershipTier? tier = await _tierRepository.GetByIdAsync(user.MembershipTierId);
-
             Claim[] claims = new[]
             {
                 new Claim("userId", user.UserId.ToString()),
@@ -55,14 +53,7 @@ namespace AdinsLibrary.Services
             {
                 status = "success",
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
-                User = new UserSummary
-                {
-                    UserId = user.UserId,
-                    UserName = user.Username,
-                    Email = user.Email,
-                    RoleName = user.Role.ToString(),
-                    MembershipTierName = tier?.TierName ?? string.Empty
-                }
+                User = await BuildSummaryAsync(user)
             };
         }
 
@@ -72,16 +63,20 @@ namespace AdinsLibrary.Services
             if (users.Any(u => u.Email == request.Email))
                 return null;
 
-            const long defaultTierId = 1; // Bronze
-            MembershipTier? tier = await _tierRepository.GetByIdAsync(defaultTierId);
+            // tier awal = tier dengan MinPoints terkecil
+            List<MembershipTier> tiers = await _tierRepository.GetAllAsync();
+            MembershipTier? startTier = tiers.OrderBy(t => t.MinPoints).FirstOrDefault();
+            if (startTier is null)
+                throw new InvalidOperationException("Belum ada MembershipTier di database.");
 
             User user = new User
             {
                 Username = request.Username,
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                Role = UserRole.User,          // semua yang daftar otomatis User
-                MembershipTierId = defaultTierId,
+                Role = UserRole.User,
+                MembershipTierId = startTier.MembershipTierId,
+                Points = 0,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -92,14 +87,36 @@ namespace AdinsLibrary.Services
             {
                 Status = "success",
                 Message = "Registrasi berhasil. Silakan login.",
-                User = new UserSummary
-                {
-                    UserId = user.UserId,
-                    UserName = user.Username,
-                    Email = user.Email,
-                    RoleName = user.Role.ToString(),
-                    MembershipTierName = tier?.TierName ?? string.Empty
-                }
+                User = await BuildSummaryAsync(user)
+            };
+        }
+
+        public async Task<UserSummary?> GetProfileAsync(long userId)
+        {
+            User? user = await _userRepository.GetByIdAsync(userId);
+            return user is null ? null : await BuildSummaryAsync(user);
+        }
+
+        private async Task<UserSummary> BuildSummaryAsync(User user)
+        {
+            List<MembershipTier> tiers = (await _tierRepository.GetAllAsync())
+                .OrderBy(t => t.MinPoints).ToList();
+
+            MembershipTier? tier = tiers.FirstOrDefault(t => t.MembershipTierId == user.MembershipTierId);
+            MembershipTier? next = tiers.FirstOrDefault(t => t.MinPoints > user.Points);
+
+            return new UserSummary
+            {
+                UserId = user.UserId,
+                UserName = user.Username,
+                Email = user.Email,
+                RoleName = user.Role.ToString(),
+                MembershipTierName = tier?.TierName ?? string.Empty,
+                Points = user.Points,
+                MaxBorrowItems = tier?.MaxBorrowItems ?? 0,
+                BorrowDurationDays = tier?.BorrowDurationDays ?? 0,
+                NextTierName = next?.TierName,
+                NextTierMinPoints = next?.MinPoints
             };
         }
     }

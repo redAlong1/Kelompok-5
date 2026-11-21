@@ -1,7 +1,8 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service'; // SESUAIKAN path
+
 
 @Component({
   selector: 'app-header',
@@ -10,7 +11,7 @@ import { AuthService } from '../../services/auth.service'; // SESUAIKAN path
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
   isOpen = false;
 
@@ -39,10 +40,24 @@ export class HeaderComponent {
       this.isOpen = false;
     }
   }
+  
 
   logout(): void {
     this.authService.logout();
     this.isOpen = false;
-    void this.router.navigate(['/login']);
+    void this.router.navigate(['/landing']);
+  }
+
+ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.authService.refreshUser().subscribe({ error: () => {} });
+    }
+  }
+
+  get progress(): number {
+    const u = this.user;
+    if (!u || !u.nextTierMinPoints) return 100;
+    return Math.min(100, (u.points / u.nextTierMinPoints) * 100);
   }
 }
+

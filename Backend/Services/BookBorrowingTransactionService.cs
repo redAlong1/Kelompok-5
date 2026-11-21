@@ -25,17 +25,25 @@ namespace AdinsLibrary.Services
         public async Task<(BorrowingResponse? Result, string? Error)> BorrowAsync(BorrowRequest request)
         {
             var inventoryIds = request.InventoryIds.Distinct().ToList();
-            int maxItems = _config.GetValue("Borrowing:MaxItems", 3);
-            int durationDays = _config.GetValue("Borrowing:DurationDays", 14);
-
             if (inventoryIds.Count == 0)
                 return (null, "Pilih minimal satu buku");
-            if (inventoryIds.Count > maxItems)
-                return (null, $"Maksimal {maxItems} buku per peminjaman");
 
-            var user = await _db.Users.FindAsync(request.UserId);
+            var user = await _db.Users
+                .Include(u => u.MembershipTier)
+                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
             if (user == null)
                 return (null, "User tidak ditemukan");
+
+            int maxItems = user.MembershipTier.MaxBorrowItems;
+            int durationDays = user.MembershipTier.BorrowDurationDays;
+
+            // buku yang masih dipinjam + yang mau dipinjam tidak boleh melebihi batas tier
+            int activeCount = await _db.BorrowingItems.CountAsync(i =>
+                i.ReturnDate == null && i.BookBorrowingTransaction.UserId == user.UserId);
+
+            if (activeCount + inventoryIds.Count > maxItems)
+                return (null, $"Batas peminjaman tier {user.MembershipTier.TierName} adalah {maxItems} buku " +
+                              $"(sedang dipinjam: {activeCount})");
 
             if (await _fineService.HasUnpaidFinesAsync(user.UserId))
                 return (null, "User masih memiliki denda yang belum dibayar");
@@ -71,6 +79,11 @@ namespace AdinsLibrary.Services
             }
 
             _db.BookBorrowingTransactions.Add(transaction);
+
+            // poin untuk meminjam
+            user.Points += inventories.Count * _config.GetValue("Points:PerBorrow", 5);
+            await RecalculateTierAsync(user);
+
             await _db.SaveChangesAsync();
             await tx.CommitAsync();
 
@@ -86,6 +99,7 @@ namespace AdinsLibrary.Services
                 return (null, "Ada buku yang dikirim dua kali");
 
             var transaction = await _db.BookBorrowingTransactions
+                .Include(t => t.User)
                 .Include(t => t.BorrowingItems).ThenInclude(i => i.Inventory)
                 .FirstOrDefaultAsync(t => t.BookBorrowingTransactionId == transactionId);
 
@@ -94,7 +108,6 @@ namespace AdinsLibrary.Services
             if (transaction.BookTransactionStatus == BookBorrowingTransactionStatus.RETURNED)
                 return (null, "Semua buku di transaksi ini sudah dikembalikan");
 
-            // Validasi semua item dulu sebelum mengubah apa pun
             foreach (var r in request.Items)
             {
                 var item = transaction.BorrowingItems.FirstOrDefault(i => i.BorrowingItemId == r.BorrowingItemId);
@@ -131,20 +144,39 @@ namespace AdinsLibrary.Services
 
             await _db.SaveChangesAsync();
 
-            // Buat denda untuk tiap buku yang baru dikembalikan
+            // 1) Denda dulu (memakai tier SEBELUM poin berubah)
             var fines = new List<FineResponse>();
             foreach (var r in request.Items)
             {
                 var (created, error) = await _fineService.CreateFinesForReturnAsync(r.BorrowingItemId);
                 if (created == null)
                 {
-                    // Batalkan semuanya supaya data tidak setengah jadi
                     await tx.RollbackAsync();
                     return (null, error ?? "Gagal membuat denda");
                 }
                 fines.AddRange(created);
             }
 
+            // 2) Baru poin dan tier
+            int onTime = _config.GetValue("Points:OnTimeReturn", 10);
+            int penalty = _config.GetValue("Points:Penalty", 20);
+            var user = transaction.User!;
+
+            foreach (var r in request.Items)
+            {
+                var item = transaction.BorrowingItems.First(i => i.BorrowingItemId == r.BorrowingItemId);
+
+                if (r.Condition != BookCondition.GOOD)
+                    user.Points -= penalty;                 // rusak / hilang
+                else if ((item.LateDays ?? 0) == 0)
+                    user.Points += onTime;                  // tepat waktu
+                // terlambat tapi kondisi baik: +0
+            }
+
+            if (user.Points < 0) user.Points = 0;
+            await RecalculateTierAsync(user);
+
+            await _db.SaveChangesAsync();
             await tx.CommitAsync();
 
             var borrowing = await GetByIdAsync(transactionId);
@@ -176,6 +208,16 @@ namespace AdinsLibrary.Services
         }
 
         // ---------- Helper ----------
+        // Tier = tier tertinggi yang MinPoints-nya terpenuhi
+        private async Task RecalculateTierAsync(User user)
+        {
+            var tiers = await _db.MembershipTiers.OrderByDescending(t => t.MinPoints).ToListAsync();
+            var target = tiers.FirstOrDefault(t => user.Points >= t.MinPoints) ?? tiers.LastOrDefault();
+
+            if (target != null && target.MembershipTierId != user.MembershipTierId)
+                user.MembershipTier = target;
+        }
+
         private IQueryable<BookBorrowingTransaction> TransactionQuery() => _db.BookBorrowingTransactions
             .AsNoTracking()
             .Include(t => t.User)

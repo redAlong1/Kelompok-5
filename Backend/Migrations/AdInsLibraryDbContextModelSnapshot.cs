@@ -304,11 +304,20 @@ namespace AdinsLibrary.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("MembershipTierId"));
 
+                    b.Property<int>("BorrowDurationDays")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Discount")
                         .HasColumnType("numeric(5,2)");
+
+                    b.Property<int>("MaxBorrowItems")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MinPoints")
+                        .HasColumnType("integer");
 
                     b.Property<string>("TierName")
                         .IsRequired()
@@ -367,6 +376,9 @@ namespace AdinsLibrary.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Role")
                         .IsRequired()

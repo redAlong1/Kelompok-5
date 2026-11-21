@@ -14,8 +14,12 @@ export interface UserSummary {
   email: string;
   roleName: string;
   membershipTierName: string;
+  points: number;
+  maxBorrowItems: number;
+  borrowDurationDays: number;
+  nextTierName: string | null;
+  nextTierMinPoints: number | null;
 }
-
 export interface LoginResponse {
   status: string;
   token: string;
@@ -75,4 +79,12 @@ export class AuthService {
     storage.setItem('token', res.token);
     storage.setItem('user', JSON.stringify(res.user));
   }
+  refreshUser(): Observable<UserSummary> {
+  return this.http.get<UserSummary>(`${this.url}/me`).pipe(
+    tap(u => {
+      const storage = localStorage.getItem('token') ? localStorage : sessionStorage;
+      storage.setItem('user', JSON.stringify(u));
+    })
+  );
+}
 }
