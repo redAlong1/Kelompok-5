@@ -215,31 +215,19 @@ export class BookDetailComponent implements OnInit {
 
   }
 
-  // PINJAM BUKU
+  // PINJAM / RESERVASI BUKU — arahkan ke halaman reservasi
   borrowBook(): void {
 
     // Periksa status login
     if (!this.authService.isLoggedIn()) {
-
       this.goToLogin();
-
       return;
-
     }
 
-    // Periksa stok buku
-    if (this.book.stock <= 0) {
-
-      alert('Maaf, buku sedang tidak tersedia.');
-
-      return;
-
-    }
-
-    // Jika sudah login dan stok tersedia
-    alert(
-      `Permintaan peminjaman ${this.book.title} berhasil disimulasikan!`
-    );
+    // Arahkan ke halaman reservasi dengan bookId sebagai query param
+    this.router.navigate(['/reservations'], {
+      queryParams: { bookId: this.bookId }
+    });
 
   }
 

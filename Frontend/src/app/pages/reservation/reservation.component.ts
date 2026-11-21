@@ -25,64 +25,13 @@ export class ReservationComponent implements OnInit {
   alertMessage: { type: 'success' | 'danger'; text: string } | null = null;
 
   // Form Model
-  selectedBookId: number = 5; // Default Dune
+  selectedBookId: number = 0;
   selectedBook: BookItem | null = null;
   reservationDate: string = '';
   notes: string = '';
 
-  // Books list for selection
-  availableBooks: BookItem[] = [
-    {
-      bookId: 5,
-      title: 'Dune',
-      authorName: 'Frank Herbert',
-      categoryName: 'Fiksi Ilmiah',
-      coverColor: 'cover-brown',
-      stock: 0,
-      isBorrowed: true,
-      estimatedAvailableDate: '24 Nov 2026'
-    },
-    {
-      bookId: 6,
-      title: 'The Pragmatic Programmer',
-      authorName: 'Hunt & Thomas',
-      categoryName: 'Programming',
-      coverColor: 'cover-purple',
-      stock: 0,
-      isBorrowed: true,
-      estimatedAvailableDate: '28 Nov 2026'
-    },
-    {
-      bookId: 1,
-      title: 'Clean Code',
-      authorName: 'Robert C. Martin',
-      categoryName: 'Programming',
-      coverColor: 'cover-blue',
-      stock: 5,
-      isBorrowed: false,
-      estimatedAvailableDate: 'Tersedia sekarang'
-    },
-    {
-      bookId: 3,
-      title: 'Laskar Pelangi',
-      authorName: 'Andrea Hirata',
-      categoryName: 'Novel',
-      coverColor: 'cover-green',
-      stock: 10,
-      isBorrowed: false,
-      estimatedAvailableDate: 'Tersedia sekarang'
-    },
-    {
-      bookId: 4,
-      title: 'Atomic Habits',
-      authorName: 'James Clear',
-      categoryName: 'Pengembangan Diri',
-      coverColor: 'cover-orange',
-      stock: 0,
-      isBorrowed: true,
-      estimatedAvailableDate: '30 Nov 2026'
-    }
-  ];
+  // Books list for selection (akan diisi dari API)
+  availableBooks: BookItem[] = [];
 
   // Reservations Data
   activeReservations: BookReservationResponse[] = [];
@@ -222,47 +171,9 @@ export class ReservationComponent implements OnInit {
   }
 
   setupDemoReservations(): void {
-    this.activeReservations = [
-      {
-        bookReservationId: 101,
-        userId: this.currentUser?.userId || 1,
-        userName: this.currentUser?.userName || 'Andi',
-        bookId: 5,
-        bookTitle: 'Dune',
-        authorName: 'Frank Herbert',
-        reservationDate: '2026-11-05T00:00:00Z',
-        status: 'ACTIVE',
-        queueNumber: 2,
-        createdAt: '2026-11-05T08:30:00Z'
-      }
-    ];
-
-    this.historyReservations = [
-      {
-        bookReservationId: 98,
-        userId: this.currentUser?.userId || 1,
-        userName: this.currentUser?.userName || 'Andi',
-        bookId: 4,
-        bookTitle: 'Atomic Habits',
-        authorName: 'James Clear',
-        reservationDate: '2026-10-18T00:00:00Z',
-        status: 'COMPLETE',
-        queueNumber: 1,
-        createdAt: '2026-10-18T10:00:00Z'
-      },
-      {
-        bookReservationId: 92,
-        userId: this.currentUser?.userId || 1,
-        userName: this.currentUser?.userName || 'Andi',
-        bookId: 7,
-        bookTitle: 'Sapiens',
-        authorName: 'Yuval Noah Harari',
-        reservationDate: '2026-10-02T00:00:00Z',
-        status: 'CANCELLED',
-        queueNumber: 1,
-        createdAt: '2026-10-02T14:15:00Z'
-      }
-    ];
+    // Tidak ada data dummy – biarkan kosong
+    this.activeReservations = [];
+    this.historyReservations = [];
   }
 
   submitReservation(): void {
