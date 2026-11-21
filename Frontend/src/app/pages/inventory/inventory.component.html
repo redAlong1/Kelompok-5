@@ -1,11 +1,16 @@
 <div class="d-flex vh-100 overflow-hidden">
-
-
-  <main class="flex-grow-1 d-flex flex-column overflow-auto" style="background:#f0f2f5;">
+  <main
+    class="flex-grow-1 d-flex flex-column overflow-auto"
+    style="background: #f0f2f5"
+  >
     <div class="p-4">
-
-      <h4 class="fw-bold text-dark mb-1">Manajemen Inventory &amp; Stok Buku</h4>
-      <p class="text-primary small mb-4">Kelola unit fisik (eksemplar), penempatan rak, dan status ketersediaan buku perpustakaan.</p>
+      <h4 class="fw-bold text-dark mb-1">
+        Manajemen Inventory &amp; Stok Buku
+      </h4>
+      <p class="text-primary small mb-4">
+        Kelola unit fisik (eksemplar), penempatan rak, dan status ketersediaan
+        buku perpustakaan.
+      </p>
 
       <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
@@ -30,7 +35,9 @@
               </div>
               <div>
                 <div class="text-muted small">Tersedia di Rak</div>
-                <div class="fs-4 fw-bold text-success">{{ availableCount }}</div>
+                <div class="fs-4 fw-bold text-success">
+                  {{ availableCount }}
+                </div>
               </div>
             </div>
           </div>
@@ -44,7 +51,9 @@
               </div>
               <div>
                 <div class="text-muted small">Sedang Dipinjam</div>
-                <div class="fs-4 fw-bold text-warning-emphasis">{{ borrowedCount }}</div>
+                <div class="fs-4 fw-bold text-warning-emphasis">
+                  {{ borrowedCount }}
+                </div>
               </div>
             </div>
           </div>
@@ -58,7 +67,9 @@
               </div>
               <div>
                 <div class="text-muted small">Direservasi</div>
-                <div class="fs-4 fw-bold text-info-emphasis">{{ reservedCount }}</div>
+                <div class="fs-4 fw-bold text-info-emphasis">
+                  {{ reservedCount }}
+                </div>
               </div>
             </div>
           </div>
@@ -67,26 +78,69 @@
 
       <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
-
-          <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
+          <div
+            class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3"
+          >
             <div class="d-flex flex-wrap align-items-center gap-2">
-              <input type="text" class="form-control search-input" placeholder="Cari judul, ISBN, ID, rak..."
-                [(ngModel)]="searchQuery" (input)="onSearch()" />
+              <input
+                type="text"
+                class="form-control search-input"
+                placeholder="Cari judul, ISBN, ID, rak..."
+                [(ngModel)]="searchQuery"
+                (input)="onSearch()"
+              />
 
               <div class="btn-group" role="group">
-                <button type="button" class="btn btn-sm" [class.btn-primary]="statusFilter === ''" [class.btn-outline-secondary]="statusFilter !== ''" (click)="onFilterStatus('')">Semua</button>
-                <button type="button" class="btn btn-sm" [class.btn-success]="statusFilter === 'AVAILABLE'" [class.btn-outline-secondary]="statusFilter !== 'AVAILABLE'" (click)="onFilterStatus('AVAILABLE')">Tersedia</button>
-                <button type="button" class="btn btn-sm" [class.btn-warning]="statusFilter === 'BORROWED'" [class.btn-outline-secondary]="statusFilter !== 'BORROWED'" (click)="onFilterStatus('BORROWED')">Dipinjam</button>
-                <button type="button" class="btn btn-sm" [class.btn-info]="statusFilter === 'RESERVED'" [class.btn-outline-secondary]="statusFilter !== 'RESERVED'" (click)="onFilterStatus('RESERVED')">Reservasi</button>
+                <button
+                  type="button"
+                  class="btn btn-sm"
+                  [class.btn-primary]="statusFilter === ''"
+                  [class.btn-outline-secondary]="statusFilter !== ''"
+                  (click)="onFilterStatus('')"
+                >
+                  Semua
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm"
+                  [class.btn-success]="statusFilter === 'AVAILABLE'"
+                  [class.btn-outline-secondary]="statusFilter !== 'AVAILABLE'"
+                  (click)="onFilterStatus('AVAILABLE')"
+                >
+                  Tersedia
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm"
+                  [class.btn-warning]="statusFilter === 'BORROWED'"
+                  [class.btn-outline-secondary]="statusFilter !== 'BORROWED'"
+                  (click)="onFilterStatus('BORROWED')"
+                >
+                  Dipinjam
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm"
+                  [class.btn-info]="statusFilter === 'RESERVED'"
+                  [class.btn-outline-secondary]="statusFilter !== 'RESERVED'"
+                  (click)="onFilterStatus('RESERVED')"
+                >
+                  Reservasi
+                </button>
               </div>
             </div>
 
-            <button class="btn btn-primary fw-semibold px-4 flex-shrink-0" (click)="openAddModal()">
+            <button
+              class="btn btn-primary fw-semibold px-4 flex-shrink-0"
+              (click)="openAddModal()"
+            >
               <i class="bi bi-plus-lg me-1"></i> Tambah Eksemplar / Stok
             </button>
           </div>
 
-          <div *ngIf="errorMsg" class="alert alert-danger py-2 small mb-3">{{ errorMsg }}</div>
+          <div *ngIf="errorMsg" class="alert alert-danger py-2 small mb-3">
+            {{ errorMsg }}
+          </div>
 
           <div *ngIf="isLoading" class="text-center py-5">
             <div class="spinner-border text-primary" role="status"></div>
@@ -98,51 +152,116 @@
               <table class="table table-hover align-middle mb-0">
                 <thead>
                   <tr class="table-header">
-                    <th class="py-3 px-3 text-muted fw-semibold" style="font-size:13px; width:70px;">ID Unit</th>
-                    <th class="py-3 text-muted fw-semibold" style="font-size:13px;">
-                      <span class="d-flex align-items-center gap-1 cursor-pointer user-select-none" (click)="toggleSort()">
+                    <th
+                      class="py-3 px-3 text-muted fw-semibold"
+                      style="font-size: 13px; width: 70px"
+                    >
+                      ID Unit
+                    </th>
+                    <th
+                      class="py-3 text-muted fw-semibold"
+                      style="font-size: 13px"
+                    >
+                      <span
+                        class="d-flex align-items-center gap-1 cursor-pointer user-select-none"
+                        (click)="toggleSort()"
+                      >
                         Judul Buku
-                        <i class="bi" [class.bi-arrow-down-up]="sortDir === ''"
-                                       [class.bi-arrow-up]="sortDir === 'asc'"
-                                       [class.bi-arrow-down]="sortDir === 'desc'"
-                           style="font-size:11px;"></i>
+                        <i
+                          class="bi"
+                          [class.bi-arrow-down-up]="sortDir === ''"
+                          [class.bi-arrow-up]="sortDir === 'asc'"
+                          [class.bi-arrow-down]="sortDir === 'desc'"
+                          style="font-size: 11px"
+                        ></i>
                       </span>
                     </th>
-                    <th class="py-3 text-muted fw-semibold" style="font-size:13px; width:150px;">ISBN</th>
-                    <th class="py-3 text-muted fw-semibold" style="font-size:13px; width:160px;">Lokasi Rak</th>
-                    <th class="py-3 text-muted fw-semibold" style="font-size:13px; width:140px;">Status</th>
-                    <th class="py-3 text-muted fw-semibold text-end px-3" style="font-size:13px; width:150px;">Aksi</th>
+                    <th
+                      class="py-3 text-muted fw-semibold"
+                      style="font-size: 13px; width: 150px"
+                    >
+                      ISBN
+                    </th>
+                    <th
+                      class="py-3 text-muted fw-semibold"
+                      style="font-size: 13px; width: 160px"
+                    >
+                      Lokasi Rak
+                    </th>
+                    <th
+                      class="py-3 text-muted fw-semibold"
+                      style="font-size: 13px; width: 140px"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="py-3 text-muted fw-semibold text-end px-3"
+                      style="font-size: 13px; width: 150px"
+                    >
+                      Aksi
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngIf="pagedItems.length === 0">
-                    <td colspan="6" class="text-center py-5 text-muted" style="font-size:14px;">
+                    <td
+                      colspan="6"
+                      class="text-center py-5 text-muted"
+                      style="font-size: 14px"
+                    >
                       Tidak ada data inventory yang cocok.
                     </td>
                   </tr>
                   <tr *ngFor="let item of pagedItems">
-                    <td class="px-3 text-muted fw-mono" style="font-size:13px;">#{{ item.inventoryId }}</td>
-                    <td>
-                      <div class="fw-semibold text-dark" style="font-size:14px;">{{ item.bookTitle || 'Tanpa Judul' }}</div>
-                      <small class="text-muted">Book ID: {{ item.bookId }}</small>
+                    <td class="px-3 text-muted fw-mono" style="font-size: 13px">
+                      #{{ item.inventoryId }}
                     </td>
-                    <td class="text-secondary" style="font-size:13px;">{{ item.bookIsbn || '-' }}</td>
                     <td>
-                      <span class="badge bg-light text-dark border px-2 py-1" style="font-size:12px;">
-                        <i class="bi bi-geo-alt me-1 text-primary"></i>{{ item.shelfLocation || 'Belum diatur' }}
+                      <div
+                        class="fw-semibold text-dark"
+                        style="font-size: 14px"
+                      >
+                        {{ item.bookTitle || "Tanpa Judul" }}
+                      </div>
+                      <small class="text-muted"
+                        >Book ID: {{ item.bookId }}</small
+                      >
+                    </td>
+                    <td class="text-secondary" style="font-size: 13px">
+                      {{ item.bookIsbn || "-" }}
+                    </td>
+                    <td>
+                      <span
+                        class="badge bg-light text-dark border px-2 py-1"
+                        style="font-size: 12px"
+                      >
+                        <i class="bi bi-geo-alt me-1 text-primary"></i
+                        >{{ item.shelfLocation || "Belum diatur" }}
                       </span>
                     </td>
                     <td>
-                      <span class="badge rounded-pill px-2.5 py-1" [ngClass]="statusBadgeClass(item)" style="font-size:12px;">
+                      <span
+                        class="badge rounded-pill px-2.5 py-1"
+                        [ngClass]="statusBadgeClass(item)"
+                        style="font-size: 12px"
+                      >
                         {{ statusLabel(item) }}
                       </span>
                     </td>
                     <td class="text-end px-3">
                       <div class="d-flex justify-content-end gap-2">
-                        <button class="btn btn-sm btn-outline-secondary px-2 py-1" style="font-size:12px;" (click)="openEditModal(item)">
+                        <button
+                          class="btn btn-sm btn-outline-secondary px-2 py-1"
+                          style="font-size: 12px"
+                          (click)="openEditModal(item)"
+                        >
                           <i class="bi bi-pencil me-1"></i>Edit
                         </button>
-                        <button class="btn btn-sm btn-outline-danger px-2 py-1" style="font-size:12px;" (click)="confirmDelete(item)">
+                        <button
+                          class="btn btn-sm btn-outline-danger px-2 py-1"
+                          style="font-size: 12px"
+                          (click)="confirmDelete(item)"
+                        >
                           <i class="bi bi-trash"></i>
                         </button>
                       </div>
@@ -152,66 +271,132 @@
               </table>
             </div>
 
-            <div class="d-flex flex-wrap align-items-center justify-content-between mt-3 pt-3 border-top gap-2">
+            <div
+              class="d-flex flex-wrap align-items-center justify-content-between mt-3 pt-3 border-top gap-2"
+            >
               <small class="text-muted">
                 Menampilkan
-                <span class="text-primary fw-semibold">{{ rangeStart }}–{{ rangeEnd }}</span>
-                dari <span class="text-dark fw-semibold">{{ filteredItems.length }}</span> unit
+                <span class="text-primary fw-semibold"
+                  >{{ rangeStart }}–{{ rangeEnd }}</span
+                >
+                dari
+                <span class="text-dark fw-semibold">{{
+                  filteredItems.length
+                }}</span>
+                unit
               </small>
               <nav *ngIf="totalPages > 1">
                 <ul class="pagination pagination-sm mb-0">
-                  <li class="page-item" *ngFor="let p of pages" [class.active]="p === currentPage">
-                    <a class="page-link" href="#" (click)="goToPage(p, $event)">{{ p }}</a>
+                  <li
+                    class="page-item"
+                    *ngFor="let p of pages"
+                    [class.active]="p === currentPage"
+                  >
+                    <a
+                      class="page-link"
+                      href="#"
+                      (click)="goToPage(p, $event)"
+                      >{{ p }}</a
+                    >
                   </li>
                 </ul>
               </nav>
             </div>
           </div>
-
         </div>
       </div>
     </div>
   </main>
 </div>
 
-<div class="modal fade" [class.show]="showAddModal" [style.display]="showAddModal ? 'block' : 'none'" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+<div
+  class="modal fade"
+  [class.show]="showAddModal"
+  [style.display]="showAddModal ? 'block' : 'none'"
+  tabindex="-1"
+>
+  <div
+    class="modal-dialog modal-dialog-centered"
+    (click)="$event.stopPropagation()"
+  >
     <div class="modal-content border-0 shadow-lg rounded-3">
       <div class="modal-header border-0 px-4 pt-4 pb-2">
-        <h6 class="modal-title fw-bold text-dark">Tambah Eksemplar / Stok Buku</h6>
-        <button type="button" class="btn-close" (click)="closeModals()"></button>
+        <h6 class="modal-title fw-bold text-dark">
+          Tambah Eksemplar / Stok Buku
+        </h6>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeModals()"
+        ></button>
       </div>
 
       <div class="modal-body px-4 py-2">
-        <div *ngIf="formError" class="alert alert-danger py-2 small mb-3">{{ formError }}</div>
+        <div *ngIf="formError" class="alert alert-danger py-2 small mb-3">
+          {{ formError }}
+        </div>
 
         <div class="mb-3">
-          <label class="form-label small fw-semibold text-muted mb-1">Pilih Buku <span class="text-danger">*</span></label>
+          <label class="form-label small fw-semibold text-muted mb-1"
+            >Pilih Buku <span class="text-danger">*</span></label
+          >
           <select class="form-select" [(ngModel)]="addForm.bookId">
             <option *ngFor="let b of books" [value]="b.bookId">
-              {{ b.title }} {{ b.isbn ? '(' + b.isbn + ')' : '' }}
+              {{ b.title }} {{ b.isbn ? "(" + b.isbn + ")" : "" }}
             </option>
           </select>
         </div>
 
         <div class="mb-3">
-          <label class="form-label small fw-semibold text-muted mb-1">Lokasi Rak</label>
-          <input type="text" class="form-control" placeholder="Contoh: Rak A-01, Lantai 2"
-            [(ngModel)]="addForm.shelfLocation" />
+          <label class="form-label small fw-semibold text-muted mb-1"
+            >Lokasi Rak</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Contoh: Rak A-01, Lantai 2"
+            [(ngModel)]="addForm.shelfLocation"
+          />
         </div>
 
         <div class="mb-3">
-          <label class="form-label small fw-semibold text-muted mb-1">Jumlah Eksemplar yang Ditambahkan <span class="text-danger">*</span></label>
-          <input type="number" min="1" max="100" class="form-control"
-            [(ngModel)]="addForm.quantity" />
-          <small class="text-muted">Setiap unit akan tercatat sebagai 1 eksemplar fisik di perpustakaan.</small>
+          <label class="form-label small fw-semibold text-muted mb-1"
+            >Jumlah Eksemplar yang Ditambahkan
+            <span class="text-danger">*</span></label
+          >
+          <input
+            type="number"
+            min="1"
+            max="100"
+            class="form-control"
+            [(ngModel)]="addForm.quantity"
+          />
+          <small class="text-muted"
+            >Setiap unit akan tercatat sebagai 1 eksemplar fisik di
+            perpustakaan.</small
+          >
         </div>
       </div>
 
       <div class="modal-footer border-0 px-4 pb-4 pt-2">
-        <button type="button" class="btn btn-outline-secondary px-4" (click)="closeModals()" [disabled]="isSaving">Batal</button>
-        <button type="button" class="btn btn-primary px-4 fw-semibold" (click)="saveAdd()" [disabled]="isSaving">
-          <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1"></span>
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          (click)="closeModals()"
+          [disabled]="isSaving"
+        >
+          Batal
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary px-4 fw-semibold"
+          (click)="saveAdd()"
+          [disabled]="isSaving"
+        >
+          <span
+            *ngIf="isSaving"
+            class="spinner-border spinner-border-sm me-1"
+          ></span>
           Simpan Eksemplar
         </button>
       </div>
@@ -219,42 +404,89 @@
   </div>
 </div>
 
-<div class="modal fade" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+<div
+  class="modal fade"
+  [class.show]="showEditModal"
+  [style.display]="showEditModal ? 'block' : 'none'"
+  tabindex="-1"
+>
+  <div
+    class="modal-dialog modal-dialog-centered"
+    (click)="$event.stopPropagation()"
+  >
     <div class="modal-content border-0 shadow-lg rounded-3">
       <div class="modal-header border-0 px-4 pt-4 pb-2">
-        <h6 class="modal-title fw-bold text-dark">Edit Eksemplar #{{ selectedItem?.inventoryId }}</h6>
-        <button type="button" class="btn-close" (click)="closeModals()"></button>
+        <h6 class="modal-title fw-bold text-dark">
+          Edit Eksemplar #{{ selectedItem?.inventoryId }}
+        </h6>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeModals()"
+        ></button>
       </div>
 
       <div class="modal-body px-4 py-2">
-        <div *ngIf="formError" class="alert alert-danger py-2 small mb-3">{{ formError }}</div>
-
-        <div class="mb-3">
-          <label class="form-label small fw-semibold text-muted mb-1">Judul Buku</label>
-          <input type="text" class="form-control" [value]="selectedItem?.bookTitle" disabled />
+        <div *ngIf="formError" class="alert alert-danger py-2 small mb-3">
+          {{ formError }}
         </div>
 
         <div class="mb-3">
-          <label class="form-label small fw-semibold text-muted mb-1">Lokasi Rak</label>
-          <input type="text" class="form-control" placeholder="Contoh: Rak A-01"
-            [(ngModel)]="editForm.shelfLocation" />
+          <label class="form-label small fw-semibold text-muted mb-1"
+            >Judul Buku</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            [value]="selectedItem?.bookTitle"
+            disabled
+          />
         </div>
 
         <div class="mb-3">
-          <label class="form-label small fw-semibold text-muted mb-1">Status Ketersediaan</label>
+          <label class="form-label small fw-semibold text-muted mb-1"
+            >Lokasi Rak</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Contoh: Rak A-01"
+            [(ngModel)]="editForm.shelfLocation"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-semibold text-muted mb-1"
+            >Status Ketersediaan</label
+          >
           <select class="form-select" [(ngModel)]="editForm.availabilityStatus">
             <option [ngValue]="0">AVAILABLE (Tersedia)</option>
             <option [ngValue]="1">BORROWED (Dipinjam)</option>
             <option [ngValue]="2">RESERVED (Direservasi)</option>
+            <option [ngValue]="3">UNAVAILABLE (Tidak Tersedia)</option>
           </select>
         </div>
       </div>
 
       <div class="modal-footer border-0 px-4 pb-4 pt-2">
-        <button type="button" class="btn btn-outline-secondary px-4" (click)="closeModals()" [disabled]="isSaving">Batal</button>
-        <button type="button" class="btn btn-primary px-4 fw-semibold" (click)="saveEdit()" [disabled]="isSaving">
-          <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1"></span>
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          (click)="closeModals()"
+          [disabled]="isSaving"
+        >
+          Batal
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary px-4 fw-semibold"
+          (click)="saveEdit()"
+          [disabled]="isSaving"
+        >
+          <span
+            *ngIf="isSaving"
+            class="spinner-border spinner-border-sm me-1"
+          ></span>
           Simpan Perubahan
         </button>
       </div>
@@ -262,8 +494,16 @@
   </div>
 </div>
 
-<div class="modal fade" [class.show]="showDeleteModal" [style.display]="showDeleteModal ? 'block' : 'none'" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-sm" (click)="$event.stopPropagation()">
+<div
+  class="modal fade"
+  [class.show]="showDeleteModal"
+  [style.display]="showDeleteModal ? 'block' : 'none'"
+  tabindex="-1"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-sm"
+    (click)="$event.stopPropagation()"
+  >
     <div class="modal-content border-0 shadow-lg rounded-3 text-center p-3">
       <div class="modal-body">
         <div class="delete-icon text-danger mb-3">
@@ -271,14 +511,33 @@
         </div>
         <h6 class="fw-bold text-dark mb-1">Hapus Eksemplar?</h6>
         <p class="text-muted small mb-0">
-          Eksemplar <strong>#{{ selectedItem?.inventoryId }}</strong> dari buku <strong>{{ selectedItem?.bookTitle }}</strong> akan dihapus permanen dari inventaris.
+          Eksemplar <strong>#{{ selectedItem?.inventoryId }}</strong> dari buku
+          <strong>{{ selectedItem?.bookTitle }}</strong> akan dihapus permanen
+          dari inventaris.
         </p>
-        <div *ngIf="formError" class="alert alert-danger py-2 small mt-3 mb-0">{{ formError }}</div>
+        <div *ngIf="formError" class="alert alert-danger py-2 small mt-3 mb-0">
+          {{ formError }}
+        </div>
       </div>
       <div class="d-flex gap-2 justify-content-center pb-2">
-        <button type="button" class="btn btn-outline-secondary px-3 flex-fill" (click)="closeModals()" [disabled]="isSaving">Batal</button>
-        <button type="button" class="btn btn-danger px-3 flex-fill fw-semibold" (click)="deleteItem()" [disabled]="isSaving">
-          <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1"></span>
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-3 flex-fill"
+          (click)="closeModals()"
+          [disabled]="isSaving"
+        >
+          Batal
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger px-3 flex-fill fw-semibold"
+          (click)="deleteItem()"
+          [disabled]="isSaving"
+        >
+          <span
+            *ngIf="isSaving"
+            class="spinner-border spinner-border-sm me-1"
+          ></span>
           Hapus
         </button>
       </div>
@@ -286,4 +545,8 @@
   </div>
 </div>
 
-<div class="modal-backdrop fade show" *ngIf="showAddModal || showEditModal || showDeleteModal" (click)="closeModals()"></div>
+<div
+  class="modal-backdrop fade show"
+  *ngIf="showAddModal || showEditModal || showDeleteModal"
+  (click)="closeModals()"
+></div>

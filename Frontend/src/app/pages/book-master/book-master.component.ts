@@ -55,7 +55,7 @@ interface BookForm {
   title: string;
   isbn: string;
   coverUrl: string;
-  price: number;
+  price: number | null;
   description: string;
   authorId: number;
   categoryId: number;
@@ -102,6 +102,7 @@ export class BookMasterComponent implements OnInit {
   isUploadingCover = false;
   coverUploadError = '';
   previewUrl = '';
+  priceInput = '';
 
   form: BookForm = this.emptyForm();
   selectedItem: BookResponse | null = null;
@@ -299,9 +300,32 @@ export class BookMasterComponent implements OnInit {
     this.coverUploadError = '';
   }
 
+  onPriceInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let cleaned = input.value.replace(/[^0-9.,]/g, '');
+    cleaned = cleaned.replace(/\./g, ',');
+
+    const parts = cleaned.split(',');
+    if (parts.length > 2) {
+      cleaned = parts[0] + ',' + parts.slice(1).join('');
+    }
+
+    if (parts.length === 2 && parts[1].length > 2) {
+      cleaned = parts[0] + ',' + parts[1].slice(0, 2);
+    }
+
+    this.priceInput = cleaned;
+    input.value = cleaned;
+
+    const numericValue = parseFloat(cleaned.replace(',', '.'));
+    this.form.price =
+      cleaned === '' || Number.isNaN(numericValue) ? null : numericValue;
+  }
+
   openAddModal(): void {
     this.isEditMode = false;
     this.form = this.emptyForm();
+    this.priceInput = '';
     this.previewUrl = '';
     this.coverUploadError = '';
     this.formError = '';
@@ -316,12 +340,16 @@ export class BookMasterComponent implements OnInit {
       title: item.title || '',
       isbn: item.isbn || '',
       coverUrl: item.coverUrl || '',
-      price: item.price ?? 0,
+      price: item.price ?? null,
       description: item.description || '',
       authorId: item.authorId,
       categoryId: item.categoryId,
       publisherId: item.publisherId,
     };
+    this.priceInput =
+      item.price !== null && item.price !== undefined
+        ? String(item.price).replace('.', ',')
+        : '';
     this.previewUrl = this.getCoverImageUrl(item.coverUrl);
     this.coverUploadError = '';
     this.formError = '';
@@ -350,7 +378,8 @@ export class BookMasterComponent implements OnInit {
     if (
       this.form.price === null ||
       this.form.price === undefined ||
-      this.form.price < 0
+      Number.isNaN(Number(this.form.price)) ||
+      Number(this.form.price) < 0
     ) {
       this.formError = 'Harga buku harus lebih besar atau sama dengan 0.';
       return;
@@ -378,7 +407,7 @@ export class BookMasterComponent implements OnInit {
       title: this.form.title.trim(),
       isbn: this.form.isbn.trim() || null,
       coverUrl: this.form.coverUrl.trim() || null,
-      price: Number(this.form.price) || 0,
+      price: Number(this.form.price),
       description: this.form.description.trim() || null,
       authorId: this.form.authorId,
       categoryId: this.form.categoryId,
@@ -434,6 +463,7 @@ export class BookMasterComponent implements OnInit {
   closeFormModal(): void {
     this.showFormModal = false;
     this.form = this.emptyForm();
+    this.priceInput = '';
     this.previewUrl = '';
     this.coverUploadError = '';
     this.formError = '';
@@ -451,7 +481,7 @@ export class BookMasterComponent implements OnInit {
       title: '',
       isbn: '',
       coverUrl: '',
-      price: 0,
+      price: null,
       description: '',
       authorId: 0,
       categoryId: 0,

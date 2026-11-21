@@ -55,3 +55,6 @@ logs/
 
 # User-specific files
 *.suo
+
+# EF Core Migrations
+**/Migrations/

@@ -7,7 +7,7 @@ import {
   BorrowingItem,
   BorrowingService,
   BookCondition,
-  Fine
+  Fine,
 } from '../../services/borrowing.service';
 
 interface ReturnRow {
@@ -21,10 +21,9 @@ interface ReturnRow {
   standalone: true,
   imports: [CommonModule, FormsModule, SidebarComponent],
   templateUrl: './admin-return.component.html',
-  styleUrl: './admin-return.component.scss'
+  styleUrl: './admin-return.component.scss',
 })
 export class AdminReturnComponent implements OnInit {
-
   activeTab: 'borrow' | 'return' = 'borrow';
 
   // --- RETURN DATA ---
@@ -42,7 +41,7 @@ export class AdminReturnComponent implements OnInit {
     { value: 'GOOD', label: 'Baik' },
     { value: 'DAMAGED_LIGHT', label: 'Rusak ringan' },
     { value: 'DAMAGED_HEAVY', label: 'Rusak berat' },
-    { value: 'LOST', label: 'Hilang' }
+    { value: 'LOST', label: 'Hilang' },
   ];
 
   // --- BORROW DATA ---
@@ -86,22 +85,23 @@ export class AdminReturnComponent implements OnInit {
     this.isLoading = true;
     this.borrowingService.getAll('BORROWED').subscribe({
       next: (data) => {
-        this.borrowings = (data || []).map(b => this.normalizeBorrowing(b));
+        this.borrowings = (data || []).map((b) => this.normalizeBorrowing(b));
         this.isLoading = false;
       },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = this.getError(err);
-      }
+      },
     });
   }
 
   get filtered(): Borrowing[] {
     const q = this.search.trim().toLowerCase();
     if (!q) return this.borrowings;
-    return this.borrowings.filter(b =>
-      b.username.toLowerCase().includes(q) ||
-      String(b.bookBorrowingTransactionId).includes(q)
+    return this.borrowings.filter(
+      (b) =>
+        b.username.toLowerCase().includes(q) ||
+        String(b.bookBorrowingTransactionId).includes(q),
     );
   }
 
@@ -112,8 +112,12 @@ export class AdminReturnComponent implements OnInit {
     this.resultFines = [];
 
     this.rows = b.items
-      .filter(i => !i.returnDate)
-      .map(i => ({ item: i, selected: true, condition: 'GOOD' as BookCondition }));
+      .filter((i) => !i.returnDate)
+      .map((i) => ({
+        item: i,
+        selected: true,
+        condition: 'GOOD' as BookCondition,
+      }));
   }
 
   cancel(): void {
@@ -132,7 +136,7 @@ export class AdminReturnComponent implements OnInit {
   }
 
   get selectedCount(): number {
-    return this.rows.filter(r => r.selected).length;
+    return this.rows.filter((r) => r.selected).length;
   }
 
   submit(): void {
@@ -142,24 +146,29 @@ export class AdminReturnComponent implements OnInit {
     this.errorMessage = '';
 
     const items = this.rows
-      .filter(r => r.selected)
-      .map(r => ({ borrowingItemId: r.item.borrowingItemId, condition: r.condition }));
+      .filter((r) => r.selected)
+      .map((r) => ({
+        borrowingItemId: r.item.borrowingItemId,
+        condition: r.condition,
+      }));
 
-    this.borrowingService.returnBooks(this.selected.bookBorrowingTransactionId, items).subscribe({
-      next: (res) => {
-        this.isSaving = false;
-        this.resultFines = res.fines;
-        this.successMessage = 'Pengembalian berhasil disimpan.';
-        this.selected = null;
-        this.rows = [];
-        this.loadBorrowings();
-        this.loadBorrowData();
-      },
-      error: (err) => {
-        this.isSaving = false;
-        this.errorMessage = this.getError(err);
-      }
-    });
+    this.borrowingService
+      .returnBooks(this.selected.bookBorrowingTransactionId, items)
+      .subscribe({
+        next: (res) => {
+          this.isSaving = false;
+          this.resultFines = res.fines;
+          this.successMessage = 'Pengembalian berhasil disimpan.';
+          this.selected = null;
+          this.rows = [];
+          this.loadBorrowings();
+          this.loadBorrowData();
+        },
+        error: (err) => {
+          this.isSaving = false;
+          this.errorMessage = this.getError(err);
+        },
+      });
   }
 
   // ---------- BORROW & RESERVATION METHODS ----------
@@ -167,47 +176,80 @@ export class AdminReturnComponent implements OnInit {
     this.isLoadingReservations = true;
     this.borrowingService.getReservations('ACTIVE').subscribe({
       next: (data) => {
-        this.reservations = (data || []).map(r => ({
+        this.reservations = (data || []).map((r) => ({
           ...r,
-          reservationDate: r.reservationDate ? this.formatDateOnly(r.reservationDate) : r.reservationDate
+          reservationDate: r.reservationDate
+            ? this.formatDateOnly(r.reservationDate)
+            : r.reservationDate,
         }));
         this.isLoadingReservations = false;
       },
       error: () => {
         this.isLoadingReservations = false;
-      }
+      },
     });
 
     this.borrowingService.getUsers().subscribe({
-      next: (data) => this.users = data,
-      error: () => {}
+      next: (data) => (this.users = data),
+      error: () => {},
     });
 
     this.borrowingService.getInventories().subscribe({
-      next: (data) => this.inventories = data,
-      error: () => {}
+      next: (data) => (this.inventories = data),
+      error: () => {},
     });
+  }
+
+  getBorrowDaysByUserId(userId?: number | null): number {
+    if (!userId && this.selectedReservation) {
+      return (
+        this.selectedReservation.borrowDays ??
+        this.selectedReservation.maxBorrowDays ??
+        this.selectedReservation.borrowDurationDays ??
+        this.selectedReservation.membershipTier?.borrowDays ??
+        this.selectedReservation.membershipTier?.maxBorrowDays ??
+        this.selectedReservation.membershipTier?.borrowDurationDays ??
+        0
+      );
+    }
+
+    if (!userId) return 0;
+
+    const user = this.users.find((u) => u.userId === userId);
+    if (!user) return 0;
+
+    return (
+      user.borrowDays ??
+      user.maxBorrowDays ??
+      user.borrowDurationDays ??
+      user.membershipTier?.borrowDays ??
+      user.membershipTier?.maxBorrowDays ??
+      user.membershipTier?.borrowDurationDays ??
+      0
+    );
   }
 
   get filteredReservations(): any[] {
     const q = this.searchReservation.trim().toLowerCase();
     if (!q) return this.reservations;
-    return this.reservations.filter(r =>
-      (r.userName && r.userName.toLowerCase().includes(q)) ||
-      (r.bookTitle && r.bookTitle.toLowerCase().includes(q))
+    return this.reservations.filter(
+      (r) =>
+        (r.userName && r.userName.toLowerCase().includes(q)) ||
+        (r.bookTitle && r.bookTitle.toLowerCase().includes(q)),
     );
   }
 
   get availableInventories(): any[] {
-    return this.inventories.filter(i =>
-      i.availabilityStatus === 0 ||
-      i.availabilityStatus === 'AVAILABLE' ||
-      i.statusName === 'AVAILABLE'
+    return this.inventories.filter(
+      (i) =>
+        i.availabilityStatus === 0 ||
+        i.availabilityStatus === 'AVAILABLE' ||
+        i.statusName === 'AVAILABLE',
     );
   }
 
   getUnitsForBook(bookId: number): any[] {
-    return this.availableInventories.filter(i => i.bookId === bookId);
+    return this.availableInventories.filter((i) => i.bookId === bookId);
   }
 
   openProcessReservation(res: any): void {
@@ -231,6 +273,7 @@ export class AdminReturnComponent implements OnInit {
     this.selectedReservation = null;
     this.availableUnitsForBook = [];
     this.selectedInventoryId = null;
+    this.errorMessage = '';
   }
 
   confirmBorrowReservation(): void {
@@ -259,13 +302,13 @@ export class AdminReturnComponent implements OnInit {
             this.closeProcessModal();
             this.loadBorrowData();
             this.loadBorrowings();
-          }
+          },
         });
       },
       error: (err) => {
         this.isSaving = false;
         this.errorMessage = this.getError(err);
-      }
+      },
     });
   }
 
@@ -281,6 +324,7 @@ export class AdminReturnComponent implements OnInit {
     this.showWalkInModal = false;
     this.walkInUserId = null;
     this.walkInInventoryId = null;
+    this.errorMessage = '';
   }
 
   confirmWalkInBorrow(): void {
@@ -292,19 +336,21 @@ export class AdminReturnComponent implements OnInit {
     this.isSaving = true;
     this.errorMessage = '';
 
-    this.borrowingService.borrow(this.walkInUserId, [this.walkInInventoryId]).subscribe({
-      next: () => {
-        this.isSaving = false;
-        this.successMessage = 'Peminjaman walk-in berhasil dicatat!';
-        this.closeWalkInModal();
-        this.loadBorrowData();
-        this.loadBorrowings();
-      },
-      error: (err) => {
-        this.isSaving = false;
-        this.errorMessage = this.getError(err);
-      }
-    });
+    this.borrowingService
+      .borrow(this.walkInUserId, [this.walkInInventoryId])
+      .subscribe({
+        next: () => {
+          this.isSaving = false;
+          this.successMessage = 'Peminjaman walk-in berhasil dicatat!';
+          this.closeWalkInModal();
+          this.loadBorrowData();
+          this.loadBorrowings();
+        },
+        error: (err) => {
+          this.isSaving = false;
+          this.errorMessage = this.getError(err);
+        },
+      });
   }
 
   private normalizeBorrowing(b: Borrowing): Borrowing {
@@ -312,10 +358,12 @@ export class AdminReturnComponent implements OnInit {
       ...b,
       borrowDate: this.formatDateOnly(b.borrowDate),
       dueDate: this.formatDateOnly(b.dueDate),
-      items: (b.items || []).map(item => ({
+      items: (b.items || []).map((item) => ({
         ...item,
-        returnDate: item.returnDate ? this.formatDateOnly(item.returnDate) : null
-      }))
+        returnDate: item.returnDate
+          ? this.formatDateOnly(item.returnDate)
+          : null,
+      })),
     };
   }
 
@@ -330,7 +378,11 @@ export class AdminReturnComponent implements OnInit {
       const clean = val.split('T')[0];
       const parts = clean.split('-');
       if (parts.length === 3) {
-        return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+        return new Date(
+          Number(parts[0]),
+          Number(parts[1]) - 1,
+          Number(parts[2]),
+        );
       }
       const parsed = new Date(val);
       return isNaN(parsed.getTime()) ? null : parsed;

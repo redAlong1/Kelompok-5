@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';        // SESUAIKAN path
+import { AuthService } from '../../services/auth.service';
 import { BorrowingService, Borrowing } from '../../services/borrowing.service';
 import { FineService } from '../../services/fine.service';
+import { BookReservationService } from '../../services/book-reservation.service';
 
 interface BorrowedBook {
   id: number;
@@ -33,14 +34,16 @@ interface ReservedBook {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],   // SidebarComponent dihapus: sidebar sudah ada di layout
+  imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
-
   today = new Date().toLocaleDateString('id-ID', {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
   });
   userName = '';
 
@@ -51,18 +54,15 @@ export class DashboardComponent implements OnInit {
     borrowed: 0,
     reserved: 0,
     fine: 0,
-    membership: ''
+    membership: '',
   };
 
-  // Samakan dengan Borrowing:MaxItems di appsettings.json backend
   borrowLimit = { max: 3, current: 0 };
 
   dueSoonCount = 0;
 
   borrowedBooks: BorrowedBook[] = [];
   activities: Activity[] = [];
-
-  // Belum ada endpoint reservasi, jadi dikosongkan dulu
   reservedBook: ReservedBook | null = null;
 
   private readonly covers = ['cover-blue', 'cover-green', 'cover-brown'];
@@ -70,7 +70,8 @@ export class DashboardComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private borrowingService: BorrowingService,
-    private fineService: FineService
+    private fineService: FineService,
+    private reservationService: BookReservationService,
   ) {
     const user = this.authService.getUser();
     this.userName = user?.userName ?? '';
@@ -78,16 +79,20 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.refreshUser().subscribe(u => {
+    this.authService.refreshUser().subscribe((u) => {
       this.stats.membership = u.membershipTierName;
       this.borrowLimit.max = u.maxBorrowItems;
     });
     this.loadBorrowings();
     this.loadFines();
+    this.loadReservations();
   }
 
   get borrowPercent(): number {
-    return Math.min(100, (this.borrowLimit.current / this.borrowLimit.max) * 100);
+    return Math.min(
+      100,
+      (this.borrowLimit.current / Math.max(1, this.borrowLimit.max)) * 100,
+    );
   }
 
   get remainingBorrow(): number {
@@ -99,25 +104,53 @@ export class DashboardComponent implements OnInit {
     this.isLoading = true;
     this.borrowingService.getMine().subscribe({
       next: (data) => {
-        this.buildBorrowedBooks(data);
-        this.buildActivities(data);
+        this.buildBorrowedBooks(data || []);
+        this.buildActivities(data || []);
         this.isLoading = false;
       },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = this.getError(err);
-      }
+      },
     });
   }
 
   private loadFines(): void {
     this.fineService.getMine().subscribe({
       next: (fines) => {
-        this.stats.fine = fines
-          .filter(f => f.fineStatus === 'UNPAID')
-          .reduce((sum, f) => sum + f.amount, 0);
+        this.stats.fine = (fines || [])
+          .filter((f) => f.fineStatus === 'UNPAID' || f.fineStatus === 'Unpaid')
+          .reduce((sum, f) => sum + (f.amount || 0), 0);
       },
-      error: (err) => (this.errorMessage = this.getError(err))
+      error: (err) => (this.errorMessage = this.getError(err)),
+    });
+  }
+
+  private loadReservations(): void {
+    this.reservationService.getMyReservations().subscribe({
+      next: (list) => {
+        const active = (list || []).filter(
+          (r) => r.status === 'ACTIVE' || r.status === 'Active',
+        );
+        this.stats.reserved = active.length;
+
+        if (active.length > 0) {
+          const first = active[0];
+          this.reservedBook = {
+            title: first.bookTitle || 'Buku',
+            author: first.authorName || 'Penulis',
+            queue: first.queueNumber || 1,
+            coverColor: this.covers[0],
+            coverLabel: first.bookTitle || 'Buku',
+          };
+        } else {
+          this.reservedBook = null;
+        }
+      },
+      error: () => {
+        this.stats.reserved = 0;
+        this.reservedBook = null;
+      },
     });
   }
 
@@ -125,15 +158,15 @@ export class DashboardComponent implements OnInit {
     const books: BorrowedBook[] = [];
 
     for (const t of data) {
-      for (const i of t.items) {
-        if (i.returnDate) continue;                 // sudah dikembalikan
+      for (const i of t.items || []) {
+        if (i.returnDate) continue;
         books.push({
           id: i.borrowingItemId,
           title: i.bookTitle,
           dueDate: this.formatDate(t.dueDate),
           daysLeft: this.daysUntil(t.dueDate),
           coverColor: this.covers[books.length % this.covers.length],
-          coverLabel: i.bookTitle
+          coverLabel: i.bookTitle,
         });
       }
     }
@@ -142,30 +175,35 @@ export class DashboardComponent implements OnInit {
     this.borrowedBooks = books;
     this.stats.borrowed = books.length;
     this.borrowLimit.current = books.length;
-    this.dueSoonCount = books.filter(b => b.daysLeft <= 7).length;
+    this.dueSoonCount = books.filter((b) => b.daysLeft <= 7).length;
   }
 
   private buildActivities(data: Borrowing[]): void {
     const list: Activity[] = [];
 
     for (const t of data) {
-      const borrowTime = new Date(t.borrowDate).getTime();
-      for (const i of t.items) {
+      const borrowParsed = this.parseDateOnly(t.borrowDate);
+      const borrowTime = borrowParsed ? borrowParsed.getTime() : 0;
+
+      for (const i of t.items || []) {
         list.push({
           type: 'borrow',
           description: `Meminjam buku ${i.bookTitle}`,
           date: this.formatDate(t.borrowDate),
-          sortKey: borrowTime
+          sortKey: borrowTime,
         });
 
         if (i.returnDate) {
           const late = (i.lateDays ?? 0) > 0;
+          const returnParsed = this.parseDateOnly(i.returnDate);
           list.push({
             type: 'return',
-            description: `Mengembalikan ${i.bookTitle}` + (late ? ` (terlambat ${i.lateDays} hari)` : ''),
+            description:
+              `Mengembalikan ${i.bookTitle}` +
+              (late ? ` (terlambat ${i.lateDays} hari)` : ''),
             date: this.formatDate(i.returnDate),
-            sortKey: new Date(i.returnDate).getTime(),
-            isLate: late
+            sortKey: returnParsed ? returnParsed.getTime() : 0,
+            isLate: late,
           });
         }
       }
@@ -193,16 +231,57 @@ export class DashboardComponent implements OnInit {
     return days >= 0 ? `${days} hari lagi` : `Terlambat ${Math.abs(days)} hari`;
   }
 
-  private daysUntil(dateStr: string): number {
-    const due = new Date(dateStr.substring(0, 10) + 'T00:00:00');
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    return Math.round((due.getTime() - today.getTime()) / 86400000);
+  private parseDateOnly(val: any): Date | null {
+    if (!val) return null;
+
+    if (
+      typeof val === 'object' &&
+      val.year != null &&
+      val.month != null &&
+      val.day != null
+    ) {
+      return new Date(Number(val.year), Number(val.month) - 1, Number(val.day));
+    }
+
+    if (typeof val === 'string') {
+      const clean = val.split('T')[0];
+      const parts = clean.split('-');
+      if (parts.length === 3) {
+        return new Date(
+          Number(parts[0]),
+          Number(parts[1]) - 1,
+          Number(parts[2]),
+        );
+      }
+      const parsed = new Date(val);
+      return isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    if (val instanceof Date) {
+      return isNaN(val.getTime()) ? null : val;
+    }
+
+    return null;
   }
 
-  private formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('id-ID', {
-      day: 'numeric', month: 'short', year: 'numeric'
+  private daysUntil(dateVal: any): number {
+    const due = this.parseDateOnly(dateVal);
+    if (!due) return 0;
+
+    const dueStart = new Date(due.getFullYear(), due.getMonth(), due.getDate());
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.round((dueStart.getTime() - today.getTime()) / 86400000);
+  }
+
+  private formatDate(dateVal: any): string {
+    const parsed = this.parseDateOnly(dateVal);
+    if (!parsed) return '-';
+
+    return parsed.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
     });
   }
 
