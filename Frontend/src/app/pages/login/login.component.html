@@ -57,27 +57,34 @@
 
         <!-- FORM -->
         <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
-          <!-- USERNAME -->
+          <!-- EMAIL -->
           <div class="form-group">
-            <label for="username"> Username atau Email </label>
+            <label for="email"> Email </label>
 
             <div class="input-wrapper">
-              <i class="bi bi-person"></i>
+              <i class="bi bi-envelope"></i>
 
               <input
-                id="username"
-                type="text"
-                formControlName="username"
+                id="email"
+                type="email"
+                autocomplete="email"
+                formControlName="email"
                 placeholder="Masukkan email"
-                [class.input-error]="username?.invalid && username?.touched"
+                [class.input-error]="email?.invalid && email?.touched"
               />
             </div>
 
             <small
               class="error-message"
-              *ngIf="username?.hasError('required') && username?.touched"
+              *ngIf="email?.hasError('required') && email?.touched"
             >
-              Username atau email wajib diisi.
+              Email wajib diisi.
+            </small>
+            <small
+              class="error-message"
+              *ngIf="email?.hasError('email') && email?.touched"
+            >
+              Format email tidak valid.
             </small>
           </div>
 

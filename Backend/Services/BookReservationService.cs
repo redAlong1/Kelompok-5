@@ -199,8 +199,45 @@ namespace AdinsLibrary.Services
 
             r.BookReservationStatus = BookReservationStatus.COMPLETE;
             _reservationRepo.Update(r);
+
+            // If an older flow borrowed an AVAILABLE copy instead of the copy
+            // held for this reservation, release any now-orphaned RESERVED copy.
+            await ReleaseSurplusReservedCopiesAsync(r.BookId);
             await _reservationRepo.SaveChangesAsync();
 
+            return true;
+        }
+
+        private async Task ReleaseSurplusReservedCopiesAsync(long bookId)
+        {
+            var reservations = await _reservationRepo.GetAllAsync();
+            var activeReservationCount = reservations.Count(r =>
+                r.BookId == bookId && r.BookReservationStatus == BookReservationStatus.ACTIVE);
+
+            var inventories = await _inventoryRepo.GetAllAsync();
+            var reservedUnits = inventories
+                .Where(i => i.BookId == bookId && i.AvailabilityStatus == AvailabilityStatus.RESERVED)
+                .OrderBy(i => i.InventoryId)
+                .ToList();
+
+            foreach (var orphanedUnit in reservedUnits.Skip(activeReservationCount))
+            {
+                orphanedUnit.AvailabilityStatus = AvailabilityStatus.AVAILABLE;
+                _inventoryRepo.Update(orphanedUnit);
+            }
+        }
+
+        public async Task<bool> RejectAsync(long id)
+        {
+            BookReservation? reservation = await _reservationRepo.GetByIdAsync(id);
+
+            if (reservation is null || reservation.BookReservationStatus != BookReservationStatus.ACTIVE)
+                return false;
+
+            reservation.BookReservationStatus = BookReservationStatus.CANCELLED;
+            _reservationRepo.Update(reservation);
+            await ReleaseSurplusReservedCopiesAsync(reservation.BookId);
+            await _reservationRepo.SaveChangesAsync();
             return true;
         }
 
@@ -219,19 +256,7 @@ namespace AdinsLibrary.Services
 
             r.BookReservationStatus = BookReservationStatus.CANCELLED;
             _reservationRepo.Update(r);
-
-            // Kembalikan 1 unit inventory berstatus RESERVED untuk buku ini menjadi AVAILABLE
-            var inventories = await _inventoryRepo.GetAllAsync();
-            var reservedUnit = inventories.FirstOrDefault(i =>
-                i.BookId == r.BookId &&
-                i.AvailabilityStatus == AvailabilityStatus.RESERVED);
-
-            if (reservedUnit is not null)
-            {
-                reservedUnit.AvailabilityStatus = AvailabilityStatus.AVAILABLE;
-                _inventoryRepo.Update(reservedUnit);
-            }
-
+            await ReleaseSurplusReservedCopiesAsync(r.BookId);
             await _reservationRepo.SaveChangesAsync();
 
             return true;

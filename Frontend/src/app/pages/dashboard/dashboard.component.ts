@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { BorrowingService, Borrowing } from '../../services/borrowing.service';
 import { FineService } from '../../services/fine.service';
 import { BookReservationService } from '../../services/book-reservation.service';
+import { environment } from '../../../environments/environment';
 
 interface BorrowedBook {
   id: number;
@@ -13,6 +14,7 @@ interface BorrowedBook {
   daysLeft: number;
   coverColor: string;
   coverLabel: string;
+  coverUrl?: string;
 }
 
 interface Activity {
@@ -29,6 +31,7 @@ interface ReservedBook {
   queue: number;
   coverColor: string;
   coverLabel: string;
+  coverUrl?: string;
 }
 
 @Component({
@@ -99,6 +102,13 @@ export class DashboardComponent implements OnInit {
     return Math.max(0, this.borrowLimit.max - this.borrowLimit.current);
   }
 
+  getCoverImageUrl(url?: string): string {
+    if (!url) return '';
+    if (/^(https?:|blob:|data:)/i.test(url)) return url;
+    const backendBase = environment.apiUrl.replace(/\/api\/?$/, '');
+    return `${backendBase}${url.startsWith('/') ? '' : '/'}${url}`;
+  }
+
   // ---------- Data ----------
   private loadBorrowings(): void {
     this.isLoading = true;
@@ -142,6 +152,7 @@ export class DashboardComponent implements OnInit {
             queue: first.queueNumber || 1,
             coverColor: this.covers[0],
             coverLabel: first.bookTitle || 'Buku',
+            coverUrl: first.coverUrl,
           };
         } else {
           this.reservedBook = null;
@@ -167,6 +178,7 @@ export class DashboardComponent implements OnInit {
           daysLeft: this.daysUntil(t.dueDate),
           coverColor: this.covers[books.length % this.covers.length],
           coverLabel: i.bookTitle,
+          coverUrl: i.coverUrl,
         });
       }
     }

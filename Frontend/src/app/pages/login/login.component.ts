@@ -36,8 +36,9 @@ export class LoginComponent {
   ) {
 
     this.loginForm = this.fb.group({
-      username: ['', [
-        Validators.required
+      email: ['', [
+        Validators.required,
+        Validators.email
       ]],
 
       password: ['', [
@@ -50,8 +51,8 @@ export class LoginComponent {
 
   }
 
-  get username() {
-    return this.loginForm.get('username');
+  get email() {
+    return this.loginForm.get('email');
   }
 
   get password() {
@@ -72,10 +73,9 @@ export class LoginComponent {
   this.isLoading = true;
   this.errorMessage = '';
 
-  const { username, password, rememberMe } = this.loginForm.value;
+  const { email, password, rememberMe } = this.loginForm.value;
 
-  // Backend meminta "email", jadi isi input dikirim sebagai email
-  this.authService.login({ email: username, password }, rememberMe).subscribe({
+  this.authService.login({ email, password }, rememberMe).subscribe({
     next: () => {
       this.isLoading = false;
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');

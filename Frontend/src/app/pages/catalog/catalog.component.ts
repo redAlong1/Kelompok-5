@@ -22,6 +22,7 @@ import {
   AuthService,
   UserSummary
 } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-catalog',
@@ -364,6 +365,13 @@ export class CatalogComponent implements OnInit {
       Math.abs(id) % colors.length
     ];
 
+  }
+
+  getCoverImageUrl(url?: string): string {
+    if (!url) return '';
+    if (/^(https?:|blob:|data:)/i.test(url)) return url;
+    const backendBase = environment.apiUrl.replace(/\/api\/?$/, '');
+    return `${backendBase}${url.startsWith('/') ? '' : '/'}${url}`;
   }
 
 

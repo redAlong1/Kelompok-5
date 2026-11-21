@@ -73,7 +73,14 @@
                   selectedBook.coverColor || 'cover-brown'
                 }} d-flex align-items-center justify-content-center rounded-2 text-white fw-bold shadow-sm"
               >
-                <span class="cover-thumb-text">{{ selectedBook.title }}</span>
+                <img
+                  *ngIf="selectedBook.coverUrl"
+                  class="cover-thumb-image"
+                  [src]="getCoverImageUrl(selectedBook.coverUrl)"
+                  [alt]="'Cover ' + selectedBook.title"
+                  (error)="selectedBook.coverUrl = undefined"
+                >
+                <span *ngIf="!selectedBook.coverUrl" class="cover-thumb-text">{{ selectedBook.title }}</span>
               </div>
               <div class="flex-grow-1 overflow-hidden">
                 <h6 class="fw-bold text-dark mb-1 text-truncate">
@@ -196,6 +203,13 @@
                   <div
                     class="book-mini-thumb cover-brown rounded-2 text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
                   >
+                    <img
+                      *ngIf="item.coverUrl"
+                      class="mini-thumb-image"
+                      [src]="getCoverImageUrl(item.coverUrl)"
+                      [alt]="'Cover ' + item.bookTitle"
+                      (error)="item.coverUrl = undefined"
+                    >
                     <span class="mini-text text-truncate px-1">{{
                       item.bookTitle
                     }}</span>

@@ -47,12 +47,15 @@ export class AdminReturnComponent implements OnInit {
   // --- BORROW DATA ---
   reservations: any[] = [];
   isLoadingReservations = false;
+  rejectingReservationId: number | null = null;
   searchReservation = '';
   users: any[] = [];
   inventories: any[] = [];
 
   // Modal: Proses Booking
   showProcessModal = false;
+  showRejectModal = false;
+  selectedRejectReservation: any = null;
   selectedReservation: any = null;
   availableUnitsForBook: any[] = [];
   selectedInventoryId: number | null = null;
@@ -249,7 +252,30 @@ export class AdminReturnComponent implements OnInit {
   }
 
   getUnitsForBook(bookId: number): any[] {
-    return this.availableInventories.filter((i) => i.bookId === bookId);
+    return this.inventories
+      .filter((i) => {
+        if (Number(i.bookId) !== Number(bookId)) return false;
+        const status = this.getInventoryStatus(i);
+        return status === 'AVAILABLE' || status === 'RESERVED';
+      })
+      .sort((a, b) => {
+        // Reservasi sudah menahan satu unit; proses unit itu lebih dulu.
+        const aReserved = this.getInventoryStatus(a) === 'RESERVED' ? 1 : 0;
+        const bReserved = this.getInventoryStatus(b) === 'RESERVED' ? 1 : 0;
+        return bReserved - aReserved;
+      });
+  }
+
+  private getInventoryStatus(inventory: any): string {
+    const status = inventory.availabilityStatus ?? inventory.statusName;
+    if (typeof status === 'number') {
+      return ['AVAILABLE', 'BORROWED', 'RESERVED', 'UNAVAILABLE'][status] ?? '';
+    }
+    const normalized = String(status ?? '').trim().toUpperCase();
+    if (/^[0-3]$/.test(normalized)) {
+      return ['AVAILABLE', 'BORROWED', 'RESERVED', 'UNAVAILABLE'][Number(normalized)];
+    }
+    return normalized;
   }
 
   openProcessReservation(res: any): void {
@@ -266,6 +292,43 @@ export class AdminReturnComponent implements OnInit {
     this.availableUnitsForBook = units;
     this.selectedInventoryId = units[0].inventoryId;
     this.showProcessModal = true;
+  }
+
+  openRejectConfirmation(res: any): void {
+    this.errorMessage = '';
+    this.selectedRejectReservation = res;
+    this.showRejectModal = true;
+  }
+
+  closeRejectModal(): void {
+    if (this.rejectingReservationId !== null) return;
+    this.showRejectModal = false;
+    this.selectedRejectReservation = null;
+    this.errorMessage = '';
+  }
+
+  confirmRejectReservation(): void {
+    const res = this.selectedRejectReservation;
+    const reservationId = Number(res?.bookReservationId);
+    if (!reservationId || this.rejectingReservationId !== null) return;
+
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.rejectingReservationId = reservationId;
+
+    this.borrowingService.rejectReservation(reservationId).subscribe({
+      next: () => {
+        this.rejectingReservationId = null;
+        this.showRejectModal = false;
+        this.selectedRejectReservation = null;
+        this.successMessage = `Reservasi "${res.bookTitle}" milik ${res.userName} berhasil ditolak.`;
+        this.loadBorrowData();
+      },
+      error: (err) => {
+        this.rejectingReservationId = null;
+        this.errorMessage = this.getError(err);
+      },
+    });
   }
 
   closeProcessModal(): void {

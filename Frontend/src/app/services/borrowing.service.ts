@@ -9,6 +9,7 @@ export interface BorrowingItem {
   borrowingItemId: number;
   inventoryId: number;
   bookTitle: string;
+  coverUrl?: string;
   shelfLocation: string;
   returnDate: string | null;
   returnCondition: string | null;
@@ -81,6 +82,13 @@ export class BorrowingService {
 
   completeReservation(id: number): Observable<any> {
     return this.http.patch(`${environment.apiUrl}/reservations/${id}/complete`, {});
+  }
+
+  rejectReservation(id: number): Observable<{ status: string; message: string }> {
+    return this.http.patch<{ status: string; message: string }>(
+      `${environment.apiUrl}/reservations/${id}/reject`,
+      {},
+    );
   }
 
   getUsers(): Observable<any[]> {

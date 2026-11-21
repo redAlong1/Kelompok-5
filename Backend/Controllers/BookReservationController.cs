@@ -81,5 +81,14 @@ namespace AdinsLibrary.Controllers
             if (!ok) return NotFound();
             return Ok(new { status = "success", message = "Reservasi selesai" });
         }
+
+        [HttpPatch("{id:long}/reject")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Reject(long id)
+        {
+            var ok = await _service.RejectAsync(id);
+            if (!ok) return NotFound(new { status = "error", message = "Reservasi tidak ditemukan atau sudah tidak aktif." });
+            return Ok(new { status = "success", message = "Reservasi ditolak." });
+        }
     }
 }

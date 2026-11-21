@@ -11,5 +11,6 @@ namespace AdinsLibrary.Services
         Task<List<BookReservationResponse>> GetMyReservationsAsync(long userId);
         Task<bool> CancelAsync(long id, long userId);
         Task<bool> CompleteAsync(long id);
+        Task<bool> RejectAsync(long id);
     }
 }

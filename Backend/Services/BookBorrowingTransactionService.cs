@@ -239,6 +239,7 @@ namespace AdinsLibrary.Services
                 BorrowingItemId = i.BorrowingItemId,
                 InventoryId = i.InventoryId,
                 BookTitle = i.Inventory?.Book?.Title ?? string.Empty,
+                CoverUrl = i.Inventory?.Book?.CoverUrl,
                 ShelfLocation = i.Inventory?.ShelfLocation ?? string.Empty,
                 ReturnDate = i.ReturnDate,
                 ReturnCondition = i.ReturnCondition?.ToString(),
