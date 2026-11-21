@@ -146,6 +146,15 @@ export const routes: Routes = [
     ]
   },
 
+  // ========== ERROR PAGES ==========
+
+  {
+    path: '403',
+    loadComponent: () =>
+      import('./pages/forbidden/forbidden.component')
+        .then(m => m.ForbiddenComponent)
+  },
+
   // ========== FALLBACK ==========
 
   {
