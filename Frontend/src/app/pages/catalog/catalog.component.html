@@ -26,9 +26,7 @@
         </div>
         <div class="col-md-3">
           <select class="form-select shadow-sm" [(ngModel)]="selectedSort">
-            <option value="popular">Paling populer</option>
             <option value="newest">Terbaru</option>
-            <option value="rating">Rating tertinggi</option>
             <option value="title">Judul A-Z</option>
           </select>
         </div>
@@ -59,6 +57,12 @@
         </button>
       </div>
 
+      <!-- ERROR MESSAGE -->
+      <div *ngIf="errorMessage" class="alert alert-warning alert-dismissible fade show mb-3 py-2 small" role="alert">
+        <i class="bi bi-exclamation-circle me-1"></i> {{ errorMessage }}
+        <button type="button" class="btn-close btn-sm" (click)="errorMessage = ''"></button>
+      </div>
+
       <!-- LOADING STATE -->
       <div *ngIf="loading" class="text-center py-5">
         <div class="spinner-border text-primary" role="status"></div>
@@ -86,18 +90,15 @@
 
               <!-- Rating & Stock -->
               <div class="d-flex align-items-center justify-content-between mb-3">
-                <div class="d-flex align-items-center gap-1">
-                  <i class="bi bi-star-fill text-warning" style="font-size:12px;"></i>
-                  <span class="fw-semibold small">{{ book.rating }}</span>
-                </div>
-                <div>
-                  <span *ngIf="!book.isBorrowed" class="badge stock-badge">
-                    Stok {{ book.stock }}
-                  </span>
-                  <span *ngIf="book.isBorrowed" class="badge bg-danger">
-                    Dipinjam semua
-                  </span>
-                </div>
+                <!-- Stock -->
+              <div>
+                <span *ngIf="!book.isBorrowed" class="badge stock-badge">
+                  Stok {{ book.stock }}
+                </span>
+                <span *ngIf="book.isBorrowed" class="badge bg-danger">
+                  Dipinjam semua
+                </span>
+              </div>
               </div>
 
               <!-- Action Button -->

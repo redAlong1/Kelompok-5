@@ -38,7 +38,7 @@ import {
 export class CatalogComponent implements OnInit {
 
   searchQuery: string = '';
-  selectedSort: string = 'popular';
+  selectedSort: string = 'newest';
 
   activeCategory: string = 'Semua';
   activeCategoryId: number = 0;
@@ -327,13 +327,7 @@ export class CatalogComponent implements OnInit {
     event.stopPropagation();
 
     if (book.stock > 0) {
-
-      alert(
-        `Mengajukan peminjaman untuk buku: ${book.title}`
-      );
-
-    } else {
-
+      // Stok tersedia → arahkan ke halaman reservasi untuk proses peminjaman
       this.router.navigate(
         ['/reservations'],
         {
@@ -342,7 +336,10 @@ export class CatalogComponent implements OnInit {
           }
         }
       );
-
+    } else {
+      // Stok habis (dipinjam semua) → tidak bisa dipinjam/direservasi
+      this.errorMessage = `Buku "${book.title}" sedang dipinjam semua. Tidak dapat diproses saat ini.`;
+      setTimeout(() => { this.errorMessage = ''; }, 4000);
     }
 
   }
