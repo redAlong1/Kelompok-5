@@ -5,6 +5,7 @@
         public long BorrowingItemId { get; set; }
         public long InventoryId { get; set; }
         public string BookTitle { get; set; } = string.Empty;
+        public string? CoverUrl { get; set; }
         public string ShelfLocation { get; set; } = string.Empty;
         public DateTime? ReturnDate { get; set; }
         public string? ReturnCondition { get; set; }

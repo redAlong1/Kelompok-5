@@ -28,6 +28,7 @@ export class RegisterComponent {
 
   showPassword = false;
   showConfirmPassword = false;
+  showTermsModal = false;
   isLoading = false;
   errorMessage = '';
 
@@ -111,6 +112,10 @@ export class RegisterComponent {
 
   toggleConfirmPassword(): void {
     this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  closeTermsModal(): void {
+    this.showTermsModal = false;
   }
 
   onRegister(): void {

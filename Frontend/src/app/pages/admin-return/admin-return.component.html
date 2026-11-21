@@ -35,7 +35,7 @@
       <!-- Alerts (hanya tampil di luar saat modal tidak terbuka) -->
       <div
         class="alert alert-danger py-2 small mb-3"
-        *ngIf="errorMessage && !showProcessModal && !showWalkInModal"
+        *ngIf="errorMessage && !showProcessModal && !showWalkInModal && !showRejectModal"
       >
         {{ errorMessage }}
       </div>
@@ -131,7 +131,7 @@
                       </th>
                       <th
                         class="py-3 text-muted fw-semibold text-end px-3"
-                        style="font-size: 13px; width: 160px"
+                        style="font-size: 13px; width: 220px"
                       >
                         Aksi
                       </th>
@@ -197,14 +197,27 @@
                         </span>
                       </td>
                       <td class="text-end px-3">
-                        <button
-                          class="btn btn-sm btn-primary fw-semibold px-3"
-                          style="font-size: 13px"
-                          [disabled]="getUnitsForBook(res.bookId).length === 0"
-                          (click)="openProcessReservation(res)"
-                        >
-                          <i class="bi bi-check2-circle me-1"></i> Proses Pinjam
-                        </button>
+                        <div class="d-inline-flex gap-2">
+                          <button
+                            class="btn btn-sm btn-primary fw-semibold px-3"
+                            style="font-size: 13px"
+                            [disabled]="getUnitsForBook(res.bookId).length === 0 || rejectingReservationId === res.bookReservationId"
+                            (click)="openProcessReservation(res)"
+                          >
+                            <i class="bi bi-check2-circle me-1"></i> Proses Pinjam
+                          </button>
+                          <button
+                            class="btn btn-sm btn-outline-danger fw-semibold px-3"
+                            style="font-size: 13px"
+                            [disabled]="rejectingReservationId !== null"
+                            (click)="openRejectConfirmation(res)"
+                            title="Tolak reservasi"
+                          >
+                            <span *ngIf="rejectingReservationId === res.bookReservationId" class="spinner-border spinner-border-sm me-1" role="status"></span>
+                            <i *ngIf="rejectingReservationId !== res.bookReservationId" class="bi bi-x-circle me-1"></i>
+                            Tolak
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   </tbody>
@@ -600,6 +613,57 @@
   </main>
 </div>
 
+<!-- MODAL: KONFIRMASI PENOLAKAN RESERVASI -->
+<div
+  class="modal fade"
+  [class.show]="showRejectModal"
+  [style.display]="showRejectModal ? 'block' : 'none'"
+  tabindex="-1"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="rejectReservationTitle"
+>
+  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content reject-modal-content">
+      <div class="reject-modal-icon"><i class="bi bi-x-lg"></i></div>
+      <h2 id="rejectReservationTitle">Tolak reservasi ini?</h2>
+      <p class="reject-modal-description">
+        Reservasi ini akan dibatalkan dan tidak lagi masuk antrean aktif.
+      </p>
+
+      <div class="reject-reservation-summary" *ngIf="selectedRejectReservation as res">
+        <div class="reject-summary-book"><i class="bi bi-book-half"></i></div>
+        <div class="reject-summary-text">
+          <strong>{{ res.bookTitle }}</strong>
+          <span>{{ res.userName }} · Antrean ke-{{ res.queueNumber || 1 }}</span>
+        </div>
+      </div>
+
+      <div class="alert alert-danger py-2 small mb-0" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="reject-modal-actions">
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="closeRejectModal()"
+          [disabled]="rejectingReservationId !== null"
+        >Kembali</button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="confirmRejectReservation()"
+          [disabled]="rejectingReservationId !== null"
+        >
+          <span *ngIf="rejectingReservationId !== null" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          {{ rejectingReservationId !== null ? 'Memproses...' : 'Ya, tolak reservasi' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ============================================================ -->
 <!-- MODAL: PROSES BOOKING / RESERVASI KE PEMINJAMAN              -->
 <!-- ============================================================ -->
@@ -799,6 +863,6 @@
 
 <div
   class="modal-backdrop fade show"
-  *ngIf="showProcessModal || showWalkInModal"
-  (click)="closeProcessModal(); closeWalkInModal()"
+  *ngIf="showProcessModal || showWalkInModal || showRejectModal"
+  (click)="closeProcessModal(); closeWalkInModal(); closeRejectModal()"
 ></div>

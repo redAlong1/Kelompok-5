@@ -76,6 +76,13 @@
 
             <!-- Book Cover -->
             <div class="book-cover {{ book.coverColor }} d-flex align-items-end p-3 position-relative">
+              <img
+                *ngIf="book.coverUrl"
+                class="book-cover-image"
+                [src]="getCoverImageUrl(book.coverUrl)"
+                [alt]="'Cover ' + book.title"
+                (error)="book.coverUrl = undefined"
+              >
               <div class="book-cover-overlay"></div>
               <div class="position-relative z-1 w-100">
                 <div class="fw-bold text-white fs-6 book-title-cover">{{ book.title }}</div>

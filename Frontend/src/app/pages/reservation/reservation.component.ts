@@ -15,6 +15,7 @@ import {
   InventoryResponse,
 } from '../../services/inventory.service';
 import { AuthService, UserSummary } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-reservation',
@@ -98,6 +99,13 @@ export class ReservationComponent implements OnInit {
 
   onBookChange(): void {
     this.updateSelectedBook();
+  }
+
+  getCoverImageUrl(url?: string): string {
+    if (!url) return '';
+    if (/^(https?:|blob:|data:)/i.test(url)) return url;
+    const backendBase = environment.apiUrl.replace(/\/api\/?$/, '');
+    return `${backendBase}${url.startsWith('/') ? '' : '/'}${url}`;
   }
 
   loadBooksFromApi(): void {

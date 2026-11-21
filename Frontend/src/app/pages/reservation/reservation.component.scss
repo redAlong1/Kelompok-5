@@ -28,6 +28,14 @@
   position: relative;
   overflow: hidden;
 
+  .cover-thumb-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .cover-thumb-text {
     font-size: 15px;
     line-height: 1.2;
@@ -45,6 +53,14 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+
+  .mini-thumb-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   .mini-text {
     font-size: 11px;

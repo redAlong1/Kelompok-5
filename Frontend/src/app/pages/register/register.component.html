@@ -251,9 +251,13 @@
 
             <label for="agreeTerms">
               Saya menyetujui
-              <a href="#terms">Terms & Conditions</a>
-              yang berlaku.
             </label>
+            <button
+              type="button"
+              class="terms-link"
+              (click)="showTermsModal = true"
+            >Terms &amp; Conditions</button>
+            <span class="terms-copy">yang berlaku.</span>
 
           </div>
 
@@ -302,6 +306,73 @@
 
     </section>
 
+  </div>
+
+  <div
+    class="terms-modal-backdrop"
+    *ngIf="showTermsModal"
+    (click)="closeTermsModal()"
+  >
+    <section
+      class="terms-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="termsTitle"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="terms-modal-header">
+        <div>
+          <span class="terms-eyebrow">ADINSLIBRARY</span>
+          <h2 id="termsTitle">Syarat &amp; Ketentuan</h2>
+          <p>Ketentuan penggunaan akun dan layanan perpustakaan.</p>
+        </div>
+        <button
+          type="button"
+          class="terms-close"
+          aria-label="Tutup syarat dan ketentuan"
+          (click)="closeTermsModal()"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </header>
+
+      <div class="terms-modal-body">
+        <p class="terms-intro">
+          Dengan membuat akun, Anda setuju menggunakan AdInsLibrary secara bertanggung jawab
+          dan mengikuti aturan berikut.
+        </p>
+
+        <article class="terms-section">
+          <h3><span>01</span> Informasi akun</h3>
+          <p>Berikan informasi yang benar dan gunakan akun Anda sendiri. Jaga kerahasiaan kata sandi dan segera hubungi pengelola jika menduga akun digunakan orang lain.</p>
+        </article>
+        <article class="terms-section">
+          <h3><span>02</span> Peminjaman buku</h3>
+          <p>Peminjaman mengikuti batas jumlah dan durasi sesuai status keanggotaan. Buku yang dipinjam menjadi tanggung jawab anggota sampai tercatat telah dikembalikan.</p>
+        </article>
+        <article class="terms-section">
+          <h3><span>03</span> Reservasi</h3>
+          <p>Reservasi menempatkan Anda dalam antrean untuk buku yang diinginkan. Reservasi dapat dibatalkan atau ditolak oleh pengelola, dan bukan jaminan buku langsung tersedia.</p>
+        </article>
+        <article class="terms-section">
+          <h3><span>04</span> Pengembalian dan denda</h3>
+          <p>Kembalikan buku sesuai tanggal jatuh tempo dan dalam kondisi yang layak. Denda dapat dikenakan untuk keterlambatan, kerusakan, atau kehilangan sesuai kebijakan yang berlaku.</p>
+        </article>
+        <article class="terms-section">
+          <h3><span>05</span> Penggunaan layanan</h3>
+          <p>Gunakan fitur hanya untuk keperluan perpustakaan. Jangan mengganggu layanan, mencoba mengakses akun orang lain, atau memberikan informasi yang menyesatkan.</p>
+        </article>
+        <article class="terms-section">
+          <h3><span>06</span> Perubahan ketentuan</h3>
+          <p>Pengelola dapat memperbarui ketentuan untuk menyesuaikan layanan. Ketentuan terbaru akan ditampilkan pada halaman ini.</p>
+        </article>
+      </div>
+
+      <footer class="terms-modal-footer">
+        <span><i class="bi bi-info-circle me-1"></i>Anda perlu menyetujui ketentuan ini untuk mendaftar.</span>
+        <button type="button" class="btn btn-primary" (click)="closeTermsModal()">Saya mengerti</button>
+      </footer>
+    </section>
   </div>
 
 </div>
