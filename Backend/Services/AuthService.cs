@@ -112,7 +112,6 @@ namespace AdinsLibrary.Services
                 UserName = user.Username,
                 Email = user.Email,
                 RoleName = user.Role.ToString(),
-                membershipId = tier?.MembershipTierId ?? 0,
                 MembershipTierName = tier?.TierName ?? string.Empty,
                 Points = user.Points,
                 MaxBorrowItems = tier?.MaxBorrowItems ?? 0,
