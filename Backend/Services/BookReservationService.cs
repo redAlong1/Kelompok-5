@@ -31,6 +31,18 @@ namespace AdinsLibrary.Services
             if (book is null)
                 return null;
 
+            // Validasi: Cek apakah user sudah memiliki reservasi aktif untuk buku ini
+            var existingReservations = await _reservationRepo.GetAllAsync();
+            bool alreadyReserved = existingReservations.Any(r =>
+                r.UserId == userId &&
+                r.BookId == request.BookId &&
+                r.BookReservationStatus == BookReservationStatus.ACTIVE);
+
+            if (alreadyReserved)
+            {
+                throw new ConflictException("Anda sudah memiliki reservasi aktif untuk buku ini.");
+            }
+
             User? user = await _userRepo.GetByIdAsync(userId, nameof(User.MembershipTier));
 
             BookReservation reservation = new BookReservation
