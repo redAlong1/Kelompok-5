@@ -42,6 +42,14 @@ export class ReservationComponent implements OnInit {
   activeReservations: BookReservationResponse[] = [];
   historyReservations: BookReservationResponse[] = [];
 
+  // Helper untuk cek apakah buku yang dipilih sudah aktif direservasi user
+  get isSelectedBookAlreadyReserved(): boolean {
+    if (!this.selectedBook) return false;
+    return this.activeReservations.some(
+      (r) => Number(r.bookId) === Number(this.selectedBook?.bookId)
+    );
+  }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -186,6 +194,14 @@ export class ReservationComponent implements OnInit {
   submitReservation(): void {
     if (!this.selectedBook) {
       this.showAlert('danger', 'Silakan pilih buku yang ingin direservasi.');
+      return;
+    }
+
+    if (this.isSelectedBookAlreadyReserved) {
+      this.showAlert(
+        'danger',
+        `Anda sudah memiliki reservasi aktif untuk buku "${this.selectedBook.title}".`
+      );
       return;
     }
 
