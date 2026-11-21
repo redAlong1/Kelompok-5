@@ -122,7 +122,7 @@
             <!-- Submit Button -->
             <button
               class="btn btn-primary w-100 py-2 fw-semibold rounded-3 shadow-sm mb-3"
-              [disabled]="submitting || !selectedBook"
+              [disabled]="submitting || !selectedBook || isSelectedBookAlreadyReserved"
               (click)="submitReservation()"
             >
               <span
@@ -130,8 +130,25 @@
                 class="spinner-border spinner-border-sm me-2"
                 role="status"
               ></span>
-              {{ submitting ? "Memproses Reservasi..." : "Reservasi Sekarang" }}
+              {{
+                submitting
+                  ? "Memproses Reservasi..."
+                  : isSelectedBookAlreadyReserved
+                  ? "Buku Sudah Direservasi"
+                  : "Reservasi Sekarang"
+              }}
             </button>
+
+            <!-- Warning if already reserved -->
+            <div
+              *ngIf="isSelectedBookAlreadyReserved"
+              class="alert alert-warning py-2 px-3 small rounded-3 mb-3 d-flex align-items-center gap-2"
+            >
+              <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+              <div>
+                Anda sudah memiliki reservasi aktif untuk buku ini. Silakan cek antrean Anda pada panel reservasi aktif di sebelah kanan.
+              </div>
+            </div>
 
             <!-- Terms notice -->
             <p class="text-muted small mb-0 lh-sm">
