@@ -1,4 +1,5 @@
 ﻿using AdinsLibrary.DTOs;
+using AdinsLibrary.Exceptions;
 using AdinsLibrary.Models;
 using AdinsLibrary.Repositories;
 
@@ -62,7 +63,7 @@ namespace AdinsLibrary.Services
             {
                 var allBooks = await _bookRepository.GetAllAsync();
                 if (allBooks.Any(b => string.Equals(b.Isbn, normalizedIsbn, StringComparison.OrdinalIgnoreCase)))
-                    throw new InvalidOperationException($"ISBN '{normalizedIsbn}' sudah terdaftar.");
+                    throw new ConflictException($"ISBN '{normalizedIsbn}' sudah terdaftar.");
             }
 
             var newBook = new Book
@@ -121,7 +122,7 @@ namespace AdinsLibrary.Services
                 if (allBooks.Any(b => b.BookId != existingBook.BookId &&
                                       string.Equals(b.Isbn, normalizedIsbn, StringComparison.OrdinalIgnoreCase)))
                 {
-                    throw new InvalidOperationException($"ISBN '{normalizedIsbn}' sudah digunakan buku lain.");
+                    throw new ConflictException($"ISBN '{normalizedIsbn}' sudah digunakan buku lain.");
                 }
             }
 

@@ -1,4 +1,5 @@
 ﻿using AdinsLibrary.DTOs;
+using AdinsLibrary.Exceptions;
 using AdinsLibrary.Models;
 using AdinsLibrary.Repositories;
 using Microsoft.IdentityModel.Tokens;

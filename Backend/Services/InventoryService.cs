@@ -1,4 +1,5 @@
 using AdinsLibrary.DTOs;
+using AdinsLibrary.Exceptions;
 using AdinsLibrary.Models;
 using AdinsLibrary.Repositories;
 
@@ -37,7 +38,7 @@ namespace AdinsLibrary.Services
             var book = await _bookRepository.GetByIdAsync(request.BookId);
             if (book == null)
             {
-                throw new InvalidOperationException($"Buku dengan ID {request.BookId} tidak ditemukan.");
+                throw new NotFoundException("Buku", request.BookId);
             }
 
             var count = request.Quantity <= 0 ? 1 : request.Quantity;
@@ -95,7 +96,7 @@ namespace AdinsLibrary.Services
 
             if (entity.BorrowingItems != null && entity.BorrowingItems.Any())
             {
-                throw new InvalidOperationException("Eksemplar tidak dapat dihapus karena memiliki riwayat peminjaman.");
+                throw new BadRequestException("Eksemplar tidak dapat dihapus karena memiliki riwayat peminjaman.");
             }
 
             var response = MapToResponse(entity);
