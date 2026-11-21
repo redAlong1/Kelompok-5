@@ -1,5 +1,6 @@
 using AdinsLibrary.DTOs;
 using AdinsLibrary.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdinsLibrary.Controllers
@@ -33,6 +34,7 @@ namespace AdinsLibrary.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateInventoryRequest request)
         {
             try
@@ -47,6 +49,7 @@ namespace AdinsLibrary.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(long id, [FromBody] UpdateInventoryRequest request)
         {
             try
@@ -64,6 +67,7 @@ namespace AdinsLibrary.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(long id)
         {
             try
