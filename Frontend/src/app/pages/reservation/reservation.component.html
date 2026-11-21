@@ -1,30 +1,45 @@
 <div class="d-flex vh-100 overflow-hidden">
-
   <!-- ===== MAIN CONTENT ===== -->
   <main class="flex-grow-1 d-flex flex-column bg-light overflow-auto">
-
-    
     <!-- CONTENT AREA -->
     <div class="p-4">
-
       <!-- INFO BANNER -->
-      <div class="info-banner d-flex align-items-center p-3 mb-4 rounded-3 shadow-sm">
+      <div
+        class="info-banner d-flex align-items-center p-3 mb-4 rounded-3 shadow-sm"
+      >
         <i class="bi bi-info-circle fs-5 me-3 flex-shrink-0 text-primary"></i>
         <div class="banner-text">
-          Anda dapat melakukan reservasi jika buku sedang dipinjam oleh anggota lain. Kami akan memberi tahu Anda saat buku siap diambil.
+          Anda dapat melakukan reservasi jika buku sedang dipinjam oleh anggota
+          lain. Kami akan memberi tahu Anda saat buku siap diambil.
         </div>
       </div>
 
       <!-- ALERT MESSAGE -->
-      <div *ngIf="alertMessage" class="alert alert-{{ alertMessage.type }} alert-dismissible fade show mb-4 shadow-sm" role="alert">
-        <i class="bi" [ngClass]="alertMessage.type === 'success' ? 'bi-check-circle-fill me-2' : 'bi-exclamation-triangle-fill me-2'"></i>
+      <div
+        *ngIf="alertMessage"
+        class="alert alert-{{
+          alertMessage.type
+        }} alert-dismissible fade show mb-4 shadow-sm"
+        role="alert"
+      >
+        <i
+          class="bi"
+          [ngClass]="
+            alertMessage.type === 'success'
+              ? 'bi-check-circle-fill me-2'
+              : 'bi-exclamation-triangle-fill me-2'
+          "
+        ></i>
         {{ alertMessage.text }}
-        <button type="button" class="btn-close" (click)="alertMessage = null"></button>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="alertMessage = null"
+        ></button>
       </div>
 
       <!-- MAIN RESERVATION GRID -->
       <div class="row g-4">
-
         <!-- LEFT COLUMN: BUAT RESERVASI -->
         <div class="col-12 col-lg-7">
           <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
@@ -32,27 +47,58 @@
 
             <!-- Book Selector -->
             <div class="mb-3">
-              <label class="form-label small text-muted fw-semibold mb-1">Pilih Buku yang Ingin Direservasi</label>
-              <select class="form-select shadow-sm rounded-3" [(ngModel)]="selectedBookId" (change)="onBookChange()">
+              <label class="form-label small text-muted fw-semibold mb-1"
+                >Pilih Buku yang Ingin Direservasi</label
+              >
+              <select
+                class="form-select shadow-sm rounded-3"
+                [(ngModel)]="selectedBookId"
+                (change)="onBookChange()"
+              >
                 <option *ngFor="let b of availableBooks" [value]="b.bookId">
-                  {{ b.title }} - {{ b.authorName }} ({{ b.stock <= 0 ? 'Stok 0 / Dipinjam' : 'Tersedia ' + b.stock }})
+                  {{ b.title }} - {{ b.authorName }} ({{
+                    b.stock <= 0 ? "Stok 0 / Dipinjam" : "Tersedia " + b.stock
+                  }})
                 </option>
               </select>
             </div>
 
             <!-- Selected Book Preview Card -->
-            <div *ngIf="selectedBook" class="book-preview-box p-3 mb-3 rounded-3 d-flex align-items-center gap-3">
-              <div class="book-cover-thumb {{ selectedBook.coverColor || 'cover-brown' }} d-flex align-items-center justify-content-center rounded-2 text-white fw-bold shadow-sm">
+            <div
+              *ngIf="selectedBook"
+              class="book-preview-box p-3 mb-3 rounded-3 d-flex align-items-center gap-3"
+            >
+              <div
+                class="book-cover-thumb {{
+                  selectedBook.coverColor || 'cover-brown'
+                }} d-flex align-items-center justify-content-center rounded-2 text-white fw-bold shadow-sm"
+              >
                 <span class="cover-thumb-text">{{ selectedBook.title }}</span>
               </div>
               <div class="flex-grow-1 overflow-hidden">
-                <h6 class="fw-bold text-dark mb-1 text-truncate">{{ selectedBook.title }}</h6>
-                <div class="text-muted small mb-2">{{ selectedBook.authorName }}</div>
+                <h6 class="fw-bold text-dark mb-1 text-truncate">
+                  {{ selectedBook.title }}
+                </h6>
+                <div class="text-muted small mb-2">
+                  {{ selectedBook.authorName }}
+                </div>
                 <div class="d-flex flex-wrap gap-2">
-                  <span class="badge" [ngClass]="selectedBook.stock > 0 ? 'badge-stock-success' : 'badge-stock-danger'">
-                    Stok {{ selectedBook.stock }} ({{ selectedBook.stock <= 0 ? 'dipinjam' : 'tersedia' }})
+                  <span
+                    class="badge"
+                    [ngClass]="
+                      selectedBook.stock > 0
+                        ? 'badge-stock-success'
+                        : 'badge-stock-danger'
+                    "
+                  >
+                    Stok {{ selectedBook.stock }} ({{
+                      selectedBook.stock <= 0 ? "dipinjam" : "tersedia"
+                    }})
                   </span>
-                  <span class="badge badge-estimate" *ngIf="selectedBook.stock <= 0">
+                  <span
+                    class="badge badge-estimate"
+                    *ngIf="selectedBook.stock <= 0"
+                  >
                     Estimasi tersedia {{ selectedBook.estimatedAvailableDate }}
                   </span>
                 </div>
@@ -61,25 +107,16 @@
 
             <!-- Tanggal Reservasi Input -->
             <div class="mb-3">
-              <label class="form-label small text-muted fw-semibold mb-1">Tanggal reservasi</label>
+              <label class="form-label small text-muted fw-semibold mb-1"
+                >Tanggal reservasi</label
+              >
               <div class="input-group shadow-sm">
                 <input
                   type="date"
                   class="form-control rounded-3"
                   [(ngModel)]="reservationDate"
-                >
+                />
               </div>
-            </div>
-
-            <!-- Catatan Input -->
-            <div class="mb-4">
-              <label class="form-label small text-muted fw-semibold mb-1">Catatan (opsional)</label>
-              <textarea
-                class="form-control shadow-sm rounded-3"
-                rows="3"
-                placeholder="Tuliskan alasan reservasi atau permintaan khusus"
-                [(ngModel)]="notes"
-              ></textarea>
             </div>
 
             <!-- Submit Button -->
@@ -88,47 +125,74 @@
               [disabled]="submitting || !selectedBook"
               (click)="submitReservation()"
             >
-              <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
-              {{ submitting ? 'Memproses Reservasi...' : 'Reservasi Sekarang' }}
+              <span
+                *ngIf="submitting"
+                class="spinner-border spinner-border-sm me-2"
+                role="status"
+              ></span>
+              {{ submitting ? "Memproses Reservasi..." : "Reservasi Sekarang" }}
             </button>
 
             <!-- Terms notice -->
             <p class="text-muted small mb-0 lh-sm">
-              Reservasi berlaku 2 hari setelah buku tersedia. Setelah itu antrean berpindah ke anggota berikutnya.
+              Reservasi berlaku 2 hari setelah buku tersedia. Setelah itu
+              antrean berpindah ke anggota berikutnya.
             </p>
           </div>
         </div>
 
         <!-- RIGHT COLUMN: RESERVASI AKTIF & RIWAYAT -->
         <div class="col-12 col-lg-5 d-flex flex-column gap-4">
-
           <!-- RESERVASI AKTIF CARD -->
           <div class="card border-0 shadow-sm rounded-4 p-4">
             <h5 class="fw-bold text-dark mb-3">Reservasi aktif</h5>
 
             <div *ngIf="loading" class="text-center py-3">
-              <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-              <span class="ms-2 small text-muted">Memuat data reservasi...</span>
+              <div
+                class="spinner-border spinner-border-sm text-primary"
+                role="status"
+              ></div>
+              <span class="ms-2 small text-muted"
+                >Memuat data reservasi...</span
+              >
             </div>
 
-            <div *ngIf="!loading && activeReservations.length === 0" class="text-center py-4 text-muted small">
-              <i class="bi bi-calendar-x fs-3 d-block mb-2 text-secondary opacity-50"></i>
+            <div
+              *ngIf="!loading && activeReservations.length === 0"
+              class="text-center py-4 text-muted small"
+            >
+              <i
+                class="bi bi-calendar-x fs-3 d-block mb-2 text-secondary opacity-50"
+              ></i>
               Tidak ada reservasi yang sedang aktif.
             </div>
 
-            <div class="d-flex flex-column gap-3" *ngIf="!loading && activeReservations.length > 0">
+            <div
+              class="d-flex flex-column gap-3"
+              *ngIf="!loading && activeReservations.length > 0"
+            >
               <div
                 class="active-item p-3 rounded-3 border d-flex align-items-center justify-content-between shadow-xs"
                 *ngFor="let item of activeReservations"
               >
                 <div class="d-flex align-items-center gap-3 overflow-hidden">
-                  <div class="book-mini-thumb cover-brown rounded-2 text-white d-flex align-items-center justify-content-center fw-bold shadow-sm">
-                    <span class="mini-text text-truncate px-1">{{ item.bookTitle }}</span>
+                  <div
+                    class="book-mini-thumb cover-brown rounded-2 text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                  >
+                    <span class="mini-text text-truncate px-1">{{
+                      item.bookTitle
+                    }}</span>
                   </div>
                   <div class="overflow-hidden">
-                    <div class="fw-bold text-dark text-truncate">{{ item.bookTitle }}</div>
-                    <div class="text-muted small">Dibuat {{ item.createdAt | date:'d MMM yyyy' }}</div>
-                    <span class="badge badge-queue mt-1">Antrean ke-{{ item.queueNumber || 1 }}</span>
+                    <div class="fw-bold text-dark text-truncate">
+                      {{ item.bookTitle }}
+                    </div>
+                    <div class="text-muted small">
+                      Dibuat {{ item.createdAt | date: "d MMM yyyy" }}
+                    </div>
+                    <span class="badge badge-queue mt-1"
+                      >Antrean ke-{{ item.queueNumber || 1 }}</span
+                    >
                   </div>
                 </div>
 
@@ -146,11 +210,17 @@
           <div class="card border-0 shadow-sm rounded-4 p-4">
             <h5 class="fw-bold text-dark mb-3">Riwayat reservasi</h5>
 
-            <div *ngIf="historyReservations.length === 0" class="text-center py-3 text-muted small">
+            <div
+              *ngIf="historyReservations.length === 0"
+              class="text-center py-3 text-muted small"
+            >
               Belum ada riwayat reservasi.
             </div>
 
-            <div class="d-flex flex-column" *ngIf="historyReservations.length > 0">
+            <div
+              class="d-flex flex-column"
+              *ngIf="historyReservations.length > 0"
+            >
               <div
                 class="history-item py-3 border-bottom d-flex align-items-center justify-content-between"
                 *ngFor="let item of historyReservations"
@@ -158,22 +228,27 @@
                 <div>
                   <div class="fw-semibold text-dark">{{ item.bookTitle }}</div>
                   <div class="text-muted small">
-                    {{ item.status === 'COMPLETE' ? 'Diambil' : 'Dibatalkan' }} {{ item.createdAt | date:'d MMM yyyy' }}
+                    {{ item.status === "COMPLETE" ? "Diambil" : "Dibatalkan" }}
+                    {{ item.createdAt | date: "d MMM yyyy" }}
                   </div>
                 </div>
                 <div>
-                  <span *ngIf="item.status === 'COMPLETE'" class="badge badge-complete">Selesai</span>
-                  <span *ngIf="item.status !== 'COMPLETE'" class="badge badge-cancelled">Dibatalkan</span>
+                  <span
+                    *ngIf="item.status === 'COMPLETE'"
+                    class="badge badge-complete"
+                    >Selesai</span
+                  >
+                  <span
+                    *ngIf="item.status !== 'COMPLETE'"
+                    class="badge badge-cancelled"
+                    >Dibatalkan</span
+                  >
                 </div>
               </div>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
   </main>
-
 </div>
