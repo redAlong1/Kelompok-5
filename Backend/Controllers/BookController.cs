@@ -1,6 +1,7 @@
 ﻿using AdinsLibrary.DTOs;
 using AdinsLibrary.Models;
 using AdinsLibrary.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 
@@ -40,6 +41,7 @@ namespace AdinsLibrary.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Book>> Create([FromBody] BookRequest book)
         {
             if (book == null)
@@ -60,6 +62,7 @@ namespace AdinsLibrary.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Book>> Update(long id, [FromBody] UpdateBookRequest book)
         {
             if (id <= 0)
@@ -83,6 +86,7 @@ namespace AdinsLibrary.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Book>> Delete(long id)
         {
             if (id <= 0)
@@ -103,6 +107,7 @@ namespace AdinsLibrary.Controllers
         }
 
         [HttpPost("upload-cover")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UploadCover([FromForm] IFormFile? file)
         {
             if (file == null || file.Length == 0)
